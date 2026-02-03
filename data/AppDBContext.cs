@@ -11,5 +11,6 @@ namespace StockLens.data
         }
 
         public DbSet<Sectors> Sectors { get; set; }
+        public DbSet<Industries> Industries {  get; set; }
     }
 }

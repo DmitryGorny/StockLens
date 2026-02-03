@@ -1,8 +1,8 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using StockLens.Models;
 
-namespace StockLens.Models
+namespace StockLens.Dtos.IndustriesDtos
 {
-    public class Industries
+    public class CreateIndustryDto
     {
         public int Id { get; set; }
 
