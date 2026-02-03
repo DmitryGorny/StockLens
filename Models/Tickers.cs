@@ -11,8 +11,8 @@
 
         public string LongName { get; set; }
 
-        public List<Quotation> Quotation { get; set; } = new();
+        public List<Quotes> Quotation { get; set; } = new();
 
-        public Industry Industry { get; set; } 
+        public Industries Industry { get; set; } 
     }
 }

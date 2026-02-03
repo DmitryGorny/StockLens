@@ -2,7 +2,7 @@
 
 namespace StockLens.Models
 {
-    public class Industry
+    public class Industries
     {
         public int Id { get; set; }
 
@@ -14,6 +14,6 @@ namespace StockLens.Models
 
         public List<Tickers> Tickers { get; set; } = new();
 
-        public Sector Sector { get; set; }
+        public Sectors Sector { get; set; }
     }
 }

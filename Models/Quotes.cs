@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace StockLens.Models
 {
-    public class Quotation
+    public class Quotes
     {
         public int Id { get; set; }
         public DateTime ts { get; set; }

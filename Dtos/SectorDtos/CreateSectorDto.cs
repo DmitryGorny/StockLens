@@ -1,0 +1,14 @@
+﻿using StockLens.Models;
+using System.ComponentModel.DataAnnotations;
+
+namespace StockLens.Dtos.SectorDtos
+{
+    public class CreateSectorDto
+    {
+        [Required]
+        public string Name { get; set; }
+
+        public string? Description { get; set; }
+        
+    }
+}

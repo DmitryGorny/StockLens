@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StockLens")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06d8b7b6c004582f4288c3fc74307141a73d5908")]
 [assembly: System.Reflection.AssemblyProductAttribute("StockLens")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StockLens")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
