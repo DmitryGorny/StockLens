@@ -32,16 +32,6 @@ namespace StockLens.Services.Sector
             await _sectorRepository.AddSectorAsync(sector);
         }
 
-
-        public async Task<IReadOnlyList<GetSectorDto>> GetSectorPaginatedAsync(SectorQuery query)
-        {
-            IReadOnlyList<Sectors> sectors =
-                await _sectorRepository.GetSectorPaginatedAsync(query.pageNumber, query.pageSize);
-            IReadOnlyList<GetSectorDto> dtos = (IReadOnlyList<GetSectorDto>)sectors.Select(s => s.CreateDtoFromSectors());
-            return dtos;
-                   
-        }
-
         public async Task<GetSectorDto?> GetSectorAsync(int sectorId)
         {
             Sectors? sector = await _sectorRepository.GetSectorAsync(sectorId);

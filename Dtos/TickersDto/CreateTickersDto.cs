@@ -1,23 +1,14 @@
-﻿namespace StockLens.Models
+﻿namespace StockLens.Dtos.TickersDto
 {
-    public class Tickers
+    public class CreateTickersDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
         public string Description { get; set; }
-
         public bool Privalaged { get; set; }
-
-        public string LongName { get; set; }
-
-        public decimal DividentsValue { get; set; }
-
         public int ListLevel { get; set; }
-
-        public List<Quotes> Quotation { get; set; } = new();
-
+        public string LongName { get; set; }
+        public decimal DividentsValue { get; set; }
         public int IndustryId { get; set; }
-        public Industries Industry { get; set; } 
     }
 }

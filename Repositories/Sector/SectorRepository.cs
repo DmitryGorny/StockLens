@@ -29,11 +29,5 @@ namespace StockLens.Repositories.Sector
         {
             return await _db_context.Sectors.FindAsync(sectorId);
         }
-
-        public async Task<IReadOnlyList<SectorModel>> GetSectorPaginatedAsync(int pageNumber, int pageSize)
-        {
-            var skip = (pageNumber - 1) * pageSize;
-            return await _db_context.Sectors.Skip(skip).Take(pageSize).ToListAsync();
-        }
     }
 }

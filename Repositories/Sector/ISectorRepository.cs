@@ -9,7 +9,5 @@ namespace StockLens.Repositories.Sector
         public Task AddSectorAsync(SectorModel sector);
 
         public Task<SectorModel?> GetSectorAsync(int sectorId);
-
-        public Task<IReadOnlyList<SectorModel>> GetSectorPaginatedAsync(int pageNumber, int pageSize);
     }
 }

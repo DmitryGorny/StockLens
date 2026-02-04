@@ -7,8 +7,8 @@ namespace StockLens.Models
     {
         public int Id { get; set; }
         public DateTime ts { get; set; }
-        decimal open { get; set; }
-        decimal close { get; set; }
+        public decimal open { get; set; }
+        public decimal close { get; set; }
         public decimal low { get; set; }
         public decimal high { get; set; }
 

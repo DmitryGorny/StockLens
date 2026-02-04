@@ -9,9 +9,7 @@ namespace StockLens.Services.Industries
     {
         public Task BulkCreateIndustriesAsync(List<CreateIndustryDto> dtos);
         public Task AddIndustriesAsync(CreateIndustryDto dto);
-
-        public Task<IReadOnlyList<GetIndustryDto>> GetIndustriesFilteredAsync(int sectorId);
-
+        public Task<IReadOnlyList<GetIndustryDto>> GetIndustriesFilteredAsync(IndustriesQuery query);
         public Task<GetIndustryDto?> GetIndustryAsync(int industryId);
     }
 }
