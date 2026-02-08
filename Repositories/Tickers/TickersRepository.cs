@@ -16,8 +16,19 @@ namespace StockLens.Repositories.Tickers
         }
 
         public async Task BulkCreateTickersAsync(List<TickersModel> tickers)
-        {
-            await _db_context.BulkInsertAsync(tickers);
+        { 
+            var config = new BulkConfig
+            {
+                SetOutputIdentity = true,
+                PreserveInsertOrder = true,
+                UpdateByProperties = new()
+                {
+                   nameof(TickersModel.Name),
+                   nameof(TickersModel.Privileged), 
+                },
+                PropertiesToExclude = new List<string> { "Id" }
+            };
+            await _db_context.BulkInsertOrUpdateAsync(tickers, config);
         }
         public async Task AddTickerAsync(TickersModel ticker) 
         {

@@ -1,0 +1,39 @@
+[
+  {
+    "ContainingType": "StockLens.Controllers.IndustriesController",
+    "Method": "GetIndustriesBySector",
+    "RelativePath": "api/industries",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "SectorId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "InsideTickers",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.JsonReaderController",
+    "Method": "ReadJsonFile",
+    "RelativePath": "api/read_json",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "json_file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

@@ -17,9 +17,11 @@ namespace StockLens.Services.Tickers
             _tickersRepository = tickersRepository;
         }
 
-        public async Task BulkCreateTickersAsync(List<CreateTickersDto> dtos)
+        public async Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos)
         {
-           await _tickersRepository.BulkCreateTickersAsync(dtos.Select(d => d.CreateTickerFromDto()).ToList());
+            List<TickersModel> tickers = dtos.Select(d => d.CreateTickerFromDto()).ToList();
+            await _tickersRepository.BulkCreateTickersAsync(tickers);
+            return tickers.Select(t => t.CreateDtoFromTickers()).ToList();
         }
         public async Task AddTikersAsync(CreateTickersDto dto)
         {
@@ -48,6 +50,10 @@ namespace StockLens.Services.Tickers
                     return null;
             }
 
+            var filteredList = GetTicketsFiltered(tickers, query);
+            if (filteredList != null)
+                tickers = filteredList;
+
             var sortedList = GetTickersSortedAsync(tickers, query);
             if (sortedList != null)
                 tickers = sortedList;
@@ -69,6 +75,17 @@ namespace StockLens.Services.Tickers
             return await _tickersRepository.GetTickers(skip, pageSize);
         }
 
+        private IReadOnlyList<TickersModel>? GetTicketsFiltered(IReadOnlyList<TickersModel> tics, TickersQuery query)
+        {
+            IReadOnlyList<TickersModel>? filtered = null;
+
+            if (query.CityFiltersId != null)
+            {
+                filtered = tics.Where(t => t.CityId == query.CityFiltersId).ToList();
+            }
+
+            return filtered;
+        }
         private IReadOnlyList<TickersModel>? GetTickersSortedAsync(IReadOnlyList<TickersModel> tics, TickersQuery query)
         {
             IReadOnlyList<TickersModel>? sorted = null;

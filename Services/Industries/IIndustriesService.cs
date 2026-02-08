@@ -7,8 +7,8 @@ namespace StockLens.Services.Industries
 {
     public interface IIndustriesService
     {
-        public Task BulkCreateIndustriesAsync(List<CreateIndustryDto> dtos);
-        public Task AddIndustriesAsync(CreateIndustryDto dto);
+        public Task<IReadOnlyList<GetIndustryDto>> BulkCreateIndustriesAsync(List<CreateIndustryDto> dtos);
+        public Task<GetIndustryDto> AddIndustriesAsync(CreateIndustryDto dto);
         public Task<IReadOnlyList<GetIndustryDto>> GetIndustriesFilteredAsync(IndustriesQuery query);
         public Task<GetIndustryDto?> GetIndustryAsync(int industryId);
     }

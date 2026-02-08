@@ -20,9 +20,17 @@ namespace StockLens.Repositories.Sector
             await _db_context.BulkInsertAsync(sector);
         }
 
-        public async Task AddSectorAsync(SectorModel sector)
+        public async Task<SectorModel> CreateSectorAsync(SectorModel sector)
         {
+            var alreadyExist = await _db_context.Sectors.FirstOrDefaultAsync(s => s.Name == sector.Name);
+            if (alreadyExist != null) 
+            {             
+                alreadyExist.Description = sector.Description;
+                return alreadyExist;
+            }
             await _db_context.Sectors.AddAsync(sector);
+            await _db_context.SaveChangesAsync();
+            return sector;
         }
 
         public async Task<SectorModel?> GetSectorAsync(int sectorId)

@@ -7,7 +7,7 @@ namespace StockLens.Repositories.Industries
     {
         public Task BulkCreateIndustriesAsync(List<IndustiesModel> sector);
 
-        public Task AddIndustriesAsync(IndustiesModel sector);
+        public Task CreateIndustriesAsync(IndustiesModel sector);
 
         public Task<IndustiesModel?> GetIndustryAsync(int sectorId);
 

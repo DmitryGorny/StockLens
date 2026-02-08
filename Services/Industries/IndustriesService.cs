@@ -15,15 +15,21 @@ namespace StockLens.Services.Industries
             _industriesRepo = industriesRepo;
         }
 
-        public async Task BulkCreateIndustriesAsync(List<CreateIndustryDto> dtos)
+        public async Task<IReadOnlyList<GetIndustryDto>> BulkCreateIndustriesAsync(List<CreateIndustryDto> dtos)
         {
-            IEnumerable<IndustriesModel> inds = dtos.Select(i => i.ToIndustriesFromDto());
-            await _industriesRepo.BulkCreateIndustriesAsync(inds.ToList());
+            List<IndustriesModel> inds = dtos.Select(i => i.ToIndustriesFromDto()).ToList();
+            await _industriesRepo.BulkCreateIndustriesAsync(inds);
+            foreach (var industry in inds)
+            {
+                Console.WriteLine(industry.Id);
+            }
+            return inds.Select(i => i.ToDtoFromIndustries()).ToList();
         }
-        public async Task AddIndustriesAsync(CreateIndustryDto dto)
+        public async Task<GetIndustryDto> AddIndustriesAsync(CreateIndustryDto dto)
         {
             IndustriesModel industry = dto.ToIndustriesFromDto();
-            await _industriesRepo.AddIndustriesAsync(industry);
+            await _industriesRepo.CreateIndustriesAsync(industry);
+            return industry.ToDtoFromIndustries();
         }
 
         public async Task<IReadOnlyList<GetIndustryDto>> GetIndustriesFilteredAsync(IndustriesQuery query)

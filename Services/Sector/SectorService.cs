@@ -26,10 +26,10 @@ namespace StockLens.Services.Sector
 
             await _sectorRepository.BulkCreateSectorsAsync(sectors);
         }
-        public async Task CreateSectorAsync(CreateSectorDto dto)
+        public async Task<GetSectorDto> CreateSectorAsync(CreateSectorDto dto)
         {
-            Sectors sector = dto.CreateSectorFromDto();
-            await _sectorRepository.AddSectorAsync(sector);
+            Sectors sector = await _sectorRepository.CreateSectorAsync(dto.CreateSectorFromDto());
+            return sector.CreateDtoFromSectors();
         }
 
         public async Task<GetSectorDto?> GetSectorAsync(int sectorId)

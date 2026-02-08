@@ -16,11 +16,5 @@ namespace StockLens.Controllers
         {
             _sectorService = sectorService;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetPaginatedSectors([FromQuery] SectorQuery query)
-        {
-            return Ok(query);
-        }
     }
 }

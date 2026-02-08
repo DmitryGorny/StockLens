@@ -13,12 +13,14 @@ namespace StockLens.Mappers
                 Id = ticker.Id,
                 Name = ticker.Name,
                 Description = ticker.Description,
-                Privalaged = ticker.Privalaged,
+                Privileged = ticker.Privileged,
                 LongName = ticker.LongName,
-                DividentsValue = ticker.DividentsValue,
+                DividendsValue = ticker.DividendsValue,
+                DividendsPercents = ticker.DividendsPercents,
                 Symbol = ticker.Symbol,
-                IndustryId = ticker.Industry.Id,
+                IndustryId = ticker.IndustryId,
                 ListLevel = ticker.ListLevel,
+                CityId = ticker.CityId,
             };
         }
 
@@ -28,12 +30,14 @@ namespace StockLens.Mappers
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Privalaged = dto.Privalaged,
+                Privileged = dto.Privileged,
                 LongName = dto.LongName,
-                DividentsValue = dto.DividentsValue,
+                DividendsValue = dto.DividendsValue,
+                DividendsPercents = dto.DividendsPercents,
                 Symbol = dto.Symbol,
                 IndustryId = dto.IndustryId,
                 ListLevel = dto.ListLevel,
+                CityId = dto.CityId,
             };
         }
     }

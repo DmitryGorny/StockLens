@@ -13,14 +13,25 @@ namespace StockLens.Repositories.Industries
         {
             _db_context = db_context;
         }
-        public async Task BulkCreateIndustriesAsync(List<IndustiesModel> sector)
+        public async Task BulkCreateIndustriesAsync(List<IndustiesModel> industries)
         {
-            await _db_context.BulkInsertAsync(sector);
+            var config = new BulkConfig
+            {
+                SetOutputIdentity = true,
+                PreserveInsertOrder = true,
+                UpdateByProperties = new()
+                {
+                   nameof(IndustiesModel.Name),
+                }
+            };
+            await _db_context.BulkInsertOrUpdateAsync(industries, config);
+            await _db_context.SaveChangesAsync();
         }
 
-        public async Task AddIndustriesAsync(IndustiesModel sector)
+        public async Task CreateIndustriesAsync(IndustiesModel sector)
         {
             await _db_context.AddAsync(sector);
+            await _db_context.SaveChangesAsync();
         }
 
         public async Task<IndustiesModel?> GetIndustryAsync(int sectorId)

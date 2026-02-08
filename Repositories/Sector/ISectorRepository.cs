@@ -6,7 +6,7 @@ namespace StockLens.Repositories.Sector
     {
         public Task BulkCreateSectorsAsync(List<SectorModel> sector);
 
-        public Task AddSectorAsync(SectorModel sector);
+        public Task<SectorModel> CreateSectorAsync(SectorModel sector);
 
         public Task<SectorModel?> GetSectorAsync(int sectorId);
     }

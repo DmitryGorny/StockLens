@@ -1,9 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using StockLens.data;
+using StockLens.Repositories.Cities;
 using StockLens.Repositories.Industries;
+using StockLens.Repositories.Quotes;
 using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
+using StockLens.Services.FileReaderFacade;
 using StockLens.Services.Industries;
+using StockLens.Services.Moex;
+using StockLens.Services.QuotesService;
 using StockLens.Services.Sector;
 using StockLens.Services.Tickers;
 
@@ -18,6 +23,15 @@ builder.Services.AddScoped<IIndustriesRepository, IndustriesRepository>();
 builder.Services.AddScoped<IIndustriesService, IndustriesService>();
 builder.Services.AddScoped<ITickersRepository, TickersRepository>();
 builder.Services.AddScoped<ITickersService, TickersService>();
+builder.Services.AddScoped<ICitiesRepositroy, CitiesRepository>();
+builder.Services.AddScoped<IDataBaseFillingFacade, DataBaseFillingFacade>();
+builder.Services.AddScoped<ICitiesRepositroy, CitiesRepository>();
+builder.Services.AddHttpClient<IMoexService, MoexService>(client =>
+{
+    client.BaseAddress = new Uri("https://iss.moex.com/");
+});
+builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
+builder.Services.AddScoped<IQuotesService, QuotesService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
