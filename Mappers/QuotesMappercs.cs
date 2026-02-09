@@ -1,4 +1,5 @@
 ﻿using StockLens.Dtos.QuotationsDtos;
+using StockLens.Dtos.QuotesDtos;
 using StockLens.Models;
 
 namespace StockLens.Mappers
@@ -19,6 +20,16 @@ namespace StockLens.Mappers
                 low = dto.low,
                 open = dto.open,
                 waprice = dto.waprice,
+            };
+        }
+
+        public static GeneralAnalyticsDto ToGeneralAnalyticFromQuotaion(this Quotes quotation)
+        {
+            return new GeneralAnalyticsDto
+            {
+                Symbol = quotation.Ticker.Symbol,
+                Date = quotation.ts.ToString("yyyy-MM-dd"),
+                close = quotation.close
             };
         }
     }

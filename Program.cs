@@ -6,6 +6,9 @@ using StockLens.Repositories.Quotes;
 using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.FileReaderFacade;
+using StockLens.Services.HttpRequester;
+using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
+using StockLens.Services.HttpRequester.MoexHttpRequester;
 using StockLens.Services.Industries;
 using StockLens.Services.Moex;
 using StockLens.Services.QuotesService;
@@ -26,12 +29,22 @@ builder.Services.AddScoped<ITickersService, TickersService>();
 builder.Services.AddScoped<ICitiesRepositroy, CitiesRepository>();
 builder.Services.AddScoped<IDataBaseFillingFacade, DataBaseFillingFacade>();
 builder.Services.AddScoped<ICitiesRepositroy, CitiesRepository>();
-builder.Services.AddHttpClient<IMoexService, MoexService>(client =>
+builder.Services.AddScoped<IHttpRequester, MoexHttpRequester>();
+builder.Services.AddScoped<IHttpRequester, AnalyticsHttpRequester>();
+builder.Services.AddScoped<IMoexService, MoexService>();
+builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
+builder.Services.AddScoped<IQuotesService, QuotesService>();
+
+builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {
     client.BaseAddress = new Uri("https://iss.moex.com/");
 });
-builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
-builder.Services.AddScoped<IQuotesService, QuotesService>();
+
+builder.Services.AddHttpClient<IHttpRequester, AnalyticsHttpRequester>(client =>
+{
+    client.BaseAddress = new Uri("https://iss.moex.com/"); //TODO: —юда адресс питоновского сервера
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

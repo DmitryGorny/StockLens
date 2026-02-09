@@ -37,5 +37,12 @@ namespace StockLens.Repositories.Sector
         {
             return await _db_context.Sectors.FindAsync(sectorId);
         }
+
+        public async Task<SectorModel?> GetSectorAsync(int sectorId, bool withFK)
+        {
+            return await _db_context.Sectors.Include(s => s.Industries)
+                                            .ThenInclude(i => i.Tickers)
+                                            .FirstOrDefaultAsync(s => s.Id == sectorId);
+        }
     }
 }

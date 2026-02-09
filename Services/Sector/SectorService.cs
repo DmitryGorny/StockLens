@@ -1,18 +1,26 @@
-﻿using StockLens.Dtos.SectorDtos;
+﻿using StockLens.Dtos.QuotesDtos;
+using StockLens.Dtos.SectorDtos;
 using StockLens.Mappers;
 using StockLens.Models;
 using StockLens.Queries;
 using StockLens.Repositories.Sector;
+using StockLens.Services.HttpRequester;
+using System.Text.Json;
 using System.Threading.Tasks;
+using SectorModel = StockLens.Models.Sectors;
+
 
 namespace StockLens.Services.Sector
 {
     public class SectorService : ISectorService
     {
         private readonly ISectorRepository _sectorRepository;
-        public SectorService(ISectorRepository sectorRepository) 
+        private readonly IHttpRequester _analyticsRequester;
+
+        public SectorService(ISectorRepository sectorRepository, IHttpRequester analyticsRequester) 
         {
             _sectorRepository = sectorRepository;
+            _analyticsRequester = analyticsRequester;
         }
 
         public async Task CreateSectorsBulkAsync(List<CreateSectorDto> dtos)
@@ -38,6 +46,26 @@ namespace StockLens.Services.Sector
             if (sector != null)
                 return sector.CreateDtoFromSectors();
             return null;
+        }
+
+        public async Task<string> GetSectorAnalyticsData(SectorQuery query)
+        {
+            List<GeneralAnalyticsDto> analyticsDtos = new List<GeneralAnalyticsDto>();
+            SectorModel? sector = await _sectorRepository.GetSectorAsync(query.SectorId, true);
+            if (sector == null)
+                throw new NullReferenceException($"Сектора с id {query.SectorId}");
+
+            foreach(var industry in sector.Industries)
+            {
+                foreach(var ticker in industry.Tickers)
+                {
+                    var quotes = ticker.Quotation.Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
+                    analyticsDtos.AddRange(quotes);
+                }
+            }
+
+            string result = await _analyticsRequester.PostJsonAsync("general-analytics", JsonSerializer.Serialize(analyticsDtos));
+            return result;
         }
     }
 }

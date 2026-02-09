@@ -1,6 +1,8 @@
 ﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
 using StockLens.Dtos.QuotationsDtos;
 using StockLens.Models;
+using StockLens.Services.HttpRequester;
+using StockLens.Services.HttpRequester.MoexHttpRequester;
 using System.Numerics;
 using System.Text.Json;
 
@@ -8,11 +10,11 @@ namespace StockLens.Services.Moex
 {
     public class MoexService : IMoexService
     {
-        private HttpClient _httpClient;
+        private readonly IHttpRequester _httpRequester;
 
-        public MoexService(HttpClient client)
+        public MoexService(IHttpRequester requester)
         {
-            _httpClient = client;
+            _httpRequester = requester;
         }
         public async Task<List<CreateQuotesDto>> RequestQuotes(string TickerSymbol, int TickerId)
         {
@@ -21,7 +23,7 @@ namespace StockLens.Services.Moex
             while (true) {
                 DateTime today = DateTime.Today;
                 DateTime fiveYearsAgo = today.AddYears(-5);
-                Root? root = await _httpClient.GetFromJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
+                Root? root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
                     $"{TickerSymbol}.json" +
                     $"?from={fiveYearsAgo.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +
                     $"&start={start}" +
