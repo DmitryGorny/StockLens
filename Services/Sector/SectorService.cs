@@ -57,14 +57,13 @@ namespace StockLens.Services.Sector
 
             foreach(var industry in sector.Industries)
             {
-                foreach(var ticker in industry.Tickers)
+                foreach (var ticker in industry.Tickers)
                 {
                     var quotes = ticker.Quotation.Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
                     analyticsDtos.AddRange(quotes);
                 }
             }
-
-            string result = await _analyticsRequester.PostJsonAsync("general-analytics", JsonSerializer.Serialize(analyticsDtos));
+            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("general-analytics/", analyticsDtos);
             return result;
         }
     }

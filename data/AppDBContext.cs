@@ -13,5 +13,7 @@ namespace StockLens.data
         public DbSet<Industries> Industries {  get; set; }
         public DbSet<Tickers> Tickers { get; set; }
         public DbSet<Cities> Cities { get; set; }
+
+        public DbSet<Quotes> Quotes { get; set; }
     }
 }

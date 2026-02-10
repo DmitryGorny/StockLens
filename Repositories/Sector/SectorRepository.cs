@@ -40,9 +40,23 @@ namespace StockLens.Repositories.Sector
 
         public async Task<SectorModel?> GetSectorAsync(int sectorId, bool withFK)
         {
-            return await _db_context.Sectors.Include(s => s.Industries)
+            var sector = await _db_context.Sectors.Include(s => s.Industries)
                                             .ThenInclude(i => i.Tickers)
                                             .FirstOrDefaultAsync(s => s.Id == sectorId);
+
+            foreach(var ind in sector.Industries)
+            {
+                foreach(var tick in ind.Tickers)
+                {
+                    tick.Quotation.AddRange(await _db_context.Quotes.Where(q => q.TickerId == tick.Id)
+                            .OrderByDescending(q => q.ts)
+                            .Take(180)
+                            .ToListAsync());
+                }
+            }
+
+            return sector;
+
         }
     }
 }

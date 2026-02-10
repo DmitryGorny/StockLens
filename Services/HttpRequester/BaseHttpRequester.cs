@@ -1,4 +1,7 @@
-﻿namespace StockLens.Services.HttpRequester
+﻿using System.Diagnostics;
+using System.Text.Json;
+
+namespace StockLens.Services.HttpRequester
 {
     public class BaseHttpRequester : IHttpRequester
     {
@@ -18,12 +21,24 @@
             return deserialized;
         }
 
-        public async Task<string> PostJsonAsync(string url, string jsonData)
+        public async Task<string> PostJsonAsync<T>(string url, List<T> jsonData)
         {
-            var response = await _httpClient.PostAsJsonAsync(url, jsonData);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            Console.WriteLine(
+    JsonSerializer.Serialize(jsonData, options)
+);
+            var response = await _httpClient.PostAsJsonAsync(url, jsonData, options);
 
             if (!response.IsSuccessStatusCode)
-                throw new Exception(response.StatusCode.ToString());
+            {
+                string errorBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(errorBody);
+                throw new Exception(errorBody);
+            }
+                
 
             return await response.Content.ReadAsStringAsync();
         }

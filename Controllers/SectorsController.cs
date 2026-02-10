@@ -21,8 +21,15 @@ namespace StockLens.Controllers
         [Route("/general-analytics")]
         public async Task<IActionResult> GetSectorAnalytics([FromQuery] SectorQuery query)
         {
-            string json = await _sectorService.GetSectorAnalyticsData(query);
-            return Ok(json);
+            try
+            {
+                string json = await _sectorService.GetSectorAnalyticsData(query);
+                return Ok(json);
+            }
+            catch (Exception ex) {
+                return BadRequest(ex.Message); 
+            }
+            
         }
     }
 }

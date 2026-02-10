@@ -42,7 +42,7 @@ builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 
 builder.Services.AddHttpClient<IHttpRequester, AnalyticsHttpRequester>(client =>
 {
-    client.BaseAddress = new Uri("https://iss.moex.com/"); //TODO: —юда адресс питоновского сервера
+    client.BaseAddress = new Uri("http://127.0.0.1:8000/"); //TODO: —юда адресс питоновского сервера
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
