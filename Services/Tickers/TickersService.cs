@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Formatters;
+using StockLens.Dtos.QuotesDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
 using StockLens.Queries;
 using StockLens.Repositories.Tickers;
+using StockLens.Services.HttpRequester;
 using System.Collections.Generic;
 using TickersModel = StockLens.Models.Tickers;
 
@@ -11,10 +13,12 @@ namespace StockLens.Services.Tickers
     public class TickersService : ITickersService
     {
         private readonly ITickersRepository _tickersRepository;
+        private readonly IHttpRequester _analyticsRequester;
 
-        public TickersService(ITickersRepository tickersRepository)
+        public TickersService(ITickersRepository tickersRepository, IHttpRequester httpRequester)
         {
             _tickersRepository = tickersRepository;
+            _analyticsRequester = httpRequester;
         }
 
         public async Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos)
@@ -34,7 +38,7 @@ namespace StockLens.Services.Tickers
         }
         public async Task<List<GetTickersDto>?> GetTickersAsync(TickersQuery query)
         {
-            IReadOnlyList<TickersModel> tickers;
+            IReadOnlyList<TickersModel>? tickers;
             if (query.InudustriesId.Count() > 0)
             {
                 tickers = await GetTickersByIndustryAsync(query.InudustriesId, query.pageNumber, query.pageSize);
@@ -67,7 +71,7 @@ namespace StockLens.Services.Tickers
         {
             int skip = (pageNumber - 1) * pageSize;
             return await _tickersRepository.GetTickers(ids, skip, pageSize);
-        } 
+        }
 
         private async Task<IReadOnlyList<TickersModel>?> GetAllTickersPaginatedAsync(int pageNumber, int pageSize)
         {

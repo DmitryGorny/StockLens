@@ -38,7 +38,7 @@ namespace StockLens.Repositories.Sector
             return await _db_context.Sectors.FindAsync(sectorId);
         }
 
-        public async Task<SectorModel?> GetSectorAsync(int sectorId, bool withFK)
+        public async Task<SectorModel?> GetSectorAsync(int sectorId, int quotesNumber)
         {
             var sector = await _db_context.Sectors.Include(s => s.Industries)
                                             .ThenInclude(i => i.Tickers)
@@ -50,11 +50,10 @@ namespace StockLens.Repositories.Sector
                 {
                     tick.Quotation.AddRange(await _db_context.Quotes.Where(q => q.TickerId == tick.Id)
                             .OrderByDescending(q => q.ts)
-                            .Take(180)
+                            .Take(quotesNumber)
                             .ToListAsync());
                 }
             }
-
             return sector;
 
         }

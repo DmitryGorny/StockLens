@@ -4,9 +4,8 @@ namespace StockLens.Queries
 {
     public class IndustriesQuery
     {
-        [Required]
         public int SectorId { get; set; } 
-
         public bool InsideTickers { get; set; } = false;
+        public int IndustryId { get; set; }
     }
 }

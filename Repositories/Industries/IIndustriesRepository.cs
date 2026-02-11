@@ -12,5 +12,7 @@ namespace StockLens.Repositories.Industries
         public Task<IndustiesModel?> GetIndustryAsync(int sectorId);
 
         public Task<IReadOnlyList<IndustiesModel>> GetIndustriesFilteredAsync(int industryId);
+
+        public Task<IndustiesModel>? GetIndustriesWithDependencies(int industryId, int quotesNumber);
     }
 }

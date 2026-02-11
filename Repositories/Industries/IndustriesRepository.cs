@@ -43,5 +43,17 @@ namespace StockLens.Repositories.Industries
         {
             return await _db_context.Industries.Take(industryId).ToListAsync();
         }
+
+        public async Task<IndustiesModel>? GetIndustriesWithDependencies(int industryId, int quotesNumber)
+        {
+            var industry = await _db_context.Industries.Include(i => i.Tickers)
+                                                        .ThenInclude(t => t.Quotation
+                                                                        .OrderByDescending(q => q.ts )
+                                                                        .Take(quotesNumber))
+                                                        .FirstOrDefaultAsync(i => i.Id == industryId);
+
+            return industry; 
+        }
+
     }
 }

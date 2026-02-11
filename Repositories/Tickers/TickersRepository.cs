@@ -54,5 +54,12 @@ namespace StockLens.Repositories.Tickers
         {
             return await _db_context.Tickers.FindAsync(tickerId);
         }
+
+        public async Task<TickersModel?> GetTickerWithDependencies(int tickerId, int quotesNumbers)
+        {
+            return await _db_context.Tickers.Include(t => t.Quotation
+                                                           .OrderByDescending(q => q.ts)
+                                                           .Take(quotesNumbers)).FirstOrDefaultAsync(t => t.Id == tickerId);
+        }
     }
 }

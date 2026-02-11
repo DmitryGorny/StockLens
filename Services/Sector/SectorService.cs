@@ -48,23 +48,6 @@ namespace StockLens.Services.Sector
             return null;
         }
 
-        public async Task<string> GetSectorAnalyticsData(SectorQuery query)
-        {
-            List<GeneralAnalyticsDto> analyticsDtos = new List<GeneralAnalyticsDto>();
-            SectorModel? sector = await _sectorRepository.GetSectorAsync(query.SectorId, true);
-            if (sector == null)
-                throw new NullReferenceException($"Сектора с id {query.SectorId}");
-
-            foreach(var industry in sector.Industries)
-            {
-                foreach (var ticker in industry.Tickers)
-                {
-                    var quotes = ticker.Quotation.Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
-                    analyticsDtos.AddRange(quotes);
-                }
-            }
-            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("general-analytics/", analyticsDtos);
-            return result;
-        }
+       
     }
 }

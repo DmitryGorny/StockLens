@@ -1,7 +1,9 @@
 ﻿using StockLens.Dtos.IndustriesDtos;
+using StockLens.Dtos.QuotesDtos;
 using StockLens.Mappers;
 using StockLens.Queries;
 using StockLens.Repositories.Industries;
+using StockLens.Services.HttpRequester;
 using IndustriesModel = StockLens.Models.Industries;
 
 namespace StockLens.Services.Industries
@@ -9,10 +11,12 @@ namespace StockLens.Services.Industries
     public class IndustriesService : IIndustriesService
     {
         private readonly IIndustriesRepository _industriesRepo;
+        private readonly IHttpRequester _analyticsRequester;
 
-        public IndustriesService(IIndustriesRepository industriesRepo)
+        public IndustriesService(IIndustriesRepository industriesRepo, IHttpRequester httpRequester)
         {
             _industriesRepo = industriesRepo;
+            _analyticsRequester = httpRequester;
         }
 
         public async Task<IReadOnlyList<GetIndustryDto>> BulkCreateIndustriesAsync(List<CreateIndustryDto> dtos)

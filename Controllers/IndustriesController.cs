@@ -15,11 +15,5 @@ namespace StockLens.Controllers
         {
             _industryService = industryService;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetIndustriesBySector([FromQuery] IndustriesQuery query)
-        {
-            return Ok();
-        }
     }
 }
