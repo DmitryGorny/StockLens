@@ -3,6 +3,7 @@ using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
+using StockLens.Services.Analytics.TopTen;
 using StockLens.Services.Tickers;
 
 namespace StockLens.Controllers
@@ -13,10 +14,14 @@ namespace StockLens.Controllers
     {
         private readonly IGeneralAnalyticsFacade _generalAnalyticsFacade;
         private readonly IHeatmapFacade _heatmapFacade;
-        public AnalyticsController(IGeneralAnalyticsFacade generalAnalyticsFacade, IHeatmapFacade heatmapFacade)
+        private readonly ITopTenFacade _topTenFacade;
+        public AnalyticsController(IGeneralAnalyticsFacade generalAnalyticsFacade, 
+                                   IHeatmapFacade heatmapFacade,
+                                   ITopTenFacade topTenFacade)
         {
             _generalAnalyticsFacade = generalAnalyticsFacade;
             _heatmapFacade = heatmapFacade;
+            _topTenFacade = topTenFacade;
         }
 
         [HttpGet]
@@ -77,5 +82,21 @@ namespace StockLens.Controllers
 
         }
 
+
+        [HttpGet]
+        [Route("/tickers-top-ten")]
+        public async Task<IActionResult> GetTickersTopTen()
+        {
+            try
+            {
+                string json = await _topTenFacade.GetTickersTopTen();
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

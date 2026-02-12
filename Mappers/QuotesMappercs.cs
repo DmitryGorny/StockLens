@@ -43,5 +43,17 @@ namespace StockLens.Mappers
                 Sector = quotation.Ticker.Industry.Sector.Name
             };
         }
+
+        public static TopTenDto ToTopTenFromQuotaion(this Quotes quotation)
+        {
+            return new TopTenDto
+            {
+                Symbol = quotation.Ticker.Symbol,
+                Date = quotation.ts.ToString("yyyy-MM-dd"),
+                close = quotation.close,
+                avg_dividend = quotation.Ticker.DividendsValue,
+                value = quotation.value.ToString()
+            };
+        }
     }
 }

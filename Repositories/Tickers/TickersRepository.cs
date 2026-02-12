@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using StockLens.data;
 using TickersModel = StockLens.Models.Tickers;
 
@@ -68,6 +69,13 @@ namespace StockLens.Repositories.Tickers
                                                     .Include(t => t.Industry)
                                                     .ThenInclude(i => i.Sector)
                                                     .ToListAsync();
+        }
+
+        public async Task<TickersModel?> GetTicker(string symbol)
+        {
+            return await _db_context.Tickers.Include(t => t.Industry)
+                                                    .ThenInclude(i => i.Sector).FirstOrDefaultAsync(t => t.Symbol == symbol);
+                                                    
         }
     }
 }

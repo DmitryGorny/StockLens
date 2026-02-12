@@ -28,8 +28,7 @@ namespace StockLens.Services.HttpRequester
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             Console.WriteLine(
-    JsonSerializer.Serialize(jsonData, options)
-);
+                JsonSerializer.Serialize(jsonData, options));
             var response = await _httpClient.PostAsJsonAsync(url, jsonData, options);
 
             if (!response.IsSuccessStatusCode)

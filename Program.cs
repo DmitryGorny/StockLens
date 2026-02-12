@@ -7,6 +7,7 @@ using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
+using StockLens.Services.Analytics.TopTen;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
 using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
@@ -38,7 +39,7 @@ builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
 builder.Services.AddScoped<IGeneralAnalyticsFacade, GeneralAnalyticsFacade>();
 builder.Services.AddScoped<IHeatmapFacade, HeatmapFacade>();
-
+builder.Services.AddScoped<ITopTenFacade, TopTenFacade>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {
@@ -47,7 +48,7 @@ builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 
 builder.Services.AddHttpClient<IHttpRequester, AnalyticsHttpRequester>(client =>
 {
-    client.BaseAddress = new Uri("http://127.0.0.1:8000/"); //TODO: —юда адресс питоновского сервера
+    client.BaseAddress = new Uri("http://127.0.0.1:8000/"); //TODO: —юда адрес питоновского сервера
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
