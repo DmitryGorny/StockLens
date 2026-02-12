@@ -11,5 +11,6 @@ namespace StockLens.Repositories.Tickers
         public Task<IReadOnlyList<TickersModel>> GetTickers(int start, int end);
         public Task<TickersModel>? GetTicker(int tickerId);
         public Task<TickersModel?> GetTickerWithDependencies(int tickerId, int quotesNumbers);
+        public Task<List<TickersModel>> GetTickersByListLevel(int listLevel);
     }
 }

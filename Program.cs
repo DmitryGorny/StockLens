@@ -6,6 +6,7 @@ using StockLens.Repositories.Quotes;
 using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
+using StockLens.Services.Analytics.Heatmap;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
 using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
@@ -36,6 +37,8 @@ builder.Services.AddScoped<IMoexService, MoexService>();
 builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
 builder.Services.AddScoped<IGeneralAnalyticsFacade, GeneralAnalyticsFacade>();
+builder.Services.AddScoped<IHeatmapFacade, HeatmapFacade>();
+
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {

@@ -32,5 +32,16 @@ namespace StockLens.Mappers
                 close = quotation.close
             };
         }
+
+        public static HeatmapDto ToHeatmapFromQuotaion(this Quotes quotation)
+        {
+            return new HeatmapDto
+            {
+                Symbol = quotation.Ticker.Symbol,
+                Date = quotation.ts.ToString("yyyy-MM-dd"),
+                close = quotation.close,
+                Sector = quotation.Ticker.Industry.Sector.Name
+            };
+        }
     }
 }

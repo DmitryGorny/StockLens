@@ -45,7 +45,7 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
                     analyticsDtos.AddRange(quotes);
                 }
             }
-            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("general-analytics/", analyticsDtos);
+            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("/general-analytics", analyticsDtos);
             return result;
         }
 
@@ -60,7 +60,7 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
                                                     .SelectMany(t => t.Quotation)
                                                     .Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
 
-            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("general-analytics/", dtos);
+            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("/general-analytics", dtos);
             return result;
         }
         public async Task<string> GetTickersGeneralAnalytics(TickersQuery query)
@@ -70,7 +70,7 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
                 throw new Exception($"Тикера с id {query.TickerId} не существует");
             List<GeneralAnalyticsDto> dtos = ticker.Quotation.Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
 
-            string json = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("general-analytics/", dtos);
+            string json = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("/general-analytics", dtos);
             return json;
         }
     }

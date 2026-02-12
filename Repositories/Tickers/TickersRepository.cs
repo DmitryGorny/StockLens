@@ -61,5 +61,13 @@ namespace StockLens.Repositories.Tickers
                                                            .OrderByDescending(q => q.ts)
                                                            .Take(quotesNumbers)).FirstOrDefaultAsync(t => t.Id == tickerId);
         }
+
+        public async Task<List<TickersModel>> GetTickersByListLevel(int listLevel)
+        {
+            return await _db_context.Tickers.Where(t => t.ListLevel == listLevel)
+                                                    .Include(t => t.Industry)
+                                                    .ThenInclude(i => i.Sector)
+                                                    .ToListAsync();
+        }
     }
 }

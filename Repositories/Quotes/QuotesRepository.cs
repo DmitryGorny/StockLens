@@ -1,4 +1,5 @@
 ﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using StockLens.data;
 using QuotesModel = StockLens.Models.Quotes;
 
@@ -29,6 +30,17 @@ namespace StockLens.Repositories.Quotes
                     PropertiesToExclude = new List<string> { "Id" }
                 });
             }
+        }
+
+        public async Task<List<QuotesModel>> GetQuotesByTickerId(int tickerId, int limit)
+        {
+            return  await _db_context.Quotes.Where(q => q.TickerId == tickerId)
+                                            .Include(q => q.Ticker)
+                                            .ThenInclude(t => t.Industry)
+                                            .ThenInclude(i => i.Sector)
+                                            .OrderByDescending(q => q.ts)
+                                            .Take(limit)
+                                            .ToListAsync();
         }
     }
 }

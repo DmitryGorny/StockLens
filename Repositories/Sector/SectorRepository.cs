@@ -48,10 +48,10 @@ namespace StockLens.Repositories.Sector
             {
                 foreach(var tick in ind.Tickers)
                 {
-                    tick.Quotation.AddRange(await _db_context.Quotes.Where(q => q.TickerId == tick.Id)
+                    tick.Quotation = await _db_context.Quotes.Where(q => q.TickerId == tick.Id)
                             .OrderByDescending(q => q.ts)
                             .Take(quotesNumber)
-                            .ToListAsync());
+                            .ToListAsync();
                 }
             }
             return sector;
