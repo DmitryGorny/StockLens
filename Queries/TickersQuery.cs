@@ -3,6 +3,7 @@
     public class TickersQuery
     {
         public int TickerId { get; set; }
+        public Dictionary<int, decimal> tickersAndPercantages { get; set; } = new();
         public int pageNumber { get; set; } = 1;
         public int pageSize { get; set; } = 50;
         public IReadOnlyCollection<int>? InudustriesId { get; set; } = null;

@@ -55,5 +55,17 @@ namespace StockLens.Mappers
                 value = quotation.value.ToString()
             };
         }
+
+        public static CustomTopTenDto ToCustomTopTenFromQuotaion(this Quotes quotation, decimal percentage)
+        {
+            return new CustomTopTenDto
+            {
+                Symbol = quotation.Ticker.Symbol,
+                Sector = quotation.Ticker.Industry.Sector.Name,
+                Date = quotation.ts.ToString("yyyy-MM-dd"),
+                close = quotation.close,
+                Percanatge = percentage,
+            };
+        }
     }
 }

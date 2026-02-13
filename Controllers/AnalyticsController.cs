@@ -25,7 +25,7 @@ namespace StockLens.Controllers
         }
 
         [HttpGet]
-        [Route("/tickers-general-analytics")]
+        [Route("tickers-general-analytics")]
         public async Task<IActionResult> GetTickersAnalytics([FromQuery] TickersQuery query)
         {
             try
@@ -37,7 +37,7 @@ namespace StockLens.Controllers
         }
 
         [HttpGet]
-        [Route("/industries-general-analytics")]
+        [Route("industries-general-analytics")]
         public async Task<IActionResult> GetIndustryAnalytics([FromQuery] IndustriesQuery query)
         {
             try
@@ -51,7 +51,7 @@ namespace StockLens.Controllers
         }
 
         [HttpGet]
-        [Route("/sectors-general-analytics")]
+        [Route("sectors-general-analytics")]
         public async Task<IActionResult> GetSectorAnalytics([FromQuery] SectorQuery query)
         {
             try
@@ -67,7 +67,7 @@ namespace StockLens.Controllers
         }
 
         [HttpGet]
-        [Route("/tickers-heatmap")]
+        [Route("tickers-heatmap")]
         public async Task<IActionResult> GetTickersHeatmap()
         {
             try
@@ -84,12 +84,28 @@ namespace StockLens.Controllers
 
 
         [HttpGet]
-        [Route("/tickers-top-ten")]
+        [Route("tickers-top-ten")]
         public async Task<IActionResult> GetTickersTopTen()
         {
             try
             {
                 string json = await _topTenFacade.GetTickersTopTen();
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet]
+        [Route("tickers-top-ten-custom")]
+        public async Task<IActionResult> GetCustomTickersTopTen([FromQuery] TickersQuery query)
+        {
+            try
+            {
+                string json = await _topTenFacade.GetCustomTickersTopTen(query);
                 return Ok(json);
             }
             catch (Exception ex)

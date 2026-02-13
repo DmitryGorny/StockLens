@@ -34,7 +34,6 @@ namespace StockLens.Services.HttpRequester
             if (!response.IsSuccessStatusCode)
             {
                 string errorBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(errorBody);
                 throw new Exception(errorBody);
             }
                 
