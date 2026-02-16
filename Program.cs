@@ -1,5 +1,12 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using StockLens.data;
+using StockLens.Models;
 using StockLens.Repositories.Cities;
 using StockLens.Repositories.Industries;
 using StockLens.Repositories.Quotes;
@@ -8,6 +15,8 @@ using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
 using StockLens.Services.Analytics.TopTen;
+using StockLens.Services.Auth.AuthService;
+using StockLens.Services.Auth.Token;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
 using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
@@ -17,6 +26,7 @@ using StockLens.Services.Moex;
 using StockLens.Services.QuotesService;
 using StockLens.Services.Sector;
 using StockLens.Services.Tickers;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,12 +64,76 @@ builder.Services.AddHttpClient<IHttpRequester, AnalyticsHttpRequester>(client =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
 );
 
+builder.Services.AddIdentity<User, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true; 
+    options.Password.RequireLowercase = true; 
+    options.Password.RequireUppercase = true; 
+    options.Password.RequireNonAlphanumeric = true; 
+    options.Password.RequiredLength = 12;
+}).AddEntityFrameworkStores<AppDBContext>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
+        )
+    };
+
+ 
+});
+
+builder.Services.AddScoped<ITokenCreator, TokenCreator>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(option =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    option.IncludeXmlComments(xmlPath);
+
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "StockLense API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
 
 
 var app = builder.Build();
@@ -73,6 +147,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

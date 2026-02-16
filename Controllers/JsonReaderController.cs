@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using StockLens.Repositories.Cities;
@@ -18,7 +19,7 @@ namespace StockLens.Controllers
         private readonly ISectorService _SectorsService;
         private readonly ICitiesRepositroy _citiesRepo;
         private readonly IDataBaseFillingFacade _fileReaderFacade;
-
+        
         public JsonReaderController(ITickersService tickersService, IIndustriesService industriesService, ISectorService sectorsService, ICitiesRepositroy citiesRepo, IDataBaseFillingFacade fileReaderFacade)
         {
             _TickersService = tickersService;

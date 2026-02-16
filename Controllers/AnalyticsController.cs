@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
@@ -8,8 +9,13 @@ using StockLens.Services.Tickers;
 
 namespace StockLens.Controllers
 {
+
+    /// <summary>
+    /// Аналитические эндпоинты по акциям, секторам и индустриям
+    /// </summary>
     [Route("api/analytics")]
     [ApiController]
+    [Authorize]
     public class AnalyticsController: ControllerBase
     {
         private readonly IGeneralAnalyticsFacade _generalAnalyticsFacade;
@@ -99,6 +105,14 @@ namespace StockLens.Controllers
 
         }
 
+
+        /// <summary>
+        /// Возвращает топ-10 акций по устойчивости к кризисам
+        /// </summary>
+        /// <param name="query">Параметры фильтрации тикеров</param>
+        /// <returns>Список тикеров с метриками</returns>
+        /// <response code="200">Успешный ответ</response>
+        /// <response code="400">Ошибка валидации</response>
         [HttpGet]
         [Route("tickers-top-ten-custom")]
         public async Task<IActionResult> GetCustomTickersTopTen([FromQuery] TickersQuery query)

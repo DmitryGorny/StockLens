@@ -3,6 +3,7 @@ using System;
 using System.Numerics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StockLens.data;
@@ -12,9 +13,11 @@ using StockLens.data;
 namespace StockLens.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260216161532_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,11 +103,6 @@ namespace StockLens.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -155,10 +153,6 @@ namespace StockLens.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -397,13 +391,6 @@ namespace StockLens.Migrations
                     b.HasIndex("IndustryId");
 
                     b.ToTable("Tickers");
-                });
-
-            modelBuilder.Entity("StockLens.Models.User", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.HasDiscriminator().HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

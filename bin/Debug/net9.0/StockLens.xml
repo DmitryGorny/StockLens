@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StockLens</name>
+    </assembly>
+    <members>
+        <member name="T:StockLens.Controllers.AnalyticsController">
+            <summary>
+            Аналитические эндпоинты по акциям, секторам и индустриям
+            </summary>
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetCustomTickersTopTen(StockLens.Queries.TickersQuery)">
+            <summary>
+            Возвращает топ-10 акций по устойчивости к кризисам
+            </summary>
+            <param name="query">Параметры фильтрации тикеров</param>
+            <returns>Список тикеров с метриками</returns>
+            <response code="200">Успешный ответ</response>
+            <response code="400">Ошибка валидации</response>
+        </member>
+        <member name="T:StockLens.Migrations.Initialreate">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Initialreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Initialreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Initialreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.NullExceptionFix">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.NullExceptionFix.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.NullExceptionFix.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.NullExceptionFix.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.TickersColumnsNameChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.TickersColumnsNameChanged.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.TickersColumnsNameChanged.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.TickersColumnsNameChanged.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.TickersColumnsNameChanged2">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.TickersColumnsNameChanged2.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.TickersColumnsNameChanged2.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.TickersColumnsNameChanged2.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.Identity">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Identity.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Identity.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Identity.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.Auth">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Auth.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Auth.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Auth.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.User">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.User.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.User.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.User.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
