@@ -1,11 +1,12 @@
 ﻿using StockLens.Dtos.AuthDtos;
+using StockLens.Models;
 
 namespace StockLens.Services.Auth.AuthService
 {
     public interface IAuthService
     {
-        public Task<NewUserDto> Register(RegisterDto dto);
-
+        public Task<string> Register(RegisterDto dto);
         public Task<NewUserDto> Login(LoginDto dto);
+        public Task<string> ConfirmEmail(string recieverEmail, string token);
     }
 }

@@ -25,8 +25,7 @@ namespace StockLens.Controllers
 
             try
             {
-                var user = await _authService.Register(dto);
-                return Ok(user);
+                return Ok(await _authService.Register(dto));
             }
             catch (Exception ex) 
             { 
@@ -46,6 +45,22 @@ namespace StockLens.Controllers
             {
                 var user = await _authService.Login(dto);
                 return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet]
+        [Route("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string email)
+        {
+            try
+            {
+                var ok = await _authService.ConfirmEmail(email, token);
+                return Ok(ok);
             }
             catch (Exception ex)
             {

@@ -16,6 +16,7 @@ using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
 using StockLens.Services.Analytics.TopTen;
 using StockLens.Services.Auth.AuthService;
+using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
@@ -50,6 +51,7 @@ builder.Services.AddScoped<IQuotesService, QuotesService>();
 builder.Services.AddScoped<IGeneralAnalyticsFacade, GeneralAnalyticsFacade>();
 builder.Services.AddScoped<IHeatmapFacade, HeatmapFacade>();
 builder.Services.AddScoped<ITopTenFacade, TopTenFacade>();
+builder.Services.AddScoped<IEmailMessagesSender, EmailMessagesSender>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {
@@ -76,7 +78,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireUppercase = true; 
     options.Password.RequireNonAlphanumeric = true; 
     options.Password.RequiredLength = 12;
-}).AddEntityFrameworkStores<AppDBContext>();
+}).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -95,9 +97,7 @@ builder.Services.AddAuthentication(options =>
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         )
     };
-
- 
-});
+}) ;
 
 builder.Services.AddScoped<ITokenCreator, TokenCreator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
