@@ -56,15 +56,14 @@ namespace StockLens.Mappers
             };
         }
 
-        public static CustomTopTenDto ToCustomTopTenFromQuotaion(this Quotes quotation, decimal percentage)
+        public static PortfolioDto ToPortfolioFromQuotaion(this Quotes quotation, decimal percentage)
         {
-            return new CustomTopTenDto
+            return new PortfolioDto
             {
                 Symbol = quotation.Ticker.Symbol,
-                Sector = quotation.Ticker.Industry.Sector.Name,
                 Date = quotation.ts.ToString("yyyy-MM-dd"),
                 close = quotation.close,
-                Percanatge = percentage,
+                Percentage = percentage,
             };
         }
     }

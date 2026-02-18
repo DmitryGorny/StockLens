@@ -4,6 +4,7 @@ using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
+using StockLens.Services.Analytics.Portfolio;
 using StockLens.Services.Analytics.TopTen;
 using StockLens.Services.Tickers;
 
@@ -15,19 +16,21 @@ namespace StockLens.Controllers
     /// </summary>
     [Route("api/analytics")]
     [ApiController]
-    [Authorize]
     public class AnalyticsController: ControllerBase
     {
         private readonly IGeneralAnalyticsFacade _generalAnalyticsFacade;
         private readonly IHeatmapFacade _heatmapFacade;
         private readonly ITopTenFacade _topTenFacade;
+        private readonly IPortfolioService _portfolioService;
         public AnalyticsController(IGeneralAnalyticsFacade generalAnalyticsFacade, 
                                    IHeatmapFacade heatmapFacade,
-                                   ITopTenFacade topTenFacade)
+                                   ITopTenFacade topTenFacade,
+                                   IPortfolioService portfolioService)
         {
             _generalAnalyticsFacade = generalAnalyticsFacade;
             _heatmapFacade = heatmapFacade;
             _topTenFacade = topTenFacade;
+            _portfolioService = portfolioService;
         }
 
         [HttpGet]
@@ -105,21 +108,13 @@ namespace StockLens.Controllers
 
         }
 
-
-        /// <summary>
-        /// Возвращает топ-10 акций по устойчивости к кризисам
-        /// </summary>
-        /// <param name="query">Параметры фильтрации тикеров</param>
-        /// <returns>Список тикеров с метриками</returns>
-        /// <response code="200">Успешный ответ</response>
-        /// <response code="400">Ошибка валидации</response>
         [HttpGet]
-        [Route("tickers-top-ten-custom")]
+        [Route("portfolio-metrics")]
         public async Task<IActionResult> GetCustomTickersTopTen([FromQuery] TickersQuery query)
         {
             try
             {
-                string json = await _topTenFacade.GetCustomTickersTopTen(query);
+                string json = await _portfolioService.GetPorfolioMetrics(query);
                 return Ok(json);
             }
             catch (Exception ex)

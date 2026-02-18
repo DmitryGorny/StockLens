@@ -12,6 +12,7 @@ namespace StockLens.Controllers
 {
     [Route("api/read_json")]
     [ApiController]
+    [Authorize]
     public class JsonReaderController : ControllerBase
     {
         private readonly ITickersService _TickersService;

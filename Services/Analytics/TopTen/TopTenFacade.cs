@@ -49,24 +49,5 @@ namespace StockLens.Services.Analytics.TopTen
             string json = await _analyticsRequester.PostJsonAsync("/anti-crisis-top10", dtos);
             return json;
         }
-
-        public async Task<string> GetCustomTickersTopTen(TickersQuery query)
-        {
-            if (query.tickersAndPercantages.Count() == 0)
-                throw new Exception("Неоюходимо выбрать компании для анализа");
-
-            List<CustomTopTenDto> dtos = new List<CustomTopTenDto>();
-            foreach (var (key, value) in query.tickersAndPercantages)
-            {
-                var quotes = await _quotesRepository.GetQuotesByTickerId(key, 360);
-                if (quotes == null || quotes.Count() == 0)
-                    throw new Exception($"У тикера {key} не найдено котировок");
-
-                dtos.AddRange(quotes.Select(q => q.ToCustomTopTenFromQuotaion(value)).ToList());
-            }
-
-            string json = await _analyticsRequester.PostJsonAsync("/anti-crisis-top10", dtos);
-            return json;
-        }
     }
 }

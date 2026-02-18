@@ -14,6 +14,7 @@ using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
+using StockLens.Services.Analytics.Portfolio;
 using StockLens.Services.Analytics.TopTen;
 using StockLens.Services.Auth.AuthService;
 using StockLens.Services.Auth.EmailSender;
@@ -52,6 +53,7 @@ builder.Services.AddScoped<IGeneralAnalyticsFacade, GeneralAnalyticsFacade>();
 builder.Services.AddScoped<IHeatmapFacade, HeatmapFacade>();
 builder.Services.AddScoped<ITopTenFacade, TopTenFacade>();
 builder.Services.AddScoped<IEmailMessagesSender, EmailMessagesSender>();
+builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {

@@ -9,15 +9,6 @@
             Аналитические эндпоинты по акциям, секторам и индустриям
             </summary>
         </member>
-        <member name="M:StockLens.Controllers.AnalyticsController.GetCustomTickersTopTen(StockLens.Queries.TickersQuery)">
-            <summary>
-            Возвращает топ-10 акций по устойчивости к кризисам
-            </summary>
-            <param name="query">Параметры фильтрации тикеров</param>
-            <returns>Список тикеров с метриками</returns>
-            <response code="200">Успешный ответ</response>
-            <response code="400">Ошибка валидации</response>
-        </member>
         <member name="T:StockLens.Migrations.Initialreate">
             <inheritdoc />
         </member>
