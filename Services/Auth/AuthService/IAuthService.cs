@@ -8,5 +8,6 @@ namespace StockLens.Services.Auth.AuthService
         public Task<string> Register(RegisterDto dto);
         public Task<NewUserDto> Login(LoginDto dto);
         public Task<string> ConfirmEmail(string recieverEmail, string token);
+        public Task<NewUserDto?> RefreshToken(string token, string userName);
     }
 }

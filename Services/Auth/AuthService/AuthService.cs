@@ -78,8 +78,9 @@ namespace StockLens.Services.Auth.AuthService
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user),
-                EmailConfirmed = user.EmailConfirmed
+                Token = _tokenService.CreateJWTToken(user, (List<string>)await _userManager.GetRolesAsync(user)),
+                EmailConfirmed = user.EmailConfirmed,
+                RefreshToken = await _tokenService.GenerateRefreshToken(user),
             };
         }
 
@@ -98,6 +99,33 @@ namespace StockLens.Services.Auth.AuthService
 
             return "Почта подтверждена, авторизируйтесь";
         } 
+
+        public async Task<NewUserDto?> RefreshToken(string token, string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+                throw new Exception("Пользователь не найден");
+
+            var result = await _tokenService.CheckRefreshRoken(token, user);
+
+            if (result)
+            {
+                await _tokenService.SetRevokedRefreshToken(token);
+                return new NewUserDto
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Token = _tokenService.CreateJWTToken(user, (List<string>)await _userManager.GetRolesAsync(user)),
+                    EmailConfirmed = user.EmailConfirmed,
+                    RefreshToken = await _tokenService.GenerateRefreshToken(user),
+                };
+            } else
+            {
+                await _signinManager.SignOutAsync();
+                await _tokenService.DeleteUsersTokens(user);
+                return null;
+            }
+        }
 
         private async Task SendEmailConfirmationAsync(User user)
         {

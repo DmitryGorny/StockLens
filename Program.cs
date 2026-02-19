@@ -10,6 +10,7 @@ using StockLens.Models;
 using StockLens.Repositories.Cities;
 using StockLens.Repositories.Industries;
 using StockLens.Repositories.Quotes;
+using StockLens.Repositories.RefreshTokens;
 using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
@@ -54,6 +55,7 @@ builder.Services.AddScoped<IHeatmapFacade, HeatmapFacade>();
 builder.Services.AddScoped<ITopTenFacade, TopTenFacade>();
 builder.Services.AddScoped<IEmailMessagesSender, EmailMessagesSender>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
+builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {
@@ -97,7 +99,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
-        )
+        ),
     };
 }) ;
 

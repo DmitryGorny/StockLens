@@ -17,6 +17,7 @@ namespace StockLens.data
         public DbSet<Cities> Cities { get; set; }
         public DbSet<Quotes> Quotes { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<RefreshTokens> RefreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

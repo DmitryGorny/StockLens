@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.AuthDtos;
 using StockLens.Services.Auth.AuthService;
+using System.Security.Claims;
 
 namespace StockLens.Controllers
 {
@@ -44,6 +46,30 @@ namespace StockLens.Controllers
             try
             {
                 var user = await _authService.Login(dto);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+        [HttpPost]
+        [Route("refresh")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> Refresh([FromQuery] string oldRefreshToken)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.GivenName)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim)) 
+                return Unauthorized();
+
+            try
+            {
+                var user = await _authService.RefreshToken(oldRefreshToken, userIdClaim);
+                if (user == null)
+                    return BadRequest();
                 return Ok(user);
             }
             catch (Exception ex)
