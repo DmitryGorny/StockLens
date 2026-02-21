@@ -20,6 +20,7 @@ using StockLens.Services.Analytics.TopTen;
 using StockLens.Services.Auth.AuthService;
 using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
+using StockLens.Services.Cache;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
 using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
@@ -56,6 +57,8 @@ builder.Services.AddScoped<ITopTenFacade, TopTenFacade>();
 builder.Services.AddScoped<IEmailMessagesSender, EmailMessagesSender>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
+builder.Services.AddScoped<ICacheService, CacheService>();
+builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {
@@ -101,7 +104,12 @@ builder.Services.AddAuthentication(options =>
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         ),
     };
-}) ;
+});
+
+builder.Services.AddStackExchangeRedisCache(options => {
+    options.Configuration = builder.Configuration["ConnectionStrings:Redis"];
+    options.InstanceName = "local";
+});
 
 builder.Services.AddScoped<ITokenCreator, TokenCreator>();
 builder.Services.AddScoped<IAuthService, AuthService>();

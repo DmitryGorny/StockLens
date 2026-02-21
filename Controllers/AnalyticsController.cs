@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StockLens.Mappers;
 using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
@@ -16,7 +17,6 @@ namespace StockLens.Controllers
     /// </summary>
     [Route("api/analytics")]
     [ApiController]
-    [Authorize(Roles = "User")]
     public class AnalyticsController: ControllerBase
     {
         private readonly IGeneralAnalyticsFacade _generalAnalyticsFacade;
@@ -36,11 +36,11 @@ namespace StockLens.Controllers
 
         [HttpGet]
         [Route("tickers-general-analytics")]
-        public async Task<IActionResult> GetTickersAnalytics([FromQuery] TickersQuery query)
+        public async Task<IActionResult> GetTickersAnalytics([FromQuery] int SectorId)
         {
             try
             {
-                string json = await _generalAnalyticsFacade.GetTickersGeneralAnalytics(query);
+                string json = await _generalAnalyticsFacade.GetTickersGeneralAnalytics(SectorId);
                 return Ok(json);
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
@@ -48,11 +48,11 @@ namespace StockLens.Controllers
 
         [HttpGet]
         [Route("industries-general-analytics")]
-        public async Task<IActionResult> GetIndustryAnalytics([FromQuery] IndustriesQuery query)
+        public async Task<IActionResult> GetIndustryAnalytics([FromQuery] int IndustryId)
         {
             try
             {
-                string json = await _generalAnalyticsFacade.GetIndustriesGeneralAnalytics(query);
+                string json = await _generalAnalyticsFacade.GetIndustriesGeneralAnalytics(IndustryId);
                 return Ok(json);
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
@@ -62,11 +62,11 @@ namespace StockLens.Controllers
 
         [HttpGet]
         [Route("sectors-general-analytics")]
-        public async Task<IActionResult> GetSectorAnalytics([FromQuery] SectorQuery query)
+        public async Task<IActionResult> GetSectorAnalytics([FromQuery] int TickerId)
         {
             try
             {
-                string json = await _generalAnalyticsFacade.GetSectorsGeneralAnalytics(query);
+                string json = await _generalAnalyticsFacade.GetSectorsGeneralAnalytics(TickerId);
                 return Ok(json);
             }
             catch (Exception ex)
