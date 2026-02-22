@@ -59,6 +59,9 @@ builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
+builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();
+builder.Services.Decorate<ITopTenFacade, CachedTopTen>();
+builder.Services.Decorate<IPortfolioService, CachedPortfolio>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {

@@ -22,13 +22,13 @@ namespace StockLens.Services.Analytics.Portfolio
             _analyticsRequester = analyticsRequester;
         }
 
-        public async Task<string> GetPorfolioMetrics(TickersQuery query)
+        public async Task<string> GetPorfolioMetrics(Dictionary<int, decimal> tickersAndPercantages)
         {
-            if (query.tickersAndPercantages.Count() == 0)
+            if (tickersAndPercantages.Count() == 0)
                 throw new Exception("Неоюходимо выбрать компании для анализа");
 
             List<PortfolioDto> dtos = new List<PortfolioDto>();
-            foreach (var (key, value) in query.tickersAndPercantages)
+            foreach (var (key, value) in tickersAndPercantages)
             {
                 var quotes = await _quotesRepository.GetQuotesByTickerId(key, 360);
                 if (quotes == null || quotes.Count() == 0)

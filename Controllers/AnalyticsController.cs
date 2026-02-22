@@ -111,11 +111,11 @@ namespace StockLens.Controllers
 
         [HttpGet]
         [Route("portfolio-metrics")]
-        public async Task<IActionResult> GetCustomTickersTopTen([FromQuery] TickersQuery query)
+        public async Task<IActionResult> GetPortfolioMetrics([FromQuery] Dictionary<int, decimal> tickersAndPercantages)
         {
             try
             {
-                string json = await _portfolioService.GetPorfolioMetrics(query);
+                string json = await _portfolioService.GetPorfolioMetrics(tickersAndPercantages);
                 return Ok(json);
             }
             catch (Exception ex)
