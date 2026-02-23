@@ -16,7 +16,7 @@ namespace StockLens.Services.Analytics.Portfolio
 
         public async Task<string> GetPorfolioMetrics(Dictionary<int, decimal> tickersAndPercantages)
         {
-            string pms = string.Join(" ", tickersAndPercantages.Select(kv => $"{kv.Key}: {kv.Value}"));
+            string pms = string.Join(",", tickersAndPercantages.Select(kv => $"{kv.Key}: {kv.Value}"));
             var result = await _cacheService.GetUnserializedCache("Portfolio",
                                                             "PortfolioMetrics",
                                                             pms);
@@ -26,6 +26,18 @@ namespace StockLens.Services.Analytics.Portfolio
 
             result = await _portfolioService.GetPorfolioMetrics(tickersAndPercantages);
             await _cacheService.SetCacheWithoutSerializing(result, "Portfolio", "PortfolioMetrics", pms);
+            return result;
+        }
+
+        public async Task<string> GetOptimizedPortfolio(List<int> tickersIds)
+        {
+            string ids = string.Join(",", tickersIds);
+            string? result = await _cacheService.GetUnserializedCache("Portfolio", "OptimizedPortfolio", ids);
+            if (result != null) 
+                return result;
+
+            result = await _portfolioService.GetOptimizedPortfolio(tickersIds);
+            await _cacheService.SetCacheWithoutSerializing(result, "Portfolio", "OptimizedPortfolio", ids);
             return result;
         }
     }

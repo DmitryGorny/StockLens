@@ -1,4 +1,5 @@
-﻿using StockLens.Services.Cache;
+﻿using Org.BouncyCastle.Pqc.Crypto.Lms;
+using StockLens.Services.Cache;
 
 namespace StockLens.Services.Analytics.Heatmap
 {
@@ -18,7 +19,10 @@ namespace StockLens.Services.Analytics.Heatmap
             string? result = await _cacheService.GetUnserializedCache("Heatmap", "TickersHeatmap");
             if (result != null)
                 return result;
-            return await _heatmapFacade.GetTickersHeatmap();
+
+            result = await _heatmapFacade.GetTickersHeatmap();
+            await _cacheService.SetCacheWithoutSerializing(result, "Heatmap", "TickersHeatmap");
+            return result;
         }
     }
 }

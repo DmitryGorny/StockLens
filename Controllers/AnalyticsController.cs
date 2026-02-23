@@ -122,6 +122,21 @@ namespace StockLens.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("optimized-portfolio")]
+        public async Task<IActionResult> GetPortfolioOptimized([FromQuery] List<int> tickersId)
+        {
+            try
+            {
+                string json = await _portfolioService.GetOptimizedPortfolio(tickersId);
+                return Ok(json);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
     }

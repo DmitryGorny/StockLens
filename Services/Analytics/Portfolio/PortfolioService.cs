@@ -37,7 +37,26 @@ namespace StockLens.Services.Analytics.Portfolio
                 dtos.AddRange(quotes.Select(q => q.ToPortfolioFromQuotaion(value)).ToList());
             }
 
-            string json = await _analyticsRequester.PostJsonAsync("/portfolio-metrics", dtos);
+            string json = await _analyticsRequester.PostJsonAsync("/portfolio/own-weights", dtos);
+            return json;
+        }
+
+        public async Task<string> GetOptimizedPortfolio(List<int> tickersIds)
+        {
+            if (tickersIds.Count() == 0)
+                throw new Exception("Неоюходимо выбрать компании для оптимизации");
+
+            List<OptimizePortfolioDto> dtos = new List<OptimizePortfolioDto>();
+            foreach (var id in tickersIds)
+            {
+                var quotes = await _quotesRepository.GetQuotesByTickerId(id, 360);
+                if (quotes == null || quotes.Count() == 0)
+                    throw new Exception($"У тикера {id} не найдено котировок");
+
+                dtos.AddRange(quotes.Select(q => q.ToOptimizePortfolioFromQuotaion()).ToList());
+            }
+
+            string json = await _analyticsRequester.PostJsonAsync("/portfolio/optimize", dtos);
             return json;
         }
     }
