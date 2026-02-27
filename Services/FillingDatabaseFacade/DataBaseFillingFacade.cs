@@ -61,8 +61,8 @@ namespace StockLens.Services.FileReaderFacade
                             var tickers_dto = await CreateTickers(ind.Tickers, indsMap[ind.Name].Id);
                             foreach(var ticker in tickers_dto)
                             {
-                                var quotes_dtos = await _moexService.RequestQuotes(ticker.Symbol, ticker.Id);
-                                await _quotesService.CreateQuotesBulk(quotes_dtos);
+                               var quotes_dtos = await _moexService.RequestQuotes(ticker.Symbol, ticker.Id);
+                               await _quotesService.CreateQuotesBulk(quotes_dtos);
                             }
                         }
                     }
@@ -110,13 +110,16 @@ namespace StockLens.Services.FileReaderFacade
             foreach (var t in tics) 
             {
                 var city_dto = await CreateCity(t.City);
+                int? listLevel = await _moexService.RequesTickersListLevel(t.Symbol);
+                if (listLevel == null)
+                    listLevel = 0;
                 var ticker_dto = new CreateTickersDto
                 {
                     IndustryId = industryId,
                     CityId = city_dto.Id,
                     Name = t.Name,
                     Symbol = t.Symbol,
-                    ListLevel = t.ListLevel,
+                    ListLevel = listLevel!.Value,
                     LongName = t.LongName,
                     Description = t.Description,
                     DividendsPercents = t.DividendsPercents,

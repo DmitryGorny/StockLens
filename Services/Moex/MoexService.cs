@@ -82,9 +82,30 @@ namespace StockLens.Services.Moex
             return dtos;
         }
 
+        public async Task<int?> RequesTickersListLevel(string TickerSymbol)
+        {
+            var l = await _httpRequester.GetJsonAsync<RootLevel>($"https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/{TickerSymbol}.json?iss.only=securities&securities.columns=LISTLEVEL");
+            
+            if (l != null && l.securities.data.First().Length == 0)
+                return null;
+
+            int.TryParse(l!.securities.data.First().First().ToString(), out int result);
+            return result;
+        }
+
+        private class ListLevel
+        {
+            public List<JsonElement[]> data { get; set; } = new();
+        }
+        private class RootLevel
+        {
+            public ListLevel securities { get; set; }
+        }
+
         private class Root
         {
             public QuotesHistory history {  get; set; }
+
         }
 
         private class QuotesHistory

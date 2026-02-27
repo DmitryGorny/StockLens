@@ -6,5 +6,7 @@ namespace StockLens.Services.Moex
     public interface IMoexService
     {
         public Task<List<CreateQuotesDto>> RequestQuotes(string TickerSymbol, int TickerId);
+
+        public Task<int?> RequesTickersListLevel(string TickerSymbol);
     }
 }
