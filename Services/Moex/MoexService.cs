@@ -36,47 +36,42 @@ namespace StockLens.Services.Moex
                 {
                     try
                     {
-                        if (!item[1].TryGetDecimal(out var open))
-                            throw new InvalidDataException("open is null");
-
-                        if (!item[2].TryGetDecimal(out var close))
-                            throw new InvalidDataException("close is null");
-
-                        if (!item[3].TryGetDecimal(out var low))
-                            throw new InvalidDataException("low is null");
-
-                        if (!item[4].TryGetDecimal(out var high))
-                            throw new InvalidDataException("high is null");
-
-                        if (!item[5].TryGetDecimal(out var volume))
-                            throw new InvalidDataException("volume is null");
-
-                        if (!item[6].TryGetDecimal(out var value))
-                            throw new InvalidDataException("value is null");
-
-                        if (!item[7].TryGetDecimal(out var numtrades))
-                            throw new InvalidDataException("numtrades is null");
-
-                        if (!item[8].TryGetDecimal(out var waprice))
-                            throw new InvalidDataException("waprice is null");
-
-                        dtos.Add(new CreateQuotesDto
-                        {
-                            ts = DateFromString(RequireString(item[0], "date")),
-                            open = open,
-                            close = close,
-                            low = low,
-                            high = high,
-                            volume = BigIntegerFromDecimal(volume),
-                            value = BigIntegerFromDecimal(value),
-                            numtrades = BigIntegerFromDecimal(numtrades),
-                            waprice = waprice,
-                            TickerId = TickerId
-                        });
+                        dtos.Add(QuoteValidator(item, TickerId));
                     } catch(InvalidDataException e) { continue; }                  
                     catch(InvalidOperationException e) { continue; }
                 }
 
+                start += 100;
+            }
+            return dtos;
+        }
+
+        public async Task<IEnumerable<CreateQuotesDto>> RequestPassedDayQuotes(string TickerSymbol, int TickerId)
+        {
+            List<CreateQuotesDto> dtos = new List<CreateQuotesDto>();
+            int start = 0;
+            while (true)
+            {
+                DateTime today = DateTime.Today;
+                DateTime yesterday = today.AddDays(-1);
+                Root? root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
+                    $"{TickerSymbol}.json" +
+                    $"?from={yesterday.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +
+                     $"&start={start}" +
+                    "&history.columns=TRADEDATE,OPEN,CLOSE,LOW,HIGH,VOLUME,VALUE,NUMTRADES,WAPRICE");
+
+                if (root.history.data.Count == 0)
+                    break;
+
+                foreach (var item in root.history.data)
+                {
+                    try
+                    {
+                        dtos.Add(QuoteValidator(item, TickerId));
+                    }
+                    catch (InvalidDataException e) { continue; }
+                    catch (InvalidOperationException e) { continue; }
+                }
                 start += 100;
             }
             return dtos;
@@ -91,6 +86,47 @@ namespace StockLens.Services.Moex
 
             int.TryParse(l!.securities.data.First().First().ToString(), out int result);
             return result;
+        }
+
+        private CreateQuotesDto QuoteValidator(JsonElement[] data, int TickerId)
+        {
+            if (!data[1].TryGetDecimal(out var open))
+                throw new InvalidDataException("open is null");
+
+            if (!data[2].TryGetDecimal(out var close))
+                throw new InvalidDataException("close is null");
+
+            if (!data[3].TryGetDecimal(out var low))
+                throw new InvalidDataException("low is null");
+
+            if (!data[4].TryGetDecimal(out var high))
+                throw new InvalidDataException("high is null");
+
+            if (!data[5].TryGetDecimal(out var volume))
+                throw new InvalidDataException("volume is null");
+
+            if (!data[6].TryGetDecimal(out var value))
+                throw new InvalidDataException("value is null");
+
+            if (!data[7].TryGetDecimal(out var numtrades))
+                throw new InvalidDataException("numtrades is null");
+
+            if (!data[8].TryGetDecimal(out var waprice))
+                throw new InvalidDataException("waprice is null");
+
+            return new CreateQuotesDto
+            {
+                ts = DateFromString(RequireString(data[0], "date")),
+                open = open,
+                close = close,
+                low = low,
+                high = high,
+                volume = BigIntegerFromDecimal(volume),
+                value = BigIntegerFromDecimal(value),
+                numtrades = BigIntegerFromDecimal(numtrades),
+                waprice = waprice,
+                TickerId = TickerId
+            };
         }
 
         private class ListLevel

@@ -10,5 +10,6 @@ namespace StockLens.Services.Tickers
         public Task AddTikersAsync(CreateTickersDto dto);
         public Task<GetTickersDto?> GetTickerAsync(int industryId);
         public Task<List<GetTickersDto>?> GetTickersAsync(TickersQuery query);
+        public Task<IEnumerable<GetTickersDto>> GetTickersAsync();
     }
 }

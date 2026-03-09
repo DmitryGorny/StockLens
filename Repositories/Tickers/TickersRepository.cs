@@ -77,5 +77,10 @@ namespace StockLens.Repositories.Tickers
                                                     .ThenInclude(i => i.Sector).FirstOrDefaultAsync(t => t.Symbol == symbol);
                                                     
         }
+
+        public async Task<IEnumerable<TickersModel>> GetTickers()
+        {
+            return await _db_context.Tickers.ToListAsync();
+        }
     }
 }

@@ -8,5 +8,8 @@ namespace StockLens.Services.Moex
         public Task<List<CreateQuotesDto>> RequestQuotes(string TickerSymbol, int TickerId);
 
         public Task<int?> RequesTickersListLevel(string TickerSymbol);
+
+        public Task<IEnumerable<CreateQuotesDto>> RequestPassedDayQuotes(string TickerSymbol, int TickerId);
+
     }
 }

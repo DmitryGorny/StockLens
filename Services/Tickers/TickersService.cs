@@ -67,6 +67,11 @@ namespace StockLens.Services.Tickers
 
         }
 
+        public async Task<IEnumerable<GetTickersDto>> GetTickersAsync()
+        {
+            return await _tickersRepository.GetTickers().ContinueWith(t => t.Result.Select(t => t.CreateDtoFromTickers()));
+        }
+
         private async Task<IReadOnlyList<TickersModel>>? GetTickersByIndustryAsync(IReadOnlyCollection<int> ids, int pageNumber, int pageSize)
         {
             int skip = (pageNumber - 1) * pageSize;

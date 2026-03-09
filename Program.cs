@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +23,7 @@ using StockLens.Services.Auth.AuthService;
 using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
 using StockLens.Services.Cache;
+using StockLens.Services.Cron;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
 using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
@@ -58,6 +61,7 @@ builder.Services.AddScoped<IEmailMessagesSender, EmailMessagesSender>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 builder.Services.AddScoped<ICacheService, CacheService>();
+builder.Services.AddScoped<ICronFacade, CroneFacade>();
 builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();
 builder.Services.Decorate<ITopTenFacade, CachedTopTen>();
@@ -150,6 +154,17 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.Services.AddHangfire(configuration => configuration
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()  
+        .UsePostgreSqlStorage(c => 
+        c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("Postgres"))));
+
+
+builder.Services.AddHangfireServer();
+
+
 
 var app = builder.Build();
 
@@ -161,11 +176,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseHangfireDashboard("/dashboard");
+
+RecurringJob.AddOrUpdate<ICronFacade>(
+    "RequestQuotes",
+    (cron) => cron.RequestQuotesDaily(),
+    "0 2 * * 1-5");
 
 app.MapControllers();
 
