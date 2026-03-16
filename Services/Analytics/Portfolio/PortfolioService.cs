@@ -29,7 +29,7 @@ namespace StockLens.Services.Analytics.Portfolio
             if (tickersAndPercantages.Count() == 0)
                 throw new Exception("Неоюходимо выбрать компании для анализа");
 
-            AnalyticsFabric<PortfolioDto> fabric = new AnalyticsFabric<PortfolioDto>();
+            AnalyticsBuilder<PortfolioDto> fabric = new AnalyticsBuilder<PortfolioDto>();
             foreach (var (key, value) in tickersAndPercantages)
             {
                 var quotes = await _quotesRepository.GetQuotesByTickerId(key, 360);
@@ -48,7 +48,7 @@ namespace StockLens.Services.Analytics.Portfolio
 
         public async Task<string> GetOptimizedPortfolio(List<int> tickersIds, UsersСharacteristicsDto CharDto)
         {
-            AnalyticsFabric<OptimizePortfolioDto> fabric = new AnalyticsFabric<OptimizePortfolioDto>();
+            AnalyticsBuilder<OptimizePortfolioDto> fabric = new AnalyticsBuilder<OptimizePortfolioDto>();
             if (tickersIds.Count() == 0)
                 throw new Exception("Неоюходимо выбрать компании для оптимизации");
 

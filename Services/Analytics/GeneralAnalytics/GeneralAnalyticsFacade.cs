@@ -36,7 +36,7 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
   
             Sectors? sector = await _sectorsRepository.GetSectorAsync(sectorId, 180);
 
-            AnalyticsFabric<GeneralAnalyticsDto> fabric = new AnalyticsFabric<GeneralAnalyticsDto>();
+            AnalyticsBuilder<GeneralAnalyticsDto> fabric = new AnalyticsBuilder<GeneralAnalyticsDto>();
 
             if (sector == null)
                 throw new NullReferenceException($"Сектора с id {sectorId}");
@@ -61,7 +61,7 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
         public async Task<string> GetIndustriesGeneralAnalytics(int IndustryId, UsersСharacteristicsDto dto)
         {
             IndustriesModel? ind = await _industriesRepository.GetIndustriesWithDependencies(IndustryId, 180);
-            AnalyticsFabric<GeneralAnalyticsDto> fabric = new AnalyticsFabric<GeneralAnalyticsDto>();
+            AnalyticsBuilder<GeneralAnalyticsDto> fabric = new AnalyticsBuilder<GeneralAnalyticsDto>();
 
             if (ind == null)
                 throw new Exception($"Индустрии с id {IndustryId} не существует");
@@ -80,7 +80,7 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
         }
         public async Task<string> GetTickersGeneralAnalytics(int TickerId, UsersСharacteristicsDto dto)
         {
-            AnalyticsFabric<GeneralAnalyticsDto> fabric = new AnalyticsFabric<GeneralAnalyticsDto>();
+            AnalyticsBuilder<GeneralAnalyticsDto> fabric = new AnalyticsBuilder<GeneralAnalyticsDto>();
 
             var ticker = await _tickersRepository.GetTickerWithDependencies(TickerId, 180);
             if (ticker == null)

@@ -27,7 +27,7 @@ namespace StockLens.Services.Analytics.TopTen
 
         public async Task<string> GetTickersTopTen(UsersСharacteristicsDto CharDto)
         {
-            AnalyticsFabric<TopTenDto> fabric = new AnalyticsFabric<TopTenDto>();
+            AnalyticsBuilder<TopTenDto> fabric = new AnalyticsBuilder<TopTenDto>();
             var ticker = await _tickersRepository.GetTicker("MOEX");
             if (ticker == null)
                 throw new Exception("MOEX тикер не был найден");

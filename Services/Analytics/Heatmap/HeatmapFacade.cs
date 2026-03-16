@@ -26,7 +26,7 @@ namespace StockLens.Services.Analytics.Heatmap
 
         public async Task<string> GetTickersHeatmap(UsersСharacteristicsDto dto)
         {
-            AnalyticsFabric<HeatmapDto> fabric = new AnalyticsFabric<HeatmapDto>();
+            AnalyticsBuilder<HeatmapDto> fabric = new AnalyticsBuilder<HeatmapDto>();
             var tickers = await _tickersRepository.GetTickersByListLevel(1);
             if (tickers == null || tickers.Count() == 0)
                 throw new Exception($"Тикеры с ListLevel 1 не были найдены");
