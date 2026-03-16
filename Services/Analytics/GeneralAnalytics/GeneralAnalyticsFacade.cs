@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using StockLens.Dtos.QuotesDtos;
+using StockLens.Dtos.AuthDtos;
+using StockLens.Dtos.QuotesDtos.Analytics;
+using StockLens.Dtos.QuotesDtos.Analytics.Fabric;
 using StockLens.Mappers;
 using StockLens.Models;
 using StockLens.Queries;
@@ -29,10 +31,12 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
             _analyticsRequester = httpRequester;
         }
 
-        public async Task<string> GetSectorsGeneralAnalytics(int sectorId)
+        public async Task<string> GetSectorsGeneralAnalytics(int sectorId, UsersСharacteristicsDto dto)
         {
-            List<GeneralAnalyticsDto> analyticsDtos = new List<GeneralAnalyticsDto>();
+  
             Sectors? sector = await _sectorsRepository.GetSectorAsync(sectorId, 180);
+
+            AnalyticsFabric<GeneralAnalyticsDto> fabric = new AnalyticsFabric<GeneralAnalyticsDto>();
 
             if (sector == null)
                 throw new NullReferenceException($"Сектора с id {sectorId}");
@@ -41,36 +45,52 @@ namespace StockLens.Services.Analytics.GeneralAnalytics
             {
                 foreach (var ticker in industry.Tickers)
                 {
-                    var quotes = ticker.Quotation.Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
-                    analyticsDtos.AddRange(quotes);
+                    ticker.Quotation.ForEach(q =>
+                    {
+                        var dto = q.ToGeneralAnalyticFromQuotaion();
+                        fabric.AddAnalyticsDto(dto);
+                    });
                 }
             }
-            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("/general_analytics", analyticsDtos);
+
+            string result = await _analyticsRequester.PostJsonAsync("/general_analytics", 
+                fabric.WrapAnalyticsDtos(dto));
             return result;
         }
 
-        public async Task<string> GetIndustriesGeneralAnalytics(int IndustryId)
+        public async Task<string> GetIndustriesGeneralAnalytics(int IndustryId, UsersСharacteristicsDto dto)
         {
             IndustriesModel? ind = await _industriesRepository.GetIndustriesWithDependencies(IndustryId, 180);
+            AnalyticsFabric<GeneralAnalyticsDto> fabric = new AnalyticsFabric<GeneralAnalyticsDto>();
 
             if (ind == null)
                 throw new Exception($"Индустрии с id {IndustryId} не существует");
 
-            List<GeneralAnalyticsDto> dtos = ind.Tickers
-                                                    .SelectMany(t => t.Quotation)
-                                                    .Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
+            var quotes = ind.Tickers.SelectMany(t => t.Quotation);
 
-            string result = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("/general_analytics", dtos);
+            foreach(var quote in quotes)
+            {
+                var Qdto = quote.ToGeneralAnalyticFromQuotaion();
+                fabric.AddAnalyticsDto(Qdto);
+            };
+                      
+
+            string result = await _analyticsRequester.PostJsonAsync("/general_analytics", fabric.WrapAnalyticsDtos(dto));
             return result;
         }
-        public async Task<string> GetTickersGeneralAnalytics(int TickerId)
+        public async Task<string> GetTickersGeneralAnalytics(int TickerId, UsersСharacteristicsDto dto)
         {
+            AnalyticsFabric<GeneralAnalyticsDto> fabric = new AnalyticsFabric<GeneralAnalyticsDto>();
+
             var ticker = await _tickersRepository.GetTickerWithDependencies(TickerId, 180);
             if (ticker == null)
                 throw new Exception($"Тикера с id {TickerId} не существует");
-            List<GeneralAnalyticsDto> dtos = ticker.Quotation.Select(q => q.ToGeneralAnalyticFromQuotaion()).ToList();
+            ticker.Quotation.ForEach(q => {
+                var dto = q.ToGeneralAnalyticFromQuotaion();
+                fabric.AddAnalyticsDto(dto);
+            });
 
-            string json = await _analyticsRequester.PostJsonAsync<GeneralAnalyticsDto>("/general_analytics", dtos);
+            string json = await _analyticsRequester.PostJsonAsync("/general_analytics", fabric.WrapAnalyticsDtos(dto));
             return json;
         }
     }

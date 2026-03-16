@@ -28,6 +28,11 @@ namespace StockLens.Repositories.RefreshTokens
             return await _dbContext.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
         }
 
+        public async Task<Models.RefreshTokens?> GetTokenJoinUser(string token)
+        {
+            return await _dbContext.RefreshTokens.Include(t => t.User).FirstOrDefaultAsync(t => t.Token == token);
+        }
+
         public async Task CreateToken(Models.RefreshTokens token)
         {
             if (token == null || token.ExiresOn < DateTime.UtcNow)

@@ -1,6 +1,6 @@
-﻿namespace StockLens.Dtos.QuotesDtos
+﻿namespace StockLens.Dtos.QuotesDtos.Analytics
 {
-    public class HeatmapDto
+    public class HeatmapDto : IAnalyticsDto
     {
         public string Symbol { get; set; }
         public string Date { get; set; }

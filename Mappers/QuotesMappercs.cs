@@ -1,5 +1,6 @@
-﻿using StockLens.Dtos.QuotationsDtos;
-using StockLens.Dtos.QuotesDtos;
+﻿using StockLens.Dtos.AuthDtos;
+using StockLens.Dtos.QuotationsDtos;
+using StockLens.Dtos.QuotesDtos.Analytics;
 using StockLens.Models;
 
 namespace StockLens.Mappers

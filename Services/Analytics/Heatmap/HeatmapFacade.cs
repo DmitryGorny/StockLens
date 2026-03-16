@@ -1,4 +1,6 @@
-﻿using StockLens.Dtos.QuotesDtos;
+﻿using StockLens.Dtos.AuthDtos;
+using StockLens.Dtos.QuotesDtos.Analytics;
+using StockLens.Dtos.QuotesDtos.Analytics.Fabric;
 using StockLens.Mappers;
 using StockLens.Queries;
 using StockLens.Repositories.Industries;
@@ -22,8 +24,9 @@ namespace StockLens.Services.Analytics.Heatmap
             _analyticsRequester = analyticsRequester;
         }
 
-        public async Task<string> GetTickersHeatmap()
+        public async Task<string> GetTickersHeatmap(UsersСharacteristicsDto dto)
         {
+            AnalyticsFabric<HeatmapDto> fabric = new AnalyticsFabric<HeatmapDto>();
             var tickers = await _tickersRepository.GetTickersByListLevel(1);
             if (tickers == null || tickers.Count() == 0)
                 throw new Exception($"Тикеры с ListLevel 1 не были найдены");
@@ -33,12 +36,16 @@ namespace StockLens.Services.Analytics.Heatmap
                 ticker.Quotation = await _quotesRepository.GetQuotesByTickerId(ticker.Id, 180);
             }
 
-            List<HeatmapDto> dtos = tickers.SelectMany(t => t.Quotation
-                                                            .Select(q => q.ToHeatmapFromQuotaion()))
-                                                             .ToList();
+            var quotes = tickers.SelectMany(t => t.Quotation);
+            foreach (var quote in quotes)
+            {
+                var Qdto = quote.ToHeatmapFromQuotaion();
+                fabric.AddAnalyticsDto(Qdto);
+            };
+                                                             
                                                     
 
-            string json = await _analyticsRequester.PostJsonAsync("/sector-correlations", dtos);
+            string json = await _analyticsRequester.PostJsonAsync("/sector-correlations", fabric.WrapAnalyticsDtos(dto));
 
             return json;
         }

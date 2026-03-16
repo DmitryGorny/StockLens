@@ -1,6 +1,6 @@
-﻿namespace StockLens.Dtos.QuotesDtos
+﻿namespace StockLens.Dtos.QuotesDtos.Analytics
 {
-    public class GeneralAnalyticsDto
+    public class GeneralAnalyticsDto : IAnalyticsDto
     {
         public string Symbol { get; set; }
         public string Date { get; set; }

@@ -1,4 +1,6 @@
-﻿using StockLens.Dtos.QuotesDtos;
+﻿using StockLens.Dtos.AuthDtos;
+using StockLens.Dtos.QuotesDtos.Analytics;
+using StockLens.Dtos.QuotesDtos.Analytics.Fabric;
 using StockLens.Mappers;
 using StockLens.Models;
 using StockLens.Queries;
@@ -23,8 +25,9 @@ namespace StockLens.Services.Analytics.TopTen
             _analyticsRequester = analyticsRequester;
         }
 
-        public async Task<string> GetTickersTopTen()
+        public async Task<string> GetTickersTopTen(UsersСharacteristicsDto CharDto)
         {
+            AnalyticsFabric<TopTenDto> fabric = new AnalyticsFabric<TopTenDto>();
             var ticker = await _tickersRepository.GetTicker("MOEX");
             if (ticker == null)
                 throw new Exception("MOEX тикер не был найден");
@@ -33,7 +36,10 @@ namespace StockLens.Services.Analytics.TopTen
             if (moex_quotes == null || moex_quotes.Count() == 0)
                 throw new Exception("MOEX не содержит котировок");
 
-            List<TopTenDto> dtos = moex_quotes.Select(q => q.ToTopTenFromQuotaion()).ToList();
+            moex_quotes.ForEach(q => {
+                var dto = q.ToTopTenFromQuotaion();
+                fabric.AddAnalyticsDto(dto);
+                });
 
             var LevelOneTickers = await _tickersRepository.GetTickersByListLevel(1);
 
@@ -43,10 +49,13 @@ namespace StockLens.Services.Analytics.TopTen
             foreach (var t in LevelOneTickers)
             {
                 var quotes = await _quotesRepository.GetQuotesByTickerId(t.Id, 360);
-                dtos.AddRange(quotes.Select(q => q.ToTopTenFromQuotaion()).ToList());
+                quotes.ForEach(q => {
+                    var dto = q.ToTopTenFromQuotaion();
+                    fabric.AddAnalyticsDto(dto);
+                });
             }
 
-            string json = await _analyticsRequester.PostJsonAsync("/anti-crisis-top10", dtos);
+            string json = await _analyticsRequester.PostJsonAsync("/anti-crisis-top10", fabric.WrapAnalyticsDtos(CharDto));
             return json;
         }
     }

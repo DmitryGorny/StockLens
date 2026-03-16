@@ -1,6 +1,6 @@
 ﻿namespace StockLens.Dtos.AuthDtos
 {
-    public class NewUserDto
+    public class NewUserDto : UsersСharacteristicsDto
     {
         public string UserName { get; set; }
         public string Email { get; set; }

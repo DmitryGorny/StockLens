@@ -9,6 +9,7 @@ namespace StockLens.Controllers
 {
     [Route("api/auth")]
     [ApiController]
+    
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -58,16 +59,12 @@ namespace StockLens.Controllers
 
         [HttpPost]
         [Route("refresh")]
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> Refresh([FromQuery] string oldRefreshToken)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.GivenName)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim)) 
-                return Unauthorized();
 
             try
             {
-                var user = await _authService.RefreshToken(oldRefreshToken, userIdClaim);
+                var user = await _authService.RefreshToken(oldRefreshToken);
                 if (user == null)
                     return BadRequest();
                 return Ok(user);

@@ -105,5 +105,17 @@
         <member name="M:StockLens.Migrations.RefreshTokens.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:StockLens.Migrations.UsersMetrics">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.UsersMetrics.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.UsersMetrics.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.UsersMetrics.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

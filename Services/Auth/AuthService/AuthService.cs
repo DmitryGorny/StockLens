@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using StockLens.Dtos.AuthDtos;
+using StockLens.Mappers;
+using StockLens.Migrations;
 using StockLens.Models;
 using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
 using System.Data;
 using System.Text;
+using User = StockLens.Models.User;
 
 namespace StockLens.Services.Auth.AuthService
 {
@@ -100,31 +103,45 @@ namespace StockLens.Services.Auth.AuthService
             return "Почта подтверждена, авторизируйтесь";
         } 
 
-        public async Task<NewUserDto?> RefreshToken(string token, string userName)
+        public async Task<NewUserDto?> RefreshToken(string token)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-            if (user == null)
-                throw new Exception("Пользователь не найден");
+            var result = await _tokenService.CheckRefreshRoken(token);
 
-            var result = await _tokenService.CheckRefreshRoken(token, user);
+            var tokenWithUser = await _tokenService.GetTokenWithUser(token);
+
+            if (tokenWithUser == null || tokenWithUser.User == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
 
             if (result)
-            {
-                await _tokenService.SetRevokedRefreshToken(token);
+            {              
+                var new_token = await _tokenService.GenerateRefreshToken(tokenWithUser.User);
+
+                await _tokenService.SetRevokedRefreshToken(token, new_token);
                 return new NewUserDto
                 {
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    Token = _tokenService.CreateJWTToken(user, (List<string>)await _userManager.GetRolesAsync(user)),
-                    EmailConfirmed = user.EmailConfirmed,
-                    RefreshToken = await _tokenService.GenerateRefreshToken(user),
+                    UserName = tokenWithUser.User.UserName!,
+                    Email = tokenWithUser.User.Email!,
+                    Token = _tokenService.CreateJWTToken(tokenWithUser.User, (List<string>)await _userManager.GetRolesAsync(tokenWithUser.User)),
+                    EmailConfirmed = tokenWithUser.User.EmailConfirmed,
+                    RefreshToken = new_token,
                 };
             } else
             {
                 await _signinManager.SignOutAsync();
-                await _tokenService.DeleteUsersTokens(user);
+                await _tokenService.DeleteUsersTokens(tokenWithUser.User);
                 return null;
             }
+        }
+
+        public async Task<UsersСharacteristicsDto> GetUsersMetrics(string email)
+        {
+            User? user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                throw new Exception("Пользователь не найден");
+
+            return user.GetUsersCharacteristicsDto();
         }
 
         private async Task SendEmailConfirmationAsync(User user)

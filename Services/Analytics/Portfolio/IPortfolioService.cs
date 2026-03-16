@@ -1,10 +1,11 @@
-﻿using StockLens.Queries;
+﻿using StockLens.Dtos.AuthDtos;
+using StockLens.Queries;
 
 namespace StockLens.Services.Analytics.Portfolio
 {
     public interface IPortfolioService
     {
-        public Task<string> GetPorfolioMetrics(Dictionary<int, decimal> tickersAndPercantages);
-        public Task<string> GetOptimizedPortfolio(List<int> tickersIds);
+        public Task<string> GetPorfolioMetrics(Dictionary<int, decimal> tickersAndPercantages, UsersСharacteristicsDto dto);
+        public Task<string> GetOptimizedPortfolio(List<int> tickersIds, UsersСharacteristicsDto dto);
     }
 }

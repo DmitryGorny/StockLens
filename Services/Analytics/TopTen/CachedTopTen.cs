@@ -1,4 +1,5 @@
-﻿using StockLens.Services.Cache;
+﻿using StockLens.Dtos.AuthDtos;
+using StockLens.Services.Cache;
 
 namespace StockLens.Services.Analytics.TopTen
 {
@@ -13,13 +14,13 @@ namespace StockLens.Services.Analytics.TopTen
             _cacheService = cacheService;
         }
 
-        public async Task<string> GetTickersTopTen()
+        public async Task<string> GetTickersTopTen(UsersСharacteristicsDto CharDto)
         {
             string? result = await _cacheService.GetUnserializedCache("TopTen", "TickersTopTen");
             if (result != null)
                 return result;
 
-            result = await _topTenFacade.GetTickersTopTen();
+            result = await _topTenFacade.GetTickersTopTen(CharDto);
             await _cacheService.SetCacheWithoutSerializing(result, "TopTen", "TickersTopTen"); 
             return result;
             

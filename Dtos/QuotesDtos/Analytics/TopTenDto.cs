@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace StockLens.Dtos.QuotesDtos
+namespace StockLens.Dtos.QuotesDtos.Analytics
 {
-    public class TopTenDto
+    public class TopTenDto : IAnalyticsDto
     {
         public string Symbol { get; set; }
         public string Date { get; set; }

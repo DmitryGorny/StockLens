@@ -56,7 +56,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "TickerId",
+        "Name": "SectorId",
         "Type": "System.Int32",
         "IsRequired": false
       }
@@ -72,7 +72,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "SectorId",
+        "Name": "TickerId",
         "Type": "System.Int32",
         "IsRequired": false
       }

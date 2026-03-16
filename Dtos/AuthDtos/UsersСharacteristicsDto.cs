@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace StockLens.Models
+﻿namespace StockLens.Dtos.AuthDtos
 {
-    public class User : IdentityUser
+    public class UsersСharacteristicsDto
     {
-        public List<RefreshTokens> Refreshtokens { get; set; }
         public int ReactionToDrop { get; set; }
         public int MaxDrawdownPercent { get; set; }
         public int InvestmentHorizon { get; set; }
         public int Experience { get; set; }
     }
-} 
+}

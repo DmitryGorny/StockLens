@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace StockLens.Services.Auth.Token
 {
@@ -70,7 +71,7 @@ namespace StockLens.Services.Auth.Token
             return token;
         }
 
-        public async Task<bool> CheckRefreshRoken(string token, User user)
+        public async Task<bool> CheckRefreshRoken(string token)
         {
             RefreshTokens? tokenEnt = await _refreshTokenRepository.GetToken(token);
             if (tokenEnt == null)
@@ -79,23 +80,30 @@ namespace StockLens.Services.Auth.Token
             if (tokenEnt.isRevoked)
                 return false;
 
-            if (tokenEnt.UserId != user.Id)
-                return false;
-
             if (tokenEnt.ExiresOn <= DateTime.UtcNow) 
                 return false;
 
             return true;
         }
 
-        public async Task SetRevokedRefreshToken(string token)
+        public async Task<RefreshTokens?> GetTokenWithUser(string token)
+        {
+            return await _refreshTokenRepository.GetTokenJoinUser(token);
+        }
+
+        public async Task SetRevokedRefreshToken(string token, string new_token)
         {
             var tokenEnt = await _refreshTokenRepository?.GetToken(token);
+            var new_token_ent = await _refreshTokenRepository.GetToken(new_token);
 
             if (tokenEnt == null)
                 throw new Exception("Токен не был найден");
 
+            if (new_token_ent == null)
+                throw new Exception("Токен не был создан");
+
             tokenEnt.isRevoked = true;
+            tokenEnt.ChangedWithId = new_token_ent.Id;
             
             await _refreshTokenRepository.UpdateToken(tokenEnt);
         }
