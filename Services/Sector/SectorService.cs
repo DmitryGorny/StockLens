@@ -15,12 +15,10 @@ namespace StockLens.Services.Sector
     public class SectorService : ISectorService
     {
         private readonly ISectorRepository _sectorRepository;
-        private readonly IHttpRequester _analyticsRequester;
 
-        public SectorService(ISectorRepository sectorRepository, IHttpRequester analyticsRequester) 
+        public SectorService(ISectorRepository sectorRepository)
         {
             _sectorRepository = sectorRepository;
-            _analyticsRequester = analyticsRequester;
         }
 
         public async Task CreateSectorsBulkAsync(List<CreateSectorDto> dtos)
@@ -30,7 +28,7 @@ namespace StockLens.Services.Sector
             {
                 Sectors sector = dto.CreateSectorFromDto();
                 sectors.Add(sector);
-            } 
+            }
 
             await _sectorRepository.BulkCreateSectorsAsync(sectors);
         }
@@ -40,14 +38,20 @@ namespace StockLens.Services.Sector
             return sector.CreateDtoFromSectors();
         }
 
-        public async Task<GetSectorDto?> GetSectorAsync(int sectorId)
+        public async Task<GetSectorDto> GetSectorAsync(int sectorId)
         {
-            Sectors? sector = await _sectorRepository.GetSectorAsync(sectorId);
-            if (sector != null)
-                return sector.CreateDtoFromSectors();
-            return null;
+            var sector = await _sectorRepository.GetSectorAsync(sectorId);
+            if (sector == null)
+            {
+                throw new Exception($"Сектор с {sectorId} не найден");
+            }
+            return sector.CreateDtoFromSectors();
         }
 
-       
+        public async Task<IEnumerable<GetSectorDto>> GetAllSectorsAsync(int start, int size)
+        {
+            return (await _sectorRepository.GetAllSectorsAsync(start, size)).Select(s => s.CreateDtoFromSectors());
+        }
+
     }
 }

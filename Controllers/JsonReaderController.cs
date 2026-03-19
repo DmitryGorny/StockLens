@@ -12,6 +12,7 @@ namespace StockLens.Controllers
 {
     [Route("api/read_json")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class JsonReaderController : ControllerBase
     {
         private readonly ITickersService _TickersService;
@@ -29,11 +30,25 @@ namespace StockLens.Controllers
             _fileReaderFacade = fileReaderFacade;
         }
 
+        /// <summary>
+        /// Заполняет/обновляет базу данных по данному JSON файлу
+        /// </summary>
+        /// <response code="201">
+        /// Заполнение/обновление прошло успешно
+        /// </response>
+        /// 
         [HttpPost]
         public async Task<IActionResult> ReadJsonFile(IFormFile json_file)
         {
-            await _fileReaderFacade.ReadJsonFile(json_file);
-            return Ok();
+            try
+            {
+                await _fileReaderFacade.ReadJsonFile(json_file);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
     }
 }

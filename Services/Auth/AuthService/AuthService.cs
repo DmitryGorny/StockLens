@@ -87,20 +87,22 @@ namespace StockLens.Services.Auth.AuthService
             };
         }
 
-        public async Task<string> ConfirmEmail(string recieverEmail, string token)
+        public async Task<bool> ConfirmEmail(string recieverEmail, string token)
         {
             var decodedToken = Encoding.UTF8.GetString(
                     WebEncoders.Base64UrlDecode(token)
                 );
+
             var user = await _userManager.FindByEmailAsync(recieverEmail);
             if (user == null)
                 throw new UnauthorizedAccessException("Ошибка, попробуйте позже");
+
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
             if (!result.Succeeded)
                 throw new UnauthorizedAccessException("Не удалось подтвердить вашу почту");
 
-            return "Почта подтверждена, авторизируйтесь";
+            return true;
         } 
 
         public async Task<NewUserDto?> RefreshToken(string token)

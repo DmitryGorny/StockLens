@@ -36,26 +36,32 @@ namespace StockLens.Services.Industries
             return industry.ToDtoFromIndustries();
         }
 
-        public async Task<IReadOnlyList<GetIndustryDto>> GetIndustriesFilteredAsync(IndustriesQuery query)
-        {
-            //TODO: Сделать после тикеров
-            //if (query.InsideTickers)
-            //{
-                //IReadOnlyList<IndustriesModel> industriesTickers = await _industriesRepo.GetIndustriesFilteredAsync(query.SectorId);
-                //return industries.Select(i => i.ToDtoFromIndustries()).ToList();
-            //}
 
-            IReadOnlyList<IndustriesModel> industries = await _industriesRepo.GetIndustriesFilteredAsync(query.SectorId);
-            return industries.Select(i => i.ToDtoFromIndustries()).ToList();
-
-        }
-
-        public async Task<GetIndustryDto?> GetIndustryAsync(int industryId)
+        public async Task<GetIndustryDto> GetIndustryAsync(int industryId)
         {
             var ind = await _industriesRepo.GetIndustryAsync(industryId);
             if (ind != null)
-                return ind.ToDtoFromIndustries();
-            return null;
+                throw new Exception($"Индустрии с id {industryId} не было найдено");
+            return ind!.ToDtoFromIndustries();
+
+        }
+
+        public async Task<IEnumerable<GetIndustryDto>> GetIndustriesBySectorAsync(List<int> sectorsIds, int start, int size)
+        {
+            var inds = await _industriesRepo.GetIndustriesBySectorsAsync(sectorsIds, start, size);
+            if (inds == null)
+                throw new Exception($"Индустрий для этих секторов {string.Join(", ", sectorsIds)}");
+            return inds.Select(i => i.ToDtoFromIndustries());
+
+        }
+
+        public async Task<IEnumerable<GetIndustryDto>> GetAllIndustriesAsync(int start, int size)
+        {
+            var inds = await _industriesRepo.GetAllIndustriesAsync(start, size);
+            if (inds == null)
+                throw new Exception($"Индустрии не были найдены");
+            return inds.Select(i => i.ToDtoFromIndustries());
+
         }
     }
 }

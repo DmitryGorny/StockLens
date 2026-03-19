@@ -57,5 +57,10 @@ namespace StockLens.Repositories.Sector
             return sector;
 
         }
+        public async Task<IEnumerable<SectorModel>> GetAllSectorsAsync(int start, int size)
+        {
+            return await _db_context.Sectors.Skip(start).Take(size).ToListAsync();
+        }
+
     }
 }

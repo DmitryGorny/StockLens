@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StockLens.Dtos.QuotesDtos.Analytics.Responses;
 using StockLens.Mappers;
 using StockLens.Queries;
 using StockLens.Repositories.Tickers;
@@ -15,7 +16,8 @@ namespace StockLens.Controllers
 {
 
     /// <summary>
-    /// Аналитические эндпоинты по акциям, секторам и индустриям
+    /// Контроллер, предоставляющий аналитические эндпоинты по акциям, секторам, индустриям и портфелям.
+    /// Все методы требуют авторизации и роли "User".
     /// </summary>
     [Route("api/analytics")]
     [ApiController]
@@ -40,8 +42,20 @@ namespace StockLens.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Получение общей аналитики для конкретного тикера
+        /// </summary>
+        /// <param name="TickerId">ID тикера (целое число).</param>
+        /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /tickers-general-analytics?TickerId=1
+        ///     
+        /// </remarks>
         [HttpGet]
         [Route("tickers-general-analytics")]
+        [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTickersAnalytics([FromQuery] int TickerId)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -54,8 +68,20 @@ namespace StockLens.Controllers
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
+        /// <summary>
+        /// Получение общей аналитики для тикеров конкретной индустрии
+        /// </summary>
+        /// <param name="IndustryId">ID индустрии (целое число).</param>
+        /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /industries-general-analytics?IndustryId=1
+        ///     
+        /// </remarks>
         [HttpGet]
         [Route("industries-general-analytics")]
+        [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetIndustryAnalytics([FromQuery] int IndustryId)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -70,8 +96,20 @@ namespace StockLens.Controllers
 
         }
 
+        /// <summary>
+        /// Получение общей аналитики для тикеров индустрий конкретного сектора
+        /// </summary>
+        /// <param name="SectorId">ID сектора (целое число).</param>
+        /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /industries-general-analytics?IndustryId=1
+        ///     
+        /// </remarks>
         [HttpGet]
         [Route("sectors-general-analytics")]
+        [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetSectorAnalytics([FromQuery] int SectorId)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -88,8 +126,25 @@ namespace StockLens.Controllers
 
         }
 
+        /// <summary>
+        /// Получение корреляции между всеми секторами
+        /// </summary>
+        /// <response code="200">
+        /// Возвращает массив названий секторов (sectors[]: string)<br></br>
+        /// Матрица для построения тепловой карты (matrix[sectors[] length]: decimal)<br></br>
+        /// Количество компаний в каждом секторе (stocks_Per_sector {string: int})<br></br>
+        /// </response>
+        /// 
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /tickers-heatmap
+        ///     
+        /// </remarks>
+        /// 
         [HttpGet]
         [Route("tickers-heatmap")]
+        [ProducesResponseType(typeof(SectorCorrelationResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTickersHeatmap()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -106,9 +161,24 @@ namespace StockLens.Controllers
 
         }
 
-
+        /// <summary>
+        /// Возвращает топ 10 компаний, которые в дни падения всего рынка падают меньше рынка или растут
+        /// </summary>
+        /// <response code="200">
+        /// Возвращает статус выполнения (success: bool)<br></br>
+        /// Массив полезных данных для отрисовки рейтингового списка (data []: Dictionary (string: string || decimal || int))<br></br>
+        /// </response>
+        /// 
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /tickers-top-ten
+        ///     
+        /// </remarks>
+        /// 
         [HttpGet]
         [Route("tickers-top-ten")]
+        [ProducesResponseType(typeof(AntiCrisisResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTickersTopTen()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -125,8 +195,27 @@ namespace StockLens.Controllers
 
         }
 
+        /// <summary>
+        /// Расчитывает метрики для готового портфеля с имеющимся весами по компаниям 
+        /// </summary>
+        /// <param name="tickersAndPercantages">Словарь с ID тикеров и процентами в портфеле (в сумме должны дать 1)</param>
+        /// <response code="200">
+        /// Отображение коэфициентов<br></br>
+        /// Возвращает статус ожидаемая доходность (expected_return: double)<br></br>
+        /// Коэфициент Шарпа (sharpe_ratio: double)<br></br>
+        /// Волатильность (volatility: double)<br></br>
+        /// </response>
+        /// 
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /portfolio-metrics?tickersAndPercantages[2862]=0.46&amp;tickersAndPercantages[2863]=0.54
+        ///     
+        /// </remarks>
+        /// 
         [HttpGet]
         [Route("portfolio-metrics")]
+        [ProducesResponseType(typeof(OwnWeightsResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPortfolioMetrics([FromQuery] Dictionary<int, decimal> tickersAndPercantages)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
@@ -142,8 +231,30 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Расчитывает веса компаний в портфеле и метрики для портфеля 
+        /// </summary>
+        /// <param name="tickersId">Список с Id тикеров</param>
+        /// <response code="200">
+        /// Возвращение коэфцииентов для отображения<br></br>
+        /// Вовзаращает веса компаний (Dictionary(string: decimal))<br></br>
+        /// Возвращает статус ожидаемая доходность (expected_return: double)<br></br>
+        /// Коэфициент Шарпа (sharpe_ratio: double)<br></br>
+        /// Волатильность (volatility: double)<br></br>
+        /// Поясняющий текст (text: string)<br></br>
+        /// Характериситика портфеля (riskProfile: string)<br></br>
+        /// </response>
+        /// 
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /portfolio-metrics?tickersId = 28624&amp;tickersId = 2863
+        ///     
+        /// </remarks>
+        /// 
         [HttpGet]
         [Route("optimized-portfolio")]
+        [ProducesResponseType(typeof(OptimizeResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetPortfolioOptimized([FromQuery] List<int> tickersId)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;

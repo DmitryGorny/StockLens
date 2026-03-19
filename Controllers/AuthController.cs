@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.AuthDtos;
+using StockLens.Dtos.QuotesDtos.Analytics.Responses;
 using StockLens.Services.Auth.AuthService;
 using System.Security.Claims;
 
@@ -9,7 +10,6 @@ namespace StockLens.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -19,6 +19,14 @@ namespace StockLens.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Регистрация пользователя 
+        /// </summary>
+        /// <response code="200">
+        /// Возвращает string оповещающее об отправке письма на почту
+        /// </response>
+        /// <param name="dto">Логин, почта и пароль</param>
+        /// 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
@@ -37,9 +45,17 @@ namespace StockLens.Controllers
 
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Вход в аккаунт
+        /// </summary>
+        /// <response code="200">
+        /// Возвращает объект с данными пользователями
+        /// </response>
+        /// <param name="dto">Логин и пароль</param>
+        [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromQuery] LoginDto dto)
+        [ProducesResponseType(typeof(NewUserDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -56,15 +72,19 @@ namespace StockLens.Controllers
 
         }
 
-
+        /// <summary>
+        /// Обновление JWT токена
+        /// </summary>
+        /// <param name="CurrentRefreshToken">Текущий refresh token</param>
         [HttpPost]
         [Route("refresh")]
-        public async Task<IActionResult> Refresh([FromQuery] string oldRefreshToken)
+        [ProducesResponseType(typeof(NewUserDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Refresh([FromBody] string CurrentRefreshToken)
         {
 
             try
             {
-                var user = await _authService.RefreshToken(oldRefreshToken);
+                var user = await _authService.RefreshToken(CurrentRefreshToken);
                 if (user == null)
                     return BadRequest();
                 return Ok(user);
@@ -75,7 +95,11 @@ namespace StockLens.Controllers
             }
 
         }
-
+        /// <summary>
+        /// Подтверждение почты
+        /// </summary>
+        /// <param name="token">token подтверждения почты (уже сформирован в письме)</param>
+        /// <param name="email">подтверждаемый email</param>
         [HttpGet]
         [Route("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string email)

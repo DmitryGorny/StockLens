@@ -17,7 +17,7 @@ namespace StockLens.Repositories.Tickers
         }
 
         public async Task BulkCreateTickersAsync(List<TickersModel> tickers)
-        { 
+        {
             var config = new BulkConfig
             {
                 SetOutputIdentity = true,
@@ -25,33 +25,36 @@ namespace StockLens.Repositories.Tickers
                 UpdateByProperties = new()
                 {
                    nameof(TickersModel.Name),
-                   nameof(TickersModel.Privileged), 
+                   nameof(TickersModel.Privileged),
                 },
                 PropertiesToExclude = new List<string> { "Id" }
             };
             await _db_context.BulkInsertOrUpdateAsync(tickers, config);
         }
-        public async Task AddTickerAsync(TickersModel ticker) 
+        public async Task AddTickerAsync(TickersModel ticker)
         {
             await _db_context.Tickers.AddAsync(ticker);
         }
 
-        public async Task<IReadOnlyList<TickersModel>> GetTickers(IReadOnlyCollection<int> industriesId, int start, int end)
+        public async Task<IEnumerable<TickersModel>> GetTickers(IEnumerable<int> industriesId, int start, int end)
         {
-            IReadOnlyList<TickersModel> tickers = await _db_context.Tickers.Where(t => industriesId.Contains(t.IndustryId))
+            IEnumerable<TickersModel> tickers = await _db_context.Tickers.Where(t => industriesId.Contains(t.IndustryId))
                                         .OrderBy(t => t.Industry.Name)
                                         .Skip(start)
                                         .Take(end)
                                         .ToListAsync();
             return tickers;
         }
-        public async Task<IReadOnlyList<TickersModel>> GetTickers(int start, int end)
+        public async Task<IEnumerable<TickersModel>> GetTickersAsync(int start, int end)
         {
-            IReadOnlyList<TickersModel> tickers =
-                await _db_context.Tickers.Skip(start).Take(end).OrderBy(t => t.Industry.Name).ToListAsync();
+            IEnumerable<TickersModel> tickers = await _db_context.Tickers
+                                                                    .Skip(start)
+                                                                    .Take(end)
+                                                                    .OrderBy(t => t.Industry.Name)
+                                                                    .ToListAsync();
             return tickers;
         }
-        public async Task<TickersModel>? GetTicker(int tickerId)
+        public async Task<TickersModel?> GetTicker(int tickerId)
         {
             return await _db_context.Tickers.FindAsync(tickerId);
         }
@@ -75,10 +78,33 @@ namespace StockLens.Repositories.Tickers
         {
             return await _db_context.Tickers.Include(t => t.Industry)
                                                     .ThenInclude(i => i.Sector).FirstOrDefaultAsync(t => t.Symbol == symbol);
-                                                    
+
         }
 
         public async Task<IEnumerable<TickersModel>> GetTickers()
+        {
+            return await _db_context.Tickers.ToListAsync();
+        }
+
+        public async Task<IEnumerable<TickersModel>?> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size)
+        {
+            return await _db_context.Tickers.Where(t => citiesId.Contains(t.CityId))
+                                            .OrderBy(t => t.Name)
+                                            .Skip(start)
+                                            .Take(size)
+                                            .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TickersModel>> GetTickersByIndustriesAsync(IEnumerable<int> industriesId, int start, int end)
+        {
+            return await _db_context.Tickers.Where(t => industriesId.Contains(t.IndustryId))
+                                            .OrderBy(t => t.Name)
+                                            .Skip(start)
+                                            .Take(end)
+                                            .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TickersModel>> GetTickersAsync()
         {
             return await _db_context.Tickers.ToListAsync();
         }

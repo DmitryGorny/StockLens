@@ -7,6 +7,7 @@ namespace StockLens.Services.Sector
     {
         public Task CreateSectorsBulkAsync(List<CreateSectorDto> dtos);
         public Task<GetSectorDto> CreateSectorAsync(CreateSectorDto dto);
-        public Task<GetSectorDto?> GetSectorAsync(int sectorId);
+        public Task<GetSectorDto> GetSectorAsync(int sectorId);
+        public Task<IEnumerable<GetSectorDto>> GetAllSectorsAsync(int start, int size);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using StockLens.data;
+using StockLens.Dtos.IndustriesDtos;
 using IndustiesModel = StockLens.Models.Industries;
 
 namespace StockLens.Repositories.Industries
@@ -34,14 +35,15 @@ namespace StockLens.Repositories.Industries
             await _db_context.SaveChangesAsync();
         }
 
-        public async Task<IndustiesModel?> GetIndustryAsync(int sectorId)
+        public async Task<IndustiesModel?> GetIndustryBySectorAsync(int sectorId)
         {
             return await _db_context.Industries.FindAsync(sectorId);
         }
 
-        public async Task<IReadOnlyList<IndustiesModel>> GetIndustriesFilteredAsync(int industryId)
+        public async Task<IndustiesModel?> GetIndustryAsync(int industryId)
         {
-            return await _db_context.Industries.Take(industryId).ToListAsync();
+            return await _db_context.Industries.FirstOrDefaultAsync(i => i.Id == industryId);
+            
         }
 
         public async Task<IndustiesModel>? GetIndustriesWithDependencies(int industryId, int quotesNumber)
@@ -55,5 +57,19 @@ namespace StockLens.Repositories.Industries
             return industry; 
         }
 
+        public async Task<IEnumerable<IndustiesModel>?> GetIndustriesBySectorsAsync(List<int> sectorsIds, int start, int size)
+        {
+            return await _db_context.Industries.Where(i => sectorsIds.Contains(i.SectorId))
+                                        .Skip(start)
+                                        .Take(size)
+                                        .ToListAsync();
+        }
+
+        public async Task<IEnumerable<IndustiesModel>?> GetAllIndustriesAsync(int start, int size)
+        {
+            return await _db_context.Industries.Skip(start)
+                                        .Take(size)
+                                        .ToListAsync();
+        }
     }
 }

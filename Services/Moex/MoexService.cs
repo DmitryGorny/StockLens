@@ -54,6 +54,7 @@ namespace StockLens.Services.Moex
             {
                 DateTime today = DateTime.Today;
                 DateTime yesterday = today.AddDays(-1);
+
                 Root? root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
                     $"{TickerSymbol}.json" +
                     $"?from={yesterday.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +

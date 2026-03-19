@@ -6,8 +6,167 @@
     <members>
         <member name="T:StockLens.Controllers.AnalyticsController">
             <summary>
-            Аналитические эндпоинты по акциям, секторам и индустриям
+            Контроллер, предоставляющий аналитические эндпоинты по акциям, секторам, индустриям и портфелям.
+            Все методы требуют авторизации и роли "User".
             </summary>
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetTickersAnalytics(System.Int32)">
+             <summary>
+             Получение общей аналитики для конкретного тикера
+             </summary>
+             <param name="TickerId">ID тикера (целое число).</param>
+             <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+             <remarks>
+             Пример запроса:
+            
+                 GET /tickers-general-analytics?TickerId=1
+                 
+             </remarks>
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetIndustryAnalytics(System.Int32)">
+             <summary>
+             Получение общей аналитики для тикеров конкретной индустрии
+             </summary>
+             <param name="IndustryId">ID индустрии (целое число).</param>
+             <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+             <remarks>
+             Пример запроса:
+            
+                 GET /industries-general-analytics?IndustryId=1
+                 
+             </remarks>
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetSectorAnalytics(System.Int32)">
+             <summary>
+             Получение общей аналитики для тикеров индустрий конкретного сектора
+             </summary>
+             <param name="SectorId">ID сектора (целое число).</param>
+             <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+             <remarks>
+             Пример запроса:
+            
+                 GET /industries-general-analytics?IndustryId=1
+                 
+             </remarks>
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetTickersHeatmap">
+             <summary>
+             Получение корреляции между всеми секторами
+             </summary>
+             <response code="200">
+             Возвращает массив названий секторов (sectors[]: string)<br></br>
+             Матрица для построения тепловой карты (matrix[sectors[] length]: decimal)<br></br>
+             Количество компаний в каждом секторе (stocks_Per_sector {string: int})<br></br>
+             </response>
+             
+             <remarks>
+             Пример запроса:
+            
+                 GET /tickers-heatmap
+                 
+             </remarks>
+             
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetTickersTopTen">
+             <summary>
+             Возвращает топ 10 компаний, которые в дни падения всего рынка падают меньше рынка или растут
+             </summary>
+             <response code="200">
+             Возвращает статус выполнения (success: bool)<br></br>
+             Массив полезных данных для отрисовки рейтингового списка (data []: Dictionary (string: string || decimal || int))<br></br>
+             </response>
+             
+             <remarks>
+             Пример запроса:
+            
+                 GET /tickers-top-ten
+                 
+             </remarks>
+             
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetPortfolioMetrics(System.Collections.Generic.Dictionary{System.Int32,System.Decimal})">
+             <summary>
+             Расчитывает метрики для готового портфеля с имеющимся весами по компаниям 
+             </summary>
+             <param name="tickersAndPercantages">Словарь с ID тикеров и процентами в портфеле (в сумме должны дать 1)</param>
+             <response code="200">
+             Отображение коэфициентов<br></br>
+             Возвращает статус ожидаемая доходность (expected_return: double)<br></br>
+             Коэфициент Шарпа (sharpe_ratio: double)<br></br>
+             Волатильность (volatility: double)<br></br>
+             </response>
+             
+             <remarks>
+             Пример запроса:
+            
+                 GET /portfolio-metrics?tickersAndPercantages[2862]=0.46&amp;tickersAndPercantages[2863]=0.54
+                 
+             </remarks>
+             
+        </member>
+        <member name="M:StockLens.Controllers.AnalyticsController.GetPortfolioOptimized(System.Collections.Generic.List{System.Int32})">
+             <summary>
+             Расчитывает веса компаний в портфеле и метрики для портфеля 
+             </summary>
+             <param name="tickersId">Список с Id тикеров</param>
+             <response code="200">
+             Возвращение коэфцииентов для отображения<br></br>
+             Вовзаращает веса компаний (Dictionary(string: decimal))<br></br>
+             Возвращает статус ожидаемая доходность (expected_return: double)<br></br>
+             Коэфициент Шарпа (sharpe_ratio: double)<br></br>
+             Волатильность (volatility: double)<br></br>
+             Поясняющий текст (text: string)<br></br>
+             Характериситика портфеля (riskProfile: string)<br></br>
+             </response>
+             
+             <remarks>
+             Пример запроса:
+            
+                 GET /portfolio-metrics?tickersId = 28624&amp;tickersId = 2863
+                 
+             </remarks>
+             
+        </member>
+        <member name="M:StockLens.Controllers.AuthController.Register(StockLens.Dtos.AuthDtos.RegisterDto)">
+            <summary>
+            Регистрация пользователя 
+            </summary>
+            <response code="200">
+            Возвращает string оповещающее об отправке письма на почту
+            </response>
+            <param name="dto">Логин, почта и пароль</param>
+            
+        </member>
+        <member name="M:StockLens.Controllers.AuthController.Login(StockLens.Dtos.AuthDtos.LoginDto)">
+            <summary>
+            Вход в аккаунт
+            </summary>
+            <response code="200">
+            Возвращает объект с данными пользователями
+            </response>
+            <param name="dto">Логин и пароль</param>
+        </member>
+        <member name="M:StockLens.Controllers.AuthController.Refresh(System.String)">
+            <summary>
+            Обновление JWT токена
+            </summary>
+            <param name="CurrentRefreshToken">Текущий refresh token</param>
+        </member>
+        <member name="M:StockLens.Controllers.AuthController.ConfirmEmail(System.String,System.String)">
+            <summary>
+            Подтверждение почты
+            </summary>
+            <param name="token">token подтверждения почты (уже сформирован в письме)</param>
+            <param name="email">подтверждаемый email</param>
+        </member>
+        <member name="M:StockLens.Controllers.JsonReaderController.ReadJsonFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Заполняет/обновляет базу данных по данному JSON файлу
+            </summary>
+            <response code="201">
+            Заполнение/обновление прошло успешно
+            </response>
+            
         </member>
         <member name="T:StockLens.Migrations.Initialreate">
             <inheritdoc />

@@ -2,9 +2,11 @@
 using StockLens.Dtos.QuotesDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
+using StockLens.Models;
 using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.HttpRequester;
+using System.Collections;
 using System.Collections.Generic;
 using TickersModel = StockLens.Models.Tickers;
 
@@ -36,102 +38,44 @@ namespace StockLens.Services.Tickers
             var ticker = await _tickersRepository.GetTicker(industryId);
             return ticker.CreateDtoFromTickers();
         }
-        public async Task<List<GetTickersDto>?> GetTickersAsync(TickersQuery query)
+
+        public async Task<GetTickersDto> GetTickerByIdAsync(int TickerId)
         {
-            IReadOnlyList<TickersModel>? tickers;
-            if (query.InudustriesId.Count() > 0)
-            {
-                tickers = await GetTickersByIndustryAsync(query.InudustriesId, query.pageNumber, query.pageSize);
+            var ticker = await _tickersRepository.GetTicker(TickerId);
+            if (ticker == null) 
+                throw new NullReferenceException(nameof(ticker));
+            return ticker!.CreateDtoFromTickers();
+        }
 
-                if (tickers == null) 
-                    return null;
-            } else
-            {
+        public async Task<IEnumerable<GetTickersDto?>> GetTickersByIndustriesAsync(IEnumerable<int> industriesId, int start, int size)
+        {
+            var inds = await _tickersRepository.GetTickersByIndustriesAsync(industriesId, start, size);
+            if (inds == null)
+                throw new NullReferenceException($"{nameof(inds)}");
 
-                tickers = await GetAllTickersPaginatedAsync(query.pageNumber, query.pageSize);
+            return inds.Select(t => t.CreateDtoFromTickers());
 
-                if (tickers == null)
-                    return null;
-            }
+        }
 
-            var filteredList = GetTicketsFiltered(tickers, query);
-            if (filteredList != null)
-                tickers = filteredList;
+        public async Task<IEnumerable<GetTickersDto>> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size)
+        {
+            var tickers = await _tickersRepository.GetTickersByCitiesAsync(citiesId, start, size);
+            if (tickers == null)
+                throw new NullReferenceException($"{nameof(tickers)}");
 
-            var sortedList = GetTickersSortedAsync(tickers, query);
-            if (sortedList != null)
-                tickers = sortedList;
+            return tickers.Select(t => t.CreateDtoFromTickers());
+        }
 
-            return tickers.Select(t => t.CreateDtoFromTickers()).ToList();
-
-
+        public async Task<IEnumerable<GetTickersDto>> GetTickersAsync(int start, int size)
+        {
+            var tickers = await _tickersRepository.GetTickersAsync(start, size);
+            return tickers.Select(t => t.CreateDtoFromTickers());
         }
 
         public async Task<IEnumerable<GetTickersDto>> GetTickersAsync()
         {
-            return await _tickersRepository.GetTickers().ContinueWith(t => t.Result.Select(t => t.CreateDtoFromTickers()));
+            return (await _tickersRepository.GetTickersAsync()).Select(t => t.CreateDtoFromTickers());
         }
 
-        private async Task<IReadOnlyList<TickersModel>>? GetTickersByIndustryAsync(IReadOnlyCollection<int> ids, int pageNumber, int pageSize)
-        {
-            int skip = (pageNumber - 1) * pageSize;
-            return await _tickersRepository.GetTickers(ids, skip, pageSize);
-        }
-
-        private async Task<IReadOnlyList<TickersModel>?> GetAllTickersPaginatedAsync(int pageNumber, int pageSize)
-        {
-            int skip = (pageNumber - 1) * pageSize;
-            return await _tickersRepository.GetTickers(skip, pageSize);
-        }
-
-        private IReadOnlyList<TickersModel>? GetTicketsFiltered(IReadOnlyList<TickersModel> tics, TickersQuery query)
-        {
-            IReadOnlyList<TickersModel>? filtered = null;
-
-            if (query.CityFiltersId != null)
-            {
-                filtered = tics.Where(t => t.CityId == query.CityFiltersId).ToList();
-            }
-
-            return filtered;
-        }
-        private IReadOnlyList<TickersModel>? GetTickersSortedAsync(IReadOnlyList<TickersModel> tics, TickersQuery query)
-        {
-            IReadOnlyList<TickersModel>? sorted = null;
-
-            if (query.levelSortDesc != null)
-            {
-                sorted = (query.levelSortDesc.Value 
-                    ? tics.OrderByDescending(t => t.ListLevel) 
-                    : tics.OrderBy(t => t.ListLevel)).ToList();
-                return sorted;
-            }
-
-            if (query.PrivalagedSort != null)
-            {
-                sorted = (query.PrivalagedSort.Value
-                    ? tics.OrderByDescending(t => t.ListLevel)
-                    : tics.OrderBy(t => t.ListLevel)).ToList();
-                return sorted;
-            }
-
-            if (query.PrivalagedSort != null)
-            {
-                sorted = (query.PrivalagedSort.Value
-                    ? tics.OrderByDescending(t => t.ListLevel)
-                    : tics.OrderBy(t => t.ListLevel)).ToList();
-                return sorted;
-            }
-
-            if (query.DividendsSortDesc != null)
-            {
-                sorted = (query.DividendsSortDesc.Value
-                    ? tics.OrderByDescending(t => t.ListLevel)
-                    : tics.OrderBy(t => t.ListLevel)).ToList();
-                return sorted;
-            }
-
-            return sorted;
-        }   
     }
 }

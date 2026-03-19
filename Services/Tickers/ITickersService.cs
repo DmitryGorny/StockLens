@@ -1,4 +1,5 @@
-﻿using StockLens.Dtos.IndustriesDtos;
+﻿using MimeKit.Tnef;
+using StockLens.Dtos.IndustriesDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Queries;
 
@@ -8,8 +9,11 @@ namespace StockLens.Services.Tickers
     {
         public Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos);
         public Task AddTikersAsync(CreateTickersDto dto);
-        public Task<GetTickersDto?> GetTickerAsync(int industryId);
-        public Task<List<GetTickersDto>?> GetTickersAsync(TickersQuery query);
+        public Task<GetTickersDto> GetTickerByIdAsync(int TickerId);
+        public Task<IEnumerable<GetTickersDto?>> GetTickersByIndustriesAsync(IEnumerable<int> industriesId, int start, int size);
+        public Task<IEnumerable<GetTickersDto>> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size);
+        public Task<IEnumerable<GetTickersDto>> GetTickersAsync(int start, int size);
         public Task<IEnumerable<GetTickersDto>> GetTickersAsync();
+
     }
 }
