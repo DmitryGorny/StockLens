@@ -45,5 +45,11 @@ namespace StockLens.Repositories.Cities
         {
             return await _db_context.Cities.ToListAsync();
         }
+
+        public Task DeleteCityAsync(CitiesModel model)
+        {
+            _db_context.Cities.Remove(model);
+            return _db_context.SaveChangesAsync();
+        }
     }
 }

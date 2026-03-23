@@ -7,6 +7,7 @@ namespace StockLens.Services.Cities
     {
         public Task<GetCitiesDto> GetCity(int cityId);
         public Task<IEnumerable<GetCitiesDto>> GetAllCities();
-
+        public Task CreateCity(CreateCitiesDtos dto);
+        public Task DeleteCity(int cityId);
     }
 }

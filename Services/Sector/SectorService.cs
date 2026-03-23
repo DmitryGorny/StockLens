@@ -1,12 +1,8 @@
-﻿using StockLens.Dtos.QuotesDtos;
-using StockLens.Dtos.SectorDtos;
+﻿using StockLens.Dtos.SectorDtos;
 using StockLens.Mappers;
 using StockLens.Models;
-using StockLens.Queries;
 using StockLens.Repositories.Sector;
 using StockLens.Services.HttpRequester;
-using System.Text.Json;
-using System.Threading.Tasks;
 using SectorModel = StockLens.Models.Sectors;
 
 
@@ -53,5 +49,19 @@ namespace StockLens.Services.Sector
             return (await _sectorRepository.GetAllSectorsAsync(start, size)).Select(s => s.CreateDtoFromSectors());
         }
 
+        public async Task PatchSector(int sectorId, PatchSectorDto dto)
+        {
+            await _sectorRepository.PatchSectorAsync(sectorId, dto);
+        }
+
+        public async Task DeleteSectorHard(int sectorId)
+        {
+            var sector = await _sectorRepository.GetSectorAsync(sectorId);
+            if (sector == null)
+            {
+                throw new Exception($"Сектор с id {sectorId} не найден");
+            }
+            await _sectorRepository.DeleteSectorHardAsync(sectorId);
+        }
     }
 }

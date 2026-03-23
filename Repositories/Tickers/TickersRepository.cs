@@ -1,8 +1,11 @@
 ﻿using EFCore.BulkExtensions;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using StockLens.data;
 using StockLens.Dtos.TickersDto;
+using StockLens.Mappers;
 using TickersModel = StockLens.Models.Tickers;
 
 
@@ -114,10 +117,32 @@ namespace StockLens.Repositories.Tickers
             return await _db_context.Tickers.ToListAsync();
         }
 
-        public async Task CreateTicker(TickersModel dto)
+        public async Task CreateTicker(TickersModel ticker)
         {
-            await _db_context.Tickers.AddAsync(dto);
+            var industry = await _db_context.Industries.FirstOrDefaultAsync(i => i.Id == ticker.IndustryId);
+            var city = await _db_context.Cities.FirstOrDefaultAsync(c => c.Id == ticker.CityId);
+
+            if (industry == null || city == null)
+                throw new Exception("Данные неккоректны");
+
+            await _db_context.Tickers.AddAsync(ticker);
             await _db_context.SaveChangesAsync();  
+        }
+
+        public async Task PatchTicker(int TikerId, PatchTickerDto dto)
+        {
+            var ticker = await _db_context.Tickers.FindAsync(TikerId);
+
+            if (ticker == null)
+                throw new Exception($"Тикера с id {TikerId} не найдено");
+            ticker.PatchTiker(dto);
+            await _db_context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTickerHardAsync(TickersModel ticker)
+        {
+            _db_context.Tickers.Remove(ticker); 
+            await _db_context.SaveChangesAsync();
         }
     }
 }

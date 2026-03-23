@@ -3,7 +3,6 @@ using StockLens.Dtos.QuotesDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
 using StockLens.Models;
-using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.HttpRequester;
 using System.Collections;
@@ -15,12 +14,10 @@ namespace StockLens.Services.Tickers
     public class TickersService : ITickersService
     {
         private readonly ITickersRepository _tickersRepository;
-        private readonly IHttpRequester _analyticsRequester;
 
-        public TickersService(ITickersRepository tickersRepository, IHttpRequester httpRequester)
+        public TickersService(ITickersRepository tickersRepository)
         {
             _tickersRepository = tickersRepository;
-            _analyticsRequester = httpRequester;
         }
 
         public async Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos)
@@ -75,6 +72,24 @@ namespace StockLens.Services.Tickers
         public async Task<IEnumerable<GetTickersDto>> GetTickersAsync()
         {
             return (await _tickersRepository.GetTickersAsync()).Select(t => t.CreateDtoFromTickers());
+        }
+
+        public async Task CreateTicker(CreateTickersDto dto)
+        {
+            if (dto == null) throw new Exception("Данные неккоретны");
+            await _tickersRepository.CreateTicker(dto.CreateTickerFromDto());
+        }
+
+        public async Task PatchTickerAsync(int TickerId, PatchTickerDto dto)
+        {
+            await _tickersRepository.PatchTicker(TickerId, dto);
+        }
+
+        public async Task DeleteTickerAsync(int TickerId)
+        {
+            var ticker = await  _tickersRepository.GetTicker(TickerId);
+            if (ticker == null) throw new NullReferenceException($"Тикер с id {TickerId} не найден");
+            await _tickersRepository.DeleteTickerHardAsync(ticker);
         }
 
     }

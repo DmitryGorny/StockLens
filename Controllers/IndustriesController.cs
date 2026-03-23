@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NetTopologySuite.Index.Strtree;
 using StockLens.Dtos.IndustriesDtos;
-using StockLens.Queries;
 using StockLens.Services.Industries;
 
 namespace StockLens.Controllers
@@ -69,6 +68,52 @@ namespace StockLens.Controllers
             } catch (Exception ex)
             {
                 return Task.FromResult<ActionResult<IEnumerable<GetIndustryDto>>>(NotFound(ex.Message));
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("create-industry")]
+        public async Task<IActionResult> CreateIndustry(CreateIndustryDto dto)
+        {
+            try
+            {
+                await _industryService.CreateIndustry(dto);
+                return Created(); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{IndustryId}")]
+        public async Task<IActionResult> PatchIndustry(int IndustryId, PatchIndustryDto dto)
+        {
+            try
+            {
+                await _industryService.PatchIndustry(IndustryId, dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{IndustryId}")]
+        public async Task<IActionResult> DeleteIndustry(int IndustryId)
+        {
+            try
+            {
+                await _industryService.DeleteIndustry(IndustryId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

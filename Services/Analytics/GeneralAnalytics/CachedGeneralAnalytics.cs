@@ -1,5 +1,4 @@
 ﻿using StockLens.Dtos.AuthDtos;
-using StockLens.Queries;
 using StockLens.Services.Cache;
 
 namespace StockLens.Services.Analytics.GeneralAnalytics

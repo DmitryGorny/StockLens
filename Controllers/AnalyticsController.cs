@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.QuotesDtos.Analytics.Responses;
 using StockLens.Mappers;
-using StockLens.Queries;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;

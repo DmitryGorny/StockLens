@@ -7,7 +7,9 @@ namespace StockLens.Repositories.Industries
     public interface IIndustriesRepository
     {
         public Task BulkCreateIndustriesAsync(List<IndustiesModel> sector);
-        public Task CreateIndustriesAsync(IndustiesModel sector);
+        public Task CreateIndustriesAsync(IndustiesModel industry);
+        public Task PatchIndustry(int industryId, PatchIndustryDto dto);
+        public Task DeleteIndustryHardAsync(IndustiesModel industry);
         public Task<IndustiesModel?> GetIndustryBySectorAsync(int sectorId);
         public Task<IndustiesModel?> GetIndustryAsync(int industryId);
         public Task<IndustiesModel>? GetIndustriesWithDependencies(int industryId);

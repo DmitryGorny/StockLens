@@ -11,5 +11,6 @@ namespace StockLens.Repositories.Cities
         public Task<CitiesModel> AddCityAsync(CitiesModel City);
         public Task<CitiesModel?> GetCity(int cityId);
         public Task<IEnumerable<CitiesModel>> GetAllCitiesAsync();
+        public Task DeleteCityAsync(CitiesModel model);
     }
 }

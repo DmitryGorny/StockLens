@@ -25,5 +25,13 @@ namespace StockLens.Mappers
                 Description = dto.Description
             };
         }
+
+        public static void PatchSectorFromDto(this Sectors sector, PatchSectorDto dto)
+        {
+            if (dto.Name != null)
+                sector.Name = dto.Name;
+            if (dto.Description != null)
+                sector.Description = dto.Description;
+        }
     }
 }

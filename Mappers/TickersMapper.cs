@@ -1,6 +1,7 @@
 ﻿using StockLens.Dtos.SectorDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Models;
+using System.Runtime.CompilerServices;
 
 namespace StockLens.Mappers
 {
@@ -41,6 +42,33 @@ namespace StockLens.Mappers
                 ListLevel = dto.ListLevel,
                 CityId = dto.CityId,
             };
+        }
+
+        public static void PatchTiker(this Tickers ticker, PatchTickerDto dto)
+        {
+            if (dto.Name != null)
+                ticker.Name = dto.Name;
+
+            if (dto.Symbol != null)
+                ticker.Symbol = dto.Symbol;
+
+            if (dto.Description != null)
+                ticker.Description = dto.Description;
+
+            if (dto.Privileged.HasValue)
+                ticker.Privileged = dto.Privileged.Value;
+
+            if (dto.ListLevel.HasValue)
+                ticker.ListLevel = dto.ListLevel.Value;
+
+            if (dto.LongName != null)
+                ticker.LongName = dto.LongName;
+
+            if (dto.DividendsValue.HasValue)
+                ticker.DividendsValue = dto.DividendsValue.Value;
+
+            if (dto.DividendsPercents.HasValue)
+                ticker.DividendsPercents = dto.DividendsPercents.Value;
         }
     }
 }

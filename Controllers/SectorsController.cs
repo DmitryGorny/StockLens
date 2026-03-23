@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using StockLens.Dtos.SectorDtos;
-using StockLens.Queries;
 using StockLens.Services.Sector;
 
 namespace StockLens.Controllers
@@ -51,6 +51,52 @@ namespace StockLens.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("create-sector")]
+        public async Task<IActionResult> CreateSector(CreateSectorDto dto)
+        {
+            try
+            {
+                await _sectorService.CreateSectorAsync(dto);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{sectorId}")]
+        public async Task<IActionResult> PatchSector(int sectorId, PatchSectorDto dto)
+        {
+            try
+            {
+                await _sectorService.PatchSector(sectorId, dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{sectorId}")]
+        public async Task<IActionResult> DeleteSector(int sectorId)
+        {
+            try
+            {
+                await _sectorService.DeleteSectorHard(sectorId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

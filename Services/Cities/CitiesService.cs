@@ -24,5 +24,19 @@ namespace StockLens.Services.Cities
             if (cities == null || cities.Count() == 0) throw new Exception("Города не были найдены");
             return cities.Select(c => c.ToDtoFromCities());
         }
+
+        public async Task CreateCity(CreateCitiesDtos dto)
+        {
+            var city = dto.ToCitiesFromDto();
+            if (city == null) throw new Exception("Город не был создан");
+            await _citiesRepositroy.AddCityAsync(city);
+        }
+
+        public async Task DeleteCity(int cityId)
+        {
+            var city = await _citiesRepositroy.GetCity(cityId);
+            if (city == null) throw new Exception($"Город с {cityId} не был найден");
+            await _citiesRepositroy.DeleteCityAsync(city);
+        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using StockLens.Dtos.IndustriesDtos;
 using StockLens.Dtos.QuotesDtos;
 using StockLens.Mappers;
-using StockLens.Queries;
 using StockLens.Repositories.Industries;
 using StockLens.Services.HttpRequester;
 using IndustriesModel = StockLens.Models.Industries;
@@ -63,5 +62,27 @@ namespace StockLens.Services.Industries
             return inds.Select(i => i.ToDtoFromIndustries());
 
         }
+
+        public async Task CreateIndustry(CreateIndustryDto dto)
+        {
+            IndustriesModel industry = dto.ToIndustriesFromDto();
+            if (industry == null)
+                throw new Exception($"Индустрия не была создана");
+            await _industriesRepo.CreateIndustriesAsync(industry);
+        }
+
+        public async Task PatchIndustry(int IndustryId, PatchIndustryDto dto)
+        {
+            await _industriesRepo.PatchIndustry(IndustryId, dto);
+        }
+
+        public async Task DeleteIndustry(int IndustryId)
+        {
+            var ind = await _industriesRepo.GetIndustryAsync(IndustryId);
+            if (ind == null)
+                throw new Exception($"Индустрия с id {IndustryId} не была найдена");
+            await _industriesRepo.DeleteIndustryHardAsync(ind);
+        }
     }
 }
+

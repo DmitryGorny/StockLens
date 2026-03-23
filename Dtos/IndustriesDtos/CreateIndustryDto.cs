@@ -1,18 +1,15 @@
 ﻿using StockLens.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace StockLens.Dtos.IndustriesDtos
 {
     public class CreateIndustryDto
     {
-        public int Id { get; set; }
-
+        [Required]
         public string Name { get; set; }
-
+        [Required]
         public string Description { get; set; }
-
-        public List<Tickers> Tickers { get; set; } = new();
-
+        [Required]
         public int SectorId { get; set; }
-        public Sectors Sector { get; set; }
     }
 }

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using StockLens.data;
+using StockLens.Dtos.SectorDtos;
+using StockLens.Mappers;
 using SectorModel = StockLens.Models.Sectors;
 
 namespace StockLens.Repositories.Sector
@@ -23,8 +25,8 @@ namespace StockLens.Repositories.Sector
         public async Task<SectorModel> CreateSectorAsync(SectorModel sector)
         {
             var alreadyExist = await _db_context.Sectors.FirstOrDefaultAsync(s => s.Name == sector.Name);
-            if (alreadyExist != null) 
-            {             
+            if (alreadyExist != null)
+            {
                 alreadyExist.Description = sector.Description;
                 return alreadyExist;
             }
@@ -51,5 +53,26 @@ namespace StockLens.Repositories.Sector
             return await _db_context.Sectors.Skip(start).Take(size).ToListAsync();
         }
 
+        public async Task PatchSectorAsync(int sectorId, PatchSectorDto sector)
+        {
+            var sec = await _db_context.Sectors.FindAsync(sectorId);
+
+            if (sec == null)
+                throw new Exception($"Сектор с id {sectorId} не найден");
+
+            sec.PatchSectorFromDto(sector);
+            await _db_context.SaveChangesAsync();
+
+        }
+
+        public async Task DeleteSectorHardAsync(int sectorId)
+        {
+            var sec = await _db_context.Sectors.FindAsync(sectorId);
+            if (sec == null)
+                throw new Exception($"Сектор с id {sectorId} не найден");
+
+            _db_context.Sectors.Remove(sec);
+            await _db_context.SaveChangesAsync();
+        }
     }
 }

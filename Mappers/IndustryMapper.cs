@@ -25,5 +25,13 @@ namespace StockLens.Mappers
                 SectorId = industry.SectorId,
             };
         }
+
+        public static void PatchIndustriesFromDto(this Industries industry, PatchIndustryDto dto)
+        {
+            if (dto.Description != null)
+                industry.Description = dto.Description;
+            if (dto.Name != null)
+                industry.Name = dto.Name;
+        }
     }
 }

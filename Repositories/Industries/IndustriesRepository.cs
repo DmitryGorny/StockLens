@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StockLens.data;
 using StockLens.Dtos.IndustriesDtos;
+using StockLens.Mappers;
 using IndustiesModel = StockLens.Models.Industries;
 
 namespace StockLens.Repositories.Industries
@@ -29,9 +30,13 @@ namespace StockLens.Repositories.Industries
             await _db_context.SaveChangesAsync();
         }
 
-        public async Task CreateIndustriesAsync(IndustiesModel sector)
+        public async Task CreateIndustriesAsync(IndustiesModel industry)
         {
-            await _db_context.AddAsync(sector);
+            var sector = await _db_context.Sectors.FindAsync(industry.SectorId);
+            if (sector == null)
+                throw new Exception($"Сектор с id {industry.SectorId} не найден");
+
+            await _db_context.AddAsync(industry);
             await _db_context.SaveChangesAsync();
         }
 
@@ -68,5 +73,22 @@ namespace StockLens.Repositories.Industries
                                         .Take(size)
                                         .ToListAsync();
         }
+
+        public async Task PatchIndustry(int industryId, PatchIndustryDto dto)
+        {
+            var ind = await _db_context.Industries.FindAsync(industryId);
+            if (ind == null)
+                throw new Exception($"Индустрия с id {industryId} не найдена");
+
+            ind.PatchIndustriesFromDto(dto);
+            await _db_context.SaveChangesAsync();
+        }
+
+        public async Task DeleteIndustryHardAsync(IndustiesModel industry)
+        {
+            _db_context.Industries.Remove(industry);
+            await _db_context.SaveChangesAsync();
+        }
+
     }
 }

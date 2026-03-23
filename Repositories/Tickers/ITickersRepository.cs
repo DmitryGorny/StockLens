@@ -1,4 +1,5 @@
-﻿using StockLens.Dtos.TickersDto;
+﻿using Org.BouncyCastle.Bcpg.OpenPgp;
+using StockLens.Dtos.TickersDto;
 using TickersModel = StockLens.Models.Tickers;
 
 namespace StockLens.Repositories.Tickers
@@ -7,6 +8,8 @@ namespace StockLens.Repositories.Tickers
     {
         public Task BulkCreateTickersAsync(List<TickersModel> tickers);
         public Task CreateTicker(TickersModel dto);
+        public Task PatchTicker(int TikerId, PatchTickerDto dto);
+        public Task DeleteTickerHardAsync(TickersModel tiker);
         public Task AddTickerAsync(TickersModel ticker);
         public Task<IEnumerable<TickersModel>?> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size);
         public Task<IEnumerable<TickersModel>?> GetTickersByCitiesAsync(IEnumerable<int> citiesId);

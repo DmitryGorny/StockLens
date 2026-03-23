@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.TickersDto;
-using StockLens.Models;
 using StockLens.Services.Tickers;
 
 namespace StockLens.Controllers
@@ -92,5 +91,52 @@ namespace StockLens.Controllers
                 return NotFound();
             }
         }
+
+        //[Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("create-ticker")]
+        public async Task<IActionResult> CreateTickers([FromBody] CreateTickersDto dto)
+        {
+            try
+            {
+                await _tickersService.CreateTicker(dto);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{TickerId}")]
+        public async Task<IActionResult> PatchTickers(int TickerId, [FromBody] PatchTickerDto dto)
+        {
+            try
+            {
+                await _tickersService.PatchTickerAsync(TickerId, dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[Authorize(Roles = "Admin")]
+        [HttpDelete("{TickerId}")]
+        public async Task<IActionResult> DeleteTicker(int TickerId)
+        {
+            try
+            {
+                await _tickersService.DeleteTickerAsync(TickerId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
     } 
 }

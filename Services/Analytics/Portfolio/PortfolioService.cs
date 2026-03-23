@@ -2,7 +2,6 @@
 using StockLens.Dtos.QuotesDtos.Analytics;
 using StockLens.Dtos.QuotesDtos.Analytics.Fabric;
 using StockLens.Mappers;
-using StockLens.Queries;
 using StockLens.Repositories.Quotes;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.HttpRequester;

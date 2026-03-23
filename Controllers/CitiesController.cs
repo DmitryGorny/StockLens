@@ -47,6 +47,35 @@ namespace StockLens.Controllers
                 return NotFound(ex.Message);
             }
         }
-    }
+
+        [HttpPost]
+        [Route("create-city")]
+        public async Task<IActionResult> CreateCity(CreateCitiesDtos dto)
+        {
+            try
+            {
+                await _cityService.CreateCity(dto);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{cityId}")]
+        public async Task<IActionResult> GetAllCities(int cityId)
+        {
+            try
+            {
+                await _cityService.DeleteCity(cityId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+     }
 
 }

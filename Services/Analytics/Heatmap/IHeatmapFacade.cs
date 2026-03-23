@@ -1,5 +1,4 @@
 ﻿using StockLens.Dtos.AuthDtos;
-using StockLens.Queries;
 
 namespace StockLens.Services.Analytics.Heatmap
 {

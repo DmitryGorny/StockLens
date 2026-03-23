@@ -4,7 +4,6 @@ using StockLens.Dtos.QuotesDtos.Analytics;
 using StockLens.Dtos.QuotesDtos.Analytics.Fabric;
 using StockLens.Mappers;
 using StockLens.Models;
-using StockLens.Queries;
 using StockLens.Repositories.Cities;
 using StockLens.Repositories.Industries;
 using StockLens.Repositories.Quotes;
