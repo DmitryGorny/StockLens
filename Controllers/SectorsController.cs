@@ -19,6 +19,11 @@ namespace StockLens.Controllers
             _sectorService = sectorService;
         }
 
+        /// <summary>
+        ///Выгружает данные по всем секторам с пагинацией. Если секторов нет, то возвращает 404 ошибку
+        /// </summary>
+        /// <param name="start">Индекс начала выборки</param> 
+        /// <param name="size">Количество тикеров в запросе</param>
         [HttpGet]
         public async Task<IActionResult> GetAllSectors(int start, int size)
         {
@@ -32,6 +37,10 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Выгружает данные по одной индустрии, которая соответствует переданному id. Если индустрии с таким id не существует, то возвращает 404 ошибку
+        /// </summary>
+        /// <param name="sectorId">Id нужного тикера</param> 
         [HttpGet("{sectorId}")]
         public async Task<ActionResult<GetSectorDto>> GetSector(int sectorId)
         {

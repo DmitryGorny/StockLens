@@ -21,6 +21,8 @@ namespace StockLens.Mappers
                 IndustryId = ticker.IndustryId,
                 ListLevel = ticker.ListLevel,
                 CityId = ticker.CityId,
+                Industry = ticker.Industry.ToDtoFromIndustries(),
+                City = ticker.City.ToDtoFromCities(),
             };
         }
 

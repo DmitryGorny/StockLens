@@ -19,22 +19,43 @@ namespace StockLens.Services.Auth.AuthService
         private readonly ITokenCreator _tokenService;
         private readonly SignInManager<User> _signinManager;
         private readonly IEmailMessagesSender _emailService;
+        private readonly IConfiguration _configuration;
         public AuthService(UserManager<User> userManager, 
                             ITokenCreator tokenService, 
                             SignInManager<User> signInManager,
+                            IConfiguration configuration,
                             IEmailMessagesSender emailMessagesSender)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signinManager = signInManager;
             _emailService = emailMessagesSender;
+            _configuration = configuration;
         }
         public async Task<string> Register(RegisterDto dto)
         {
+
+            var investmentHorizonDict = _configuration
+                .GetSection("RegistrationTestCoefs:InvestmentHorizon")
+                .Get<Dictionary<string, int>>();
+
+            var maxDrawdownDict = _configuration
+                .GetSection("RegistrationTestCoefs:MaxDrawdownPercent")
+                .Get<Dictionary<string, int>>();
+            var reactionToDropDict = _configuration.GetSection("RegistrationTestCoefs:ReactionToDrop")
+                                                    .Get<Dictionary<string, int>>();
+            var experienceDict = _configuration.GetSection("RegistrationTestCoefs:Experience")
+                                            .Get<Dictionary<string, int>>();
+
             var User = new User
             {
                 UserName = dto.Username,
                 Email = dto.Email,
+                InvestmentHorizon = investmentHorizonDict[dto.InvestmentHorizon.ToString()],
+                MaxDrawdownPercent = maxDrawdownDict[dto.MaxDrawdownPercent.ToString()],
+                ReactionToDrop = reactionToDropDict[dto.ReactionToDrop.ToString()],
+                Experience = experienceDict[dto.Experience.ToString()]
+
             };
 
             var user = await _userManager.FindByEmailAsync(dto.Email);

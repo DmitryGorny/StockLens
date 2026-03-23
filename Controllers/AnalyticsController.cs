@@ -46,6 +46,7 @@ namespace StockLens.Controllers
         /// Получение общей аналитики для конкретного тикера
         /// </summary>
         /// <param name="TickerId">ID тикера (целое число).</param>
+        /// <param name="daysNumber">Количество дней за которое будет выгрузка для анализа</param>
         /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
         /// <remarks>
         /// Пример запроса:
@@ -56,13 +57,42 @@ namespace StockLens.Controllers
         [HttpGet]
         [Route("tickers-general-analytics")]
         [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTickersAnalytics([FromQuery] int TickerId)
+        public async Task<IActionResult> GetTickersAnalytics([FromQuery] int TickerId, int daysNumber)
         {
+
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var characteristics = await _authService.GetUsersMetrics(email);
             try
             { 
-                string json = await _generalAnalyticsFacade.GetTickersGeneralAnalytics(TickerId, characteristics);
+                string json = await _generalAnalyticsFacade.GetTickersGeneralAnalytics(TickerId, daysNumber, characteristics);
+                return Ok(json);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+
+        /// <summary>
+        /// Получение общей аналитики для тикеров конкретного города
+        /// </summary>
+        /// <param name="CityId">ID города (целое число).</param>
+        /// <param name="daysNumber">Количество дней за которое будет выгрузка для анализа</param>
+        /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
+        /// <remarks>
+        /// Пример запроса:
+        ///
+        ///     GET /city-general-analytics?CityId=1
+        ///     
+        /// </remarks>
+        [HttpGet]
+        [Route("city-general-analytics")]
+        [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCityAnalytics([FromQuery] int CityId, int daysNumber)
+        {
+
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var characteristics = await _authService.GetUsersMetrics(email);
+            try
+            {
+                string json = await _generalAnalyticsFacade.GetCityGeneralAnalytics(CityId, daysNumber, characteristics);
                 return Ok(json);
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
@@ -72,6 +102,7 @@ namespace StockLens.Controllers
         /// Получение общей аналитики для тикеров конкретной индустрии
         /// </summary>
         /// <param name="IndustryId">ID индустрии (целое число).</param>
+        /// <param name="daysNumber">Количество дней за которое будет выгрузка для анализа</param>
         /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
         /// <remarks>
         /// Пример запроса:
@@ -82,13 +113,13 @@ namespace StockLens.Controllers
         [HttpGet]
         [Route("industries-general-analytics")]
         [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetIndustryAnalytics([FromQuery] int IndustryId)
+        public async Task<IActionResult> GetIndustryAnalytics([FromQuery] int IndustryId, int daysNumber)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var characteristics = await _authService.GetUsersMetrics(email);
             try
             {
-                string json = await _generalAnalyticsFacade.GetIndustriesGeneralAnalytics(IndustryId, characteristics);
+                string json = await _generalAnalyticsFacade.GetIndustriesGeneralAnalytics(IndustryId, daysNumber, characteristics);
                 return Ok(json);
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
@@ -100,6 +131,7 @@ namespace StockLens.Controllers
         /// Получение общей аналитики для тикеров индустрий конкретного сектора
         /// </summary>
         /// <param name="SectorId">ID сектора (целое число).</param>
+        /// <param name="daysNumber">Количество дней за которое будет выгрузка для анализа</param>
         /// <response code="200">Возвращает координаты графика (x = date: string, y = normalized: float)</response>
         /// <remarks>
         /// Пример запроса:
@@ -110,13 +142,13 @@ namespace StockLens.Controllers
         [HttpGet]
         [Route("sectors-general-analytics")]
         [ProducesResponseType(typeof(StockItemResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetSectorAnalytics([FromQuery] int SectorId)
+        public async Task<IActionResult> GetSectorAnalytics([FromQuery] int SectorId, int daysNumber)
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var characteristics = await _authService.GetUsersMetrics(email);
             try
             {
-                string json = await _generalAnalyticsFacade.GetSectorsGeneralAnalytics(SectorId, characteristics);
+                string json = await _generalAnalyticsFacade.GetSectorsGeneralAnalytics(SectorId, daysNumber, characteristics);
                 return Ok(json);
             }
             catch (Exception ex)
@@ -270,5 +302,6 @@ namespace StockLens.Controllers
             }
 
         }
+
     }
 }

@@ -131,7 +131,7 @@ namespace StockLens.Services.FileReaderFacade
             return await _tickersService.BulkCreateTickersAsync(Tickers);
         }
 
-        private async Task<GetCitiesDtos> CreateCity(City city)
+        private async Task<GetCitiesDto> CreateCity(City city)
         {
             var dto = new CreateCitiesDtos
             {

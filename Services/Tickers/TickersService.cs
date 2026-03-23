@@ -43,7 +43,7 @@ namespace StockLens.Services.Tickers
         {
             var ticker = await _tickersRepository.GetTicker(TickerId);
             if (ticker == null) 
-                throw new NullReferenceException(nameof(ticker));
+                throw new NullReferenceException();
             return ticker!.CreateDtoFromTickers();
         }
 

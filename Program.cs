@@ -23,6 +23,7 @@ using StockLens.Services.Auth.AuthService;
 using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
 using StockLens.Services.Cache;
+using StockLens.Services.Cities;
 using StockLens.Services.Cron;
 using StockLens.Services.FileReaderFacade;
 using StockLens.Services.HttpRequester;
@@ -33,6 +34,7 @@ using StockLens.Services.Moex;
 using StockLens.Services.QuotesService;
 using StockLens.Services.Sector;
 using StockLens.Services.Tickers;
+using System;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +56,7 @@ builder.Services.AddScoped<IHttpRequester, AnalyticsHttpRequester>();
 builder.Services.AddScoped<IMoexService, MoexService>();
 builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
+builder.Services.AddScoped<ICityService, CitiesService>();
 builder.Services.AddScoped<IGeneralAnalyticsFacade, GeneralAnalyticsFacade>();
 builder.Services.AddScoped<IHeatmapFacade, HeatmapFacade>();
 builder.Services.AddScoped<ITopTenFacade, TopTenFacade>();
@@ -80,6 +83,15 @@ builder.Services.AddHttpClient<IHttpRequester, AnalyticsHttpRequester>(client =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
@@ -177,8 +189,9 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 

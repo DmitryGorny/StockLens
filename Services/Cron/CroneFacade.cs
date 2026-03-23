@@ -45,7 +45,6 @@ namespace StockLens.Services.Cron
                 catch (Exception ex) 
                 {
                     await transaction.RollbackAsync();
-                    throw ex;
                 }
                
             }

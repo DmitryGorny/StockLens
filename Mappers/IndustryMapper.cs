@@ -22,7 +22,7 @@ namespace StockLens.Mappers
                 Id = industry.Id,
                 Description = industry.Description,
                 Name = industry.Name,
-                SectorId = industry.SectorId
+                SectorId = industry.SectorId,
             };
         }
     }

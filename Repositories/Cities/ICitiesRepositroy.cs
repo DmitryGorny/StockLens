@@ -9,5 +9,7 @@ namespace StockLens.Repositories.Cities
     {
         public Task CreateCitiesBulkAsync(List<CitiesModel> Cities);
         public Task<CitiesModel> AddCityAsync(CitiesModel City);
+        public Task<CitiesModel?> GetCity(int cityId);
+        public Task<IEnumerable<CitiesModel>> GetAllCitiesAsync();
     }
 }

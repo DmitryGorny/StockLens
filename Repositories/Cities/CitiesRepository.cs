@@ -35,5 +35,15 @@ namespace StockLens.Repositories.Cities
             await _db_context.SaveChangesAsync();
             return city;
         }
+
+        public async Task<CitiesModel?> GetCity(int cityId)
+        {
+            return await _db_context.Cities.FirstOrDefaultAsync(c => c.Id == cityId);
+        }
+
+        public async Task<IEnumerable<CitiesModel>> GetAllCitiesAsync()
+        {
+            return await _db_context.Cities.ToListAsync();
+        }
     }
 }

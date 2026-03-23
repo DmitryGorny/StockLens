@@ -25,7 +25,7 @@ namespace StockLens.Controllers
         /// <response code="200">
         /// Возвращает string оповещающее об отправке письма на почту
         /// </response>
-        /// <param name="dto">Логин, почта и пароль</param>
+        /// <param name="dto">Логин, почта, пароль, номер ответа на вопрос</param>
         /// 
         [HttpPost]
         [Route("register")]
@@ -81,7 +81,6 @@ namespace StockLens.Controllers
         [ProducesResponseType(typeof(NewUserDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> Refresh([FromBody] string CurrentRefreshToken)
         {
-
             try
             {
                 var user = await _authService.RefreshToken(CurrentRefreshToken);

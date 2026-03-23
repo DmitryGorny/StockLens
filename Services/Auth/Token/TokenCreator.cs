@@ -41,7 +41,7 @@ namespace StockLens.Services.Auth.Token
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
+                Subject = new ClaimsIdentity(claims, "Bearer"),
                 Issuer = _config["JWT:Issuer"],
                 Expires = DateTime.Now.AddHours(1),
                 Audience = _config["JWT:Audience"],

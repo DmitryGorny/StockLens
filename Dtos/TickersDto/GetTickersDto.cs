@@ -1,4 +1,7 @@
-﻿namespace StockLens.Dtos.TickersDto
+﻿using StockLens.Dtos.CitiesDtos;
+using StockLens.Dtos.IndustriesDtos;
+
+namespace StockLens.Dtos.TickersDto
 {
     public class GetTickersDto
     {   
@@ -13,5 +16,7 @@
         public decimal DividendsPercents { get; set; }
         public int IndustryId { get; set; }
         public int CityId { get; set; }
+        public GetIndustryDto Industry { get; set; }
+        public GetCitiesDto City { get; set; }
     }
 }

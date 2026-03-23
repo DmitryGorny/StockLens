@@ -34,12 +34,9 @@ namespace StockLens.Repositories.Quotes
 
         public async Task<List<QuotesModel>> GetQuotesByTickerId(int tickerId, int limit)
         {
-            return  await _db_context.Quotes.Where(q => q.TickerId == tickerId)
+            return await _db_context.Quotes.Where(q => q.TickerId == tickerId && q.ts >= DateTime.UtcNow.AddDays(-limit))
                                             .Include(q => q.Ticker)
-                                            .ThenInclude(t => t.Industry)
-                                            .ThenInclude(i => i.Sector)
                                             .OrderByDescending(q => q.ts)
-                                            .Take(limit)
                                             .ToListAsync();
         }
     }

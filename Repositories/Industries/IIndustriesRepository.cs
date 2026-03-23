@@ -10,7 +10,7 @@ namespace StockLens.Repositories.Industries
         public Task CreateIndustriesAsync(IndustiesModel sector);
         public Task<IndustiesModel?> GetIndustryBySectorAsync(int sectorId);
         public Task<IndustiesModel?> GetIndustryAsync(int industryId);
-        public Task<IndustiesModel>? GetIndustriesWithDependencies(int industryId, int quotesNumber);
+        public Task<IndustiesModel>? GetIndustriesWithDependencies(int industryId);
         public Task<IEnumerable<IndustiesModel>?> GetIndustriesBySectorsAsync(List<int> sectorsIds, int start, int size);
         public Task<IEnumerable<IndustiesModel>?> GetAllIndustriesAsync(int start, int size);
     }

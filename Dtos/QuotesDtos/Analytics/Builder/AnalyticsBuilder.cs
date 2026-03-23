@@ -11,6 +11,9 @@ namespace StockLens.Dtos.QuotesDtos.Analytics.Fabric
         }
         public AnalyticsContainerDto<T> WrapAnalyticsDtos(UsersСharacteristicsDto characterisctics)
         {
+            if (AnalyticsDtos.Count() == 0)
+                throw new Exception("Котировки не были найдены");
+
             return new AnalyticsContainerDto<T>
             {
                 ReactionToDrop = characterisctics.ReactionToDrop,

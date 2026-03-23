@@ -16,9 +16,9 @@ namespace StockLens.Mappers
             };
         }
 
-        public static GetCitiesDtos ToDtoFromCities(this Cities city)
+        public static GetCitiesDto ToDtoFromCities(this Cities city)
         {
-            return new GetCitiesDtos
+            return new GetCitiesDto
             {
                 Id = city.Id,
                 Name = city.Name,

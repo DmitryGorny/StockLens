@@ -2,7 +2,7 @@
 
 namespace StockLens.Dtos.AuthDtos
 {
-    public class RegisterDto
+    public class RegisterDto : UsersСharacteristicsDto
     {
         [Required]
         public string Username { get; set; }

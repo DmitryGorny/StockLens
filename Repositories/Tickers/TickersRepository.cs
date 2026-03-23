@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using StockLens.data;
+using StockLens.Dtos.TickersDto;
 using TickersModel = StockLens.Models.Tickers;
 
 
@@ -39,6 +40,7 @@ namespace StockLens.Repositories.Tickers
         public async Task<IEnumerable<TickersModel>> GetTickers(IEnumerable<int> industriesId, int start, int end)
         {
             IEnumerable<TickersModel> tickers = await _db_context.Tickers.Where(t => industriesId.Contains(t.IndustryId))
+                                        .Include(t => t.Industry)
                                         .OrderBy(t => t.Industry.Name)
                                         .Skip(start)
                                         .Take(end)
@@ -48,6 +50,8 @@ namespace StockLens.Repositories.Tickers
         public async Task<IEnumerable<TickersModel>> GetTickersAsync(int start, int end)
         {
             IEnumerable<TickersModel> tickers = await _db_context.Tickers
+                                                                    .Include(t => t.Industry)
+                                                                    .Include(t => t.City)
                                                                     .Skip(start)
                                                                     .Take(end)
                                                                     .OrderBy(t => t.Industry.Name)
@@ -56,14 +60,8 @@ namespace StockLens.Repositories.Tickers
         }
         public async Task<TickersModel?> GetTicker(int tickerId)
         {
-            return await _db_context.Tickers.FindAsync(tickerId);
-        }
-
-        public async Task<TickersModel?> GetTickerWithDependencies(int tickerId, int quotesNumbers)
-        {
-            return await _db_context.Tickers.Include(t => t.Quotation
-                                                           .OrderByDescending(q => q.ts)
-                                                           .Take(quotesNumbers)).FirstOrDefaultAsync(t => t.Id == tickerId);
+            var tick = _db_context.Tickers.Include(t => t.Industry).Include(t => t.City).FirstOrDefault(t => t.Id == tickerId);
+            return tick;
         }
 
         public async Task<List<TickersModel>> GetTickersByListLevel(int listLevel)
@@ -95,6 +93,13 @@ namespace StockLens.Repositories.Tickers
                                             .ToListAsync();
         }
 
+        public async Task<IEnumerable<TickersModel>?> GetTickersByCitiesAsync(IEnumerable<int> citiesId)
+        {
+            return await _db_context.Tickers.Where(t => citiesId.Contains(t.CityId))
+                                            .OrderBy(t => t.Name)               
+                                            .ToListAsync();
+        }
+
         public async Task<IEnumerable<TickersModel>> GetTickersByIndustriesAsync(IEnumerable<int> industriesId, int start, int end)
         {
             return await _db_context.Tickers.Where(t => industriesId.Contains(t.IndustryId))
@@ -107,6 +112,12 @@ namespace StockLens.Repositories.Tickers
         public async Task<IEnumerable<TickersModel>> GetTickersAsync()
         {
             return await _db_context.Tickers.ToListAsync();
+        }
+
+        public async Task CreateTicker(TickersModel dto)
+        {
+            await _db_context.Tickers.AddAsync(dto);
+            await _db_context.SaveChangesAsync();  
         }
     }
 }

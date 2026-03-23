@@ -8,6 +8,7 @@ namespace StockLens.Services.Tickers
     public interface ITickersService
     {
         public Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos);
+        public Task CreateTicker(CreateTickersDto dto);
         public Task AddTikersAsync(CreateTickersDto dto);
         public Task<GetTickersDto> GetTickerByIdAsync(int TickerId);
         public Task<IEnumerable<GetTickersDto?>> GetTickersByIndustriesAsync(IEnumerable<int> industriesId, int start, int size);
