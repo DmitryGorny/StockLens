@@ -16,13 +16,13 @@ namespace StockLens.Services.Moex
         {
             _httpRequester = requester;
         }
-        public async Task<List<CreateQuotesDto>> RequestQuotes(string TickerSymbol, int TickerId)
+        public async Task<List<CreateQuotesDto>> RequestQuotesByYears(string TickerSymbol, int TickerId, int yearsDelta=5)
         {
             List<CreateQuotesDto> dtos = new List<CreateQuotesDto>();
             int start = 0;
             while (true) {
                 DateTime today = DateTime.Today;
-                DateTime fiveYearsAgo = today.AddYears(-5);
+                DateTime fiveYearsAgo = today.AddYears(-yearsDelta);
                 Root? root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
                     $"{TickerSymbol}.json" +
                     $"?from={fiveYearsAgo.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +
@@ -46,18 +46,18 @@ namespace StockLens.Services.Moex
             return dtos;
         }
 
-        public async Task<IEnumerable<CreateQuotesDto>> RequestPassedDayQuotes(string TickerSymbol, int TickerId)
+        public async Task<IEnumerable<CreateQuotesDto>> RequestQuotesByDays(string TickerSymbol, int TickerId, int daysDelta)
         {
             List<CreateQuotesDto> dtos = new List<CreateQuotesDto>();
             int start = 0;
             while (true)
             {
                 DateTime today = DateTime.Today;
-                DateTime yesterday = today.AddDays(-1);
+                DateTime from = today.AddDays(daysDelta);
 
                 Root? root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
                     $"{TickerSymbol}.json" +
-                    $"?from={yesterday.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +
+                    $"?from={from.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +
                      $"&start={start}" +
                     "&history.columns=TRADEDATE,OPEN,CLOSE,LOW,HIGH,VOLUME,VALUE,NUMTRADES,WAPRICE");
 

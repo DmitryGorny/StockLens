@@ -61,7 +61,7 @@ namespace StockLens.Services.FileReaderFacade
                             var tickers_dto = await CreateTickers(ind.Tickers, indsMap[ind.Name].Id);
                             foreach(var ticker in tickers_dto)
                             {
-                               var quotes_dtos = await _moexService.RequestQuotes(ticker.Symbol, ticker.Id);
+                               var quotes_dtos = await _moexService.RequestQuotesByYears(ticker.Symbol, ticker.Id, 5);
                                await _quotesService.CreateQuotesBulk(quotes_dtos);
                             }
                         }

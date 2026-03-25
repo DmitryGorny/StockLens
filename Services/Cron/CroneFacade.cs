@@ -27,13 +27,14 @@ namespace StockLens.Services.Cron
         public async Task RequestQuotesDaily()
         {
             var Tickers = await tickersService.GetTickersAsync();
+           
             using (var transaction = await _appDBContext.Database.BeginTransactionAsync())
             {
                 try
                 {
                     foreach (var ticker in Tickers)
                     {
-                        var quotes = await _moexService.RequestPassedDayQuotes(ticker.Symbol, ticker.Id);
+                        var quotes = await _moexService.RequestQuotesByDays(ticker.Symbol, ticker.Id, 1);
                         if (quotes != null && quotes.Count() != 0)
                         {
                             await _quotesService.CreateQuotesBulk(quotes.ToList());

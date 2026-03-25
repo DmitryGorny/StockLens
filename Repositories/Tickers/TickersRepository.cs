@@ -114,7 +114,7 @@ namespace StockLens.Repositories.Tickers
 
         public async Task<IEnumerable<TickersModel>> GetTickersAsync()
         {
-            return await _db_context.Tickers.ToListAsync();
+            return await _db_context.Tickers.Include(t => t.Industry).Include(t => t.City).ToListAsync();
         }
 
         public async Task CreateTicker(TickersModel ticker)

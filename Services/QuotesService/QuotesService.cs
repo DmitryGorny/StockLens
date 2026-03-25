@@ -14,5 +14,12 @@ namespace StockLens.Services.QuotesService
         {
             await _quotesRepository.CreateQuotesBulkAsync(quotes.Select(q => q.ToQuotesFromDto()).ToList());
         }
+
+        public async Task DeleteQuotesHard(int TickerId, DateTime startDate, DateTime endDate)
+        {
+            var quotes = await _quotesRepository.GetQuotesByTickerId(TickerId, startDate, endDate);
+            if (quotes == null || quotes.Count() == 0) throw new Exception("Тикер неккоректен");
+            await _quotesRepository.DeleteQuotesBulkHard(quotes);
+        }
     }
 }

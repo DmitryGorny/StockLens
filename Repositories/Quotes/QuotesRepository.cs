@@ -1,5 +1,6 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 using StockLens.data;
 using QuotesModel = StockLens.Models.Quotes;
 
@@ -38,6 +39,21 @@ namespace StockLens.Repositories.Quotes
                                             .Include(q => q.Ticker)
                                             .OrderByDescending(q => q.ts)
                                             .ToListAsync();
+        }
+
+        public async Task<List<QuotesModel>> GetQuotesByTickerId(int tickerId, DateTime startDate, DateTime endDate)
+        {
+
+            return await _db_context.Quotes
+                                        .Where(q => q.TickerId == tickerId && q.ts >= startDate && q.ts <= endDate)
+                                        .OrderByDescending(q => q.ts)
+                                        .ToListAsync();
+        }
+
+        public async Task DeleteQuotesBulkHard(IEnumerable<QuotesModel> quotes)
+        {
+            await _db_context.BulkDeleteAsync(quotes);
+            await _db_context.SaveChangesAsync();
         }
     }
 }

@@ -351,6 +351,38 @@
     ]
   },
   {
+    "ContainingType": "StockLens.Controllers.CitiesController",
+    "Method": "GetAllCities",
+    "RelativePath": "api/Cities/{cityId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cityId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.CitiesController",
+    "Method": "CreateCity",
+    "RelativePath": "api/Cities/create-city",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.CitiesDtos.CreateCitiesDtos",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "StockLens.Controllers.IndustriesController",
     "Method": "GetIndustry",
     "RelativePath": "api/industries/{IndustriesId}",
@@ -375,6 +407,43 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "StockLens.Controllers.IndustriesController",
+    "Method": "PatchIndustry",
+    "RelativePath": "api/industries/{IndustryId}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IndustryId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.IndustriesDtos.PatchIndustryDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.IndustriesController",
+    "Method": "DeleteIndustry",
+    "RelativePath": "api/industries/{IndustryId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "IndustryId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StockLens.Controllers.IndustriesController",
@@ -432,6 +501,43 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "StockLens.Controllers.IndustriesController",
+    "Method": "CreateIndustry",
+    "RelativePath": "api/industries/create-industry",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.IndustriesDtos.CreateIndustryDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.QuotesController",
+    "Method": "RequestQuotes",
+    "RelativePath": "api/Quotes/request-quotes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "TickerId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "TickerSymbol",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StockLens.Controllers.JsonReaderController",
@@ -497,6 +603,59 @@
     ]
   },
   {
+    "ContainingType": "StockLens.Controllers.SectorsController",
+    "Method": "PatchSector",
+    "RelativePath": "api/sectors/{sectorId}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sectorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.SectorDtos.PatchSectorDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.SectorsController",
+    "Method": "DeleteSector",
+    "RelativePath": "api/sectors/{sectorId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sectorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.SectorsController",
+    "Method": "CreateSector",
+    "RelativePath": "api/sectors/create-sector",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.SectorDtos.CreateSectorDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "StockLens.Controllers.TickersController",
     "Method": "GetTicker",
     "RelativePath": "api/Tickers/{TickerId}",
@@ -521,6 +680,43 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "StockLens.Controllers.TickersController",
+    "Method": "PatchTickers",
+    "RelativePath": "api/Tickers/{TickerId}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "TickerId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.TickersDto.PatchTickerDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.TickersController",
+    "Method": "DeleteTicker",
+    "RelativePath": "api/Tickers/{TickerId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "TickerId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "StockLens.Controllers.TickersController",
@@ -624,5 +820,21 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "StockLens.Controllers.TickersController",
+    "Method": "CreateTickers",
+    "RelativePath": "api/Tickers/create-ticker",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "StockLens.Dtos.TickersDto.CreateTickersDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
