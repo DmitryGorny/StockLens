@@ -7,6 +7,7 @@ using StockLens.Mappers;
 using StockLens.Models;
 using StockLens.Repositories.Tickers;
 using StockLens.Services.HttpRequester;
+using StockLens.Services.Tickers.Filters.Facade;
 using System.Collections;
 using System.Collections.Generic;
 using TickersModel = StockLens.Models.Tickers;
@@ -16,10 +17,12 @@ namespace StockLens.Services.Tickers
     public class TickersService : ITickersService
     {
         private readonly ITickersRepository _tickersRepository;
+        private readonly IFilterFacade _filter;
 
-        public TickersService(ITickersRepository tickersRepository)
+        public TickersService(ITickersRepository tickersRepository, IFilterFacade filterFacade)
         {
             _tickersRepository = tickersRepository;
+            _filter = filterFacade;
         }
 
         public async Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos)
@@ -98,43 +101,11 @@ namespace StockLens.Services.Tickers
         {
             var allTickers = await GetTickersAsync();
 
-            var sectorsTickersTask = FilterBySectors(allTickers, dto.SectorIds);
-            var industriesTickersTask = FilterByIndustry(allTickers, dto.IndustryIds);
-
-            var results = await Task.WhenAll(sectorsTickersTask, industriesTickersTask);
-
-            var sectors = results[0];
-            var industries = results[1];
-
-            //allTickers = await FilterByCity(sectors.Union(industries, new TickerComparer()), dto.CityIds);
-
+            allTickers = await _filter.Filter(allTickers, dto);    
+            
             return allTickers;
             
         }
-        private Task<IEnumerable<GetTickersDto>> FilterBySectors(IEnumerable<GetTickersDto> dtos, IEnumerable<int>? sectorIds)
-        {
-            if (sectorIds == null)
-                return Task.FromResult(dtos);
-            var dtos_new = dtos.Where(d => sectorIds.Contains(d.Industry.SectorId));
-            return Task.FromResult(dtos_new);
-        }
-
-        private Task<IEnumerable<GetTickersDto>> FilterByIndustry(IEnumerable<GetTickersDto> dtos, IEnumerable<int>? industryIds)
-        {
-            if (industryIds == null)
-                return Task.FromResult(dtos);
-            var dtos_new = dtos.Where(d => industryIds.Contains(d.IndustryId));
-            return Task.FromResult(dtos_new);
-        }
-
-        private Task<IEnumerable<GetTickersDto>> FilterByCity(IEnumerable<GetTickersDto> dtos, IEnumerable<int>? cityIds)
-        {
-            if (cityIds == null)
-                return Task.FromResult(dtos);
-            var dtos_new = dtos.Where(d => cityIds.Contains(d.CityId));
-            return Task.FromResult(dtos_new);
-        }
-
     }
 
 }

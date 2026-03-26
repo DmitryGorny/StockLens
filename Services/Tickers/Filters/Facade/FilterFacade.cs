@@ -36,6 +36,7 @@ namespace StockLens.Services.Tickers.Filters.Facade
                     tasks.Clear();
 
                     var new_tickers = await filter.Filter(tickers, filterDto);
+                    var list = new_tickers.ToList();
                     filteredDtos = new_tickers;
                 }
             }

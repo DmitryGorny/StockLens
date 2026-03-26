@@ -20,7 +20,7 @@ namespace StockLens.Services.Tickers.Filters
         public Task<IEnumerable<GetTickersDto>> Filter(IEnumerable<GetTickersDto> dtos, FiltrationDto dto)
         {
             if (dto.SectorIds == null)
-                return Task.FromResult(dtos);
+                return Task.FromResult(Enumerable.Empty<GetTickersDto>());
             var dtos_new = dtos.Where(d => dto.SectorIds.Contains(d.Industry.SectorId));
             return Task.FromResult(dtos_new);
         }

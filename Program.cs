@@ -34,6 +34,7 @@ using StockLens.Services.Moex;
 using StockLens.Services.QuotesService;
 using StockLens.Services.Sector;
 using StockLens.Services.Tickers;
+using StockLens.Services.Tickers.Filters.Facade;
 using System;
 using System.Reflection;
 
@@ -65,6 +66,8 @@ builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<ICronFacade, CroneFacade>();
+builder.Services.AddScoped<IFilterFacade, FilterFacade>();
+
 builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();
 builder.Services.Decorate<ITopTenFacade, CachedTopTen>();
