@@ -92,7 +92,7 @@ namespace StockLens.Controllers
             }
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("create-ticker")]
         public async Task<IActionResult> CreateTickers([FromBody] CreateTickersDto dto)
@@ -123,7 +123,7 @@ namespace StockLens.Controllers
             }
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{TickerId}")]
         public async Task<IActionResult> DeleteTicker(int TickerId)
         {
@@ -137,6 +137,19 @@ namespace StockLens.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
+        [HttpGet]
+        [Route("layered-filtration")]
+        public async Task<ActionResult<IEnumerable<GetTickersDto>>> LayeredFiltration([FromQuery] FiltrationDto dto)
+        {
+            try
+            {
+                return Ok(await _tickersService.LayeredFiltration(dto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     } 
 }

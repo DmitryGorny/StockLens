@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Formatters;
+using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Crypto;
 using StockLens.Dtos.QuotesDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
@@ -92,5 +94,47 @@ namespace StockLens.Services.Tickers
             await _tickersRepository.DeleteTickerHardAsync(ticker);
         }
 
+        public async Task<IEnumerable<GetTickersDto>> LayeredFiltration(FiltrationDto dto)
+        {
+            var allTickers = await GetTickersAsync();
+
+            var sectorsTickersTask = FilterBySectors(allTickers, dto.SectorIds);
+            var industriesTickersTask = FilterByIndustry(allTickers, dto.IndustryIds);
+
+            var results = await Task.WhenAll(sectorsTickersTask, industriesTickersTask);
+
+            var sectors = results[0];
+            var industries = results[1];
+
+            //allTickers = await FilterByCity(sectors.Union(industries, new TickerComparer()), dto.CityIds);
+
+            return allTickers;
+            
+        }
+        private Task<IEnumerable<GetTickersDto>> FilterBySectors(IEnumerable<GetTickersDto> dtos, IEnumerable<int>? sectorIds)
+        {
+            if (sectorIds == null)
+                return Task.FromResult(dtos);
+            var dtos_new = dtos.Where(d => sectorIds.Contains(d.Industry.SectorId));
+            return Task.FromResult(dtos_new);
+        }
+
+        private Task<IEnumerable<GetTickersDto>> FilterByIndustry(IEnumerable<GetTickersDto> dtos, IEnumerable<int>? industryIds)
+        {
+            if (industryIds == null)
+                return Task.FromResult(dtos);
+            var dtos_new = dtos.Where(d => industryIds.Contains(d.IndustryId));
+            return Task.FromResult(dtos_new);
+        }
+
+        private Task<IEnumerable<GetTickersDto>> FilterByCity(IEnumerable<GetTickersDto> dtos, IEnumerable<int>? cityIds)
+        {
+            if (cityIds == null)
+                return Task.FromResult(dtos);
+            var dtos_new = dtos.Where(d => cityIds.Contains(d.CityId));
+            return Task.FromResult(dtos_new);
+        }
+
     }
+
 }

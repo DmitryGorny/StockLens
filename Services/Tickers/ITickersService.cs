@@ -16,6 +16,7 @@ namespace StockLens.Services.Tickers
         public Task<IEnumerable<GetTickersDto>> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size);
         public Task<IEnumerable<GetTickersDto>> GetTickersAsync(int start, int size);
         public Task<IEnumerable<GetTickersDto>> GetTickersAsync();
+        public Task<IEnumerable<GetTickersDto>> LayeredFiltration(FiltrationDto dto);
 
     }
 }

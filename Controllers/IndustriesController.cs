@@ -60,14 +60,14 @@ namespace StockLens.Controllers
         /// <param name="size">Количество тикеров в запросе</param>
         [HttpGet]
         [Route("all-industries")]
-        public Task<ActionResult<IEnumerable<GetIndustryDto>>> GetAllIndustries(int start, int size)
+        public async Task<ActionResult<IEnumerable<GetIndustryDto>>> GetAllIndustries(int start, int size)
         {
             try
             {
-                return Task.FromResult<ActionResult<IEnumerable<GetIndustryDto>>>(Ok(_industryService.GetAllIndustriesAsync(start, size)));
+                return Ok(await _industryService.GetAllIndustriesAsync(start, size));
             } catch (Exception ex)
             {
-                return Task.FromResult<ActionResult<IEnumerable<GetIndustryDto>>>(NotFound(ex.Message));
+                return Ok(await _industryService.GetAllIndustriesAsync(start, size)); ;
             }
         }
 
