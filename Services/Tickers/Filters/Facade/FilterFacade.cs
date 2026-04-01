@@ -34,6 +34,9 @@ namespace StockLens.Services.Tickers.Filters.Facade
                         tickers = tickers.Union(r, new TickerComparer());
                     }
                     tasks.Clear();
+                    
+                    if (tickers.Count() == 0)
+                        tickers = dtos;
 
                     var new_tickers = await filter.Filter(tickers, filterDto);
                     var list = new_tickers.ToList();

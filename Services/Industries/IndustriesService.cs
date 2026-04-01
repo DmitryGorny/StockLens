@@ -22,11 +22,7 @@ namespace StockLens.Services.Industries
         {
             List<IndustriesModel> inds = dtos.Select(i => i.ToIndustriesFromDto()).ToList();
             await _industriesRepo.BulkCreateIndustriesAsync(inds);
-            foreach (var industry in inds)
-            {
-                Console.WriteLine(industry.Id);
-            }
-            return inds.Select(i => i.ToDtoFromIndustries()).ToList();
+            return inds.Select(i => i.ToDtoFromIndustries()).ToList(); ////Ошибка
         }
         public async Task<GetIndustryDto> AddIndustriesAsync(CreateIndustryDto dto)
         {

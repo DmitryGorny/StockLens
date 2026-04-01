@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.TickersDto;
+using StockLens.Services.FiltrationService;
 using StockLens.Services.Tickers;
 
 namespace StockLens.Controllers
@@ -10,10 +11,12 @@ namespace StockLens.Controllers
     public class TickersController : ControllerBase
     {
         private readonly ITickersService _tickersService;
+        private readonly IFiltrationService _filtrationService;
 
-        public TickersController(ITickersService tickersService)
+        public TickersController(ITickersService tickersService, IFiltrationService filtrationService)
         {
             _tickersService = tickersService;
+            _filtrationService = filtrationService;
         }
 
         /// <summary>
@@ -144,7 +147,7 @@ namespace StockLens.Controllers
         {
             try
             {
-                return Ok(await _tickersService.LayeredFiltration(dto));
+                return Ok(await _filtrationService.LayeredFiltration(dto));
             }
             catch (Exception ex)
             {

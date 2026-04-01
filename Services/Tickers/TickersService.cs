@@ -63,7 +63,7 @@ namespace StockLens.Services.Tickers
         {
             var tickers = await _tickersRepository.GetTickersByCitiesAsync(citiesId, start, size);
             if (tickers == null)
-                throw new NullReferenceException($"{nameof(tickers)}");
+                throw new Exception($"Тикеры для этих городов {string.Join(", ", citiesId)} не были найдены");
 
             return tickers.Select(t => t.CreateDtoFromTickers());
         }

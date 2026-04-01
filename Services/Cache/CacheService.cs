@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Runtime.Serialization.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,15 +9,15 @@ namespace StockLens.Services.Cache
         private readonly IDistributedCache _cache;
 
         public CacheService(IDistributedCache cache) { _cache = cache; }
-        public async Task<T?> GetCache<T>(string serviceName, params string[] args)
+        public async Task<IEnumerable<T>?> GetCache<T>(string serviceName, params string[] args)
         {
             string key = BuildKey(serviceName, args);
             var result = await _cache.GetStringAsync(key);
 
-            if (result == null) 
-                return default(T);
+            if (result == null)
+                return null;
 
-            return JsonSerializer.Deserialize<T>(result);
+            return JsonSerializer.Deserialize<IEnumerable<T>>(result);
         }
 
         public async Task<string?> GetUnserializedCache(string serviceName, params string[] args)

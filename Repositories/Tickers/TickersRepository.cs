@@ -90,6 +90,8 @@ namespace StockLens.Repositories.Tickers
         public async Task<IEnumerable<TickersModel>?> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size)
         {
             return await _db_context.Tickers.Where(t => citiesId.Contains(t.CityId))
+                                            .Include(t => t.Industry)
+                                            .Include(t => t.City)
                                             .OrderBy(t => t.Name)
                                             .Skip(start)
                                             .Take(size)

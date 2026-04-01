@@ -26,6 +26,7 @@ using StockLens.Services.Cache;
 using StockLens.Services.Cities;
 using StockLens.Services.Cron;
 using StockLens.Services.FileReaderFacade;
+using StockLens.Services.FiltrationService;
 using StockLens.Services.HttpRequester;
 using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
 using StockLens.Services.HttpRequester.MoexHttpRequester;
@@ -67,11 +68,13 @@ builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<ICronFacade, CroneFacade>();
 builder.Services.AddScoped<IFilterFacade, FilterFacade>();
+builder.Services.AddScoped<IFiltrationService, TickersService>();
 
 builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();
 builder.Services.Decorate<ITopTenFacade, CachedTopTen>();
 builder.Services.Decorate<IPortfolioService, CachedPortfolio>();
+builder.Services.Decorate<IFiltrationService, CachedTickersFitler>();
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {
