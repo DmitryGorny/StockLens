@@ -13,7 +13,6 @@ namespace StockLens.Mappers
                 Id = sector.Id,
                 Name = sector.Name,
                 Description = sector.Description,
-                IndustriesNames = sector.Industries.Select(x => x.Name).ToList(),
             };
         }
 
