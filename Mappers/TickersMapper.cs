@@ -27,6 +27,15 @@ namespace StockLens.Mappers
             };
         }
 
+        public static GetTickersDto CreateLightDtoFromTickers(this Tickers ticker)
+        {
+            return new GetTickersDto
+            {
+                Id = ticker.Id,
+                Symbol = ticker.Symbol,
+            };
+        }
+
         public static Tickers CreateTickerFromDto(this CreateTickersDto dto)
         {
             return new Tickers

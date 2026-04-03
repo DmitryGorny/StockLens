@@ -21,7 +21,7 @@ namespace StockLens.Services.Tickers
         {
             List<TickersModel> tickers = dtos.Select(d => d.CreateTickerFromDto()).ToList();
             await _tickersRepository.BulkCreateTickersAsync(tickers);
-            return tickers.Select(t => t.CreateDtoFromTickers()).ToList();
+            return tickers.Select(t => t.CreateLightDtoFromTickers()).ToList();
         }
         public async Task AddTikersAsync(CreateTickersDto dto)
         {
