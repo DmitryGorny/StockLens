@@ -61,19 +61,19 @@ namespace StockLens.Controllers
         /// <param name="CitiesId">Список с id идустрий</param> 
         /// <param name="start">Индекс начала выборки</param> 
         /// <param name="size">Количество тикеров в запросе</param> 
-        [HttpGet]
-        [Route("by-cities-id")]
-        public async Task<ActionResult<IEnumerable<GetTickersDto>>> GetTickersByCities([FromQuery] List<int> CitiesId, int start, int size)
-        {
-            try
-            {
-                return Ok(await _tickersService.GetTickersByCitiesAsync(CitiesId, start: start, size: size));
-            }
-            catch (NullReferenceException ex)
-            {
-                return NotFound();
-            }
-        }
+        //[HttpGet]
+        //[Route("by-cities-id")]
+        //public async Task<ActionResult<IEnumerable<GetTickersDto>>> GetTickersByCities([FromQuery] List<int> CitiesId, int start, int size)
+        //{
+        //    try
+        //    {
+        //        return Ok(await _tickersService.GetTickersByCitiesAsync(CitiesId, start: start, size: size));
+        //    }
+        //    catch (NullReferenceException ex)
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
         /// <summary>
         ///Выгружает данные по всем тикерам, которые принадлежат к индустриям с переданными id, с пагинацией. Если тикеров нет, то возвращает 404 ошибку
@@ -81,19 +81,19 @@ namespace StockLens.Controllers
         /// <param name="IndustriesId">Список с id идустрий</param> 
         /// <param name="start">Индекс начала выборки</param> 
         /// <param name="size">Количество тикеров в запросе</param> 
-        [HttpGet]
-        [Route("by-industries-ids")]
-        public async Task<ActionResult<IEnumerable<GetTickersDto>>> GetTickersByIndustries([FromQuery] List<int> IndustriesId, int start, int size)
-        {
-            try
-            {
-                return Ok(await _tickersService.GetTickersByIndustriesAsync(IndustriesId, start: start, size: size));
-            }
-            catch (NullReferenceException ex)
-            {
-                return NotFound();
-            }
-        }
+        //[HttpGet]
+        //[Route("by-industries-ids")]
+        //public async Task<ActionResult<IEnumerable<GetTickersDto>>> GetTickersByIndustries([FromQuery] List<int> IndustriesId, int start, int size)
+        //{
+        //    try
+        //    {
+        //        return Ok(await _tickersService.GetTickersByIndustriesAsync(IndustriesId, start: start, size: size));
+        //    }
+        //    catch (NullReferenceException ex)
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -141,6 +141,11 @@ namespace StockLens.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// Эндпоинт для фильтрацие тикеров по ((секторам или индустриям) и городам)
+        /// </summary>
         [HttpGet]
         [Route("layered-filtration")]
         public async Task<ActionResult<IEnumerable<GetTickersDto>>> LayeredFiltration([FromQuery] FiltrationDto dto)

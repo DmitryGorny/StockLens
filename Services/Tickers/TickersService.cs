@@ -1,15 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Formatters;
-using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Crypto;
-using StockLens.Dtos.QuotesDtos;
-using StockLens.Dtos.TickersDto;
+﻿using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
-using StockLens.Models;
 using StockLens.Repositories.Tickers;
-using StockLens.Services.HttpRequester;
 using StockLens.Services.Tickers.Filters.Facade;
-using System.Collections;
-using System.Collections.Generic;
 using TickersModel = StockLens.Models.Tickers;
 
 namespace StockLens.Services.Tickers

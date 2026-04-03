@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.QuotesDtos.Analytics.Responses;
-using StockLens.Mappers;
-using StockLens.Repositories.Tickers;
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
 using StockLens.Services.Analytics.Portfolio;

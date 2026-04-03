@@ -20,6 +20,7 @@ namespace StockLens.Models
         public Industries Industry { get; set; }     
         public int CityId { get; set; }
         public Cities City { get; set; }
-
+        public List<BriefcasesTickers> BriefcasesTickers { get; set; }
+        public List<Briefcases> Briefcases { get; set; }
     }
 }

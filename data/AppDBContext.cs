@@ -18,6 +18,9 @@ namespace StockLens.data
         public DbSet<Quotes> Quotes { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<RefreshTokens> RefreshTokens { get; set; }
+        public DbSet<BriefcasesTickers> BriefcasesTickers { get; set; }
+        public DbSet<Briefcases> Briefcases {  get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -39,6 +42,13 @@ namespace StockLens.data
             };
 
             builder.Entity<IdentityRole>().HasData(roles);
+
+            builder.Entity<Briefcases>()
+                .HasMany(b => b.Tickers)
+                .WithMany(t => t.Briefcases)
+                .UsingEntity<BriefcasesTickers>().HasKey(bt => new {bt.TickerId, bt.BriefcaseId});
+
+            builder.Entity<BriefcasesTickers>().HasKey(k => new { k.BriefcaseId, k.TickerId });
         }
     }
 }

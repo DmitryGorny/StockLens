@@ -246,21 +246,33 @@
              <param name="start">Индекс начала выборки</param> 
              <param name="size">Количество тикеров в запросе</param> 
         </member>
-        <member name="M:StockLens.Controllers.TickersController.GetTickersByCities(System.Collections.Generic.List{System.Int32},System.Int32,System.Int32)">
-             <summary>
-            Выгружает данные по всем тикерам, которые принадлежат к городам с переданными id, с пагинацией. Если тикеров нет, то возвращает 404 ошибку
-             </summary>
-             <param name="CitiesId">Список с id идустрий</param> 
-             <param name="start">Индекс начала выборки</param> 
-             <param name="size">Количество тикеров в запросе</param> 
-        </member>
-        <member name="M:StockLens.Controllers.TickersController.GetTickersByIndustries(System.Collections.Generic.List{System.Int32},System.Int32,System.Int32)">
+        <member name="M:StockLens.Controllers.TickersController.CreateTickers(StockLens.Dtos.TickersDto.CreateTickersDto)">
              <summary>
             Выгружает данные по всем тикерам, которые принадлежат к индустриям с переданными id, с пагинацией. Если тикеров нет, то возвращает 404 ошибку
              </summary>
              <param name="IndustriesId">Список с id идустрий</param> 
              <param name="start">Индекс начала выборки</param> 
              <param name="size">Количество тикеров в запросе</param> 
+        </member>
+        <member name="M:StockLens.Controllers.TickersController.LayeredFiltration(StockLens.Dtos.TickersDto.FiltrationDto)">
+            <summary>
+            Эндпоинт для фильтрацие тикеров по ((секторам или индустриям) и городам)
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.FiltrationDto.SectorIds">
+            <summary>
+            Список id секторов
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.FiltrationDto.IndustryIds">
+            <summary>
+            Список id индустрий
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.FiltrationDto.CityIds">
+            <summary>
+            Список id городов
+            </summary>
         </member>
         <member name="T:StockLens.Migrations.Initialreate">
             <inheritdoc />
@@ -368,6 +380,18 @@
             <inheritdoc />
         </member>
         <member name="M:StockLens.Migrations.UsersMetrics.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:StockLens.Migrations.Briefcasesandmanytomany">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Briefcasesandmanytomany.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Briefcasesandmanytomany.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:StockLens.Migrations.Briefcasesandmanytomany.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>
