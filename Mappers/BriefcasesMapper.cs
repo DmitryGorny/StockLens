@@ -16,13 +16,13 @@ namespace StockLens.Mappers
                 Name = briefcases.Name,
             };
         }
-        public static Briefcases ToBriefcase(this CreateBriefcaseDto dto)
+        public static Briefcases ToBriefcase(this CreateBriefcaseDto dto, string userId)
         {
             return new Briefcases
             {
                 Description = dto.Description,
                 Name = dto.Name,
-                UserId = dto.UserId,
+                UserId = userId
             };
         }
 
@@ -36,6 +36,27 @@ namespace StockLens.Mappers
                 Ticker = dto.Ticker,
                 TickerId = dto.TickerId,
             };
+        }
+
+        public static GetBriefcasesDto ToBriefcasesDto(this Briefcases briefcases)
+        {
+            return new GetBriefcasesDto 
+            { 
+                Description = briefcases.Description,
+                Name = briefcases.Name,
+                BriefcasesId = briefcases.BriefcasesId,
+                Tickers = briefcases.Tickers.Select(t => t.ToBriefcasesDto()),
+            };
+
+        }
+
+        public static void PatchBriefcase(this PatchBriefcaseDto briefcaseDto, Briefcases briefcase)
+        {
+            if (briefcaseDto.Name != null) 
+                briefcase.Name = briefcaseDto.Name;
+
+            if (briefcaseDto.Description != null)
+                briefcase.Description = briefcaseDto.Description;
         }
     }
 }

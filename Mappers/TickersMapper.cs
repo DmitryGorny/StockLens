@@ -79,5 +79,23 @@ namespace StockLens.Mappers
             if (dto.DividendsPercents.HasValue)
                 ticker.DividendsPercents = dto.DividendsPercents.Value;
         }
+
+        public static GetTickersBriefcasesDto ToBriefcasesDto(this Tickers ticker)
+        {
+            return new GetTickersBriefcasesDto
+            {
+                CityId = ticker.CityId,
+                Description = ticker.Description,
+                DividendsPercents = ticker.DividendsPercents,
+                DividendsValue = ticker.DividendsValue,
+                Id = ticker.Id,
+                IndustryId = ticker.IndustryId,
+                ListLevel = ticker.ListLevel,
+                LongName = ticker.LongName,
+                Name = ticker.Name,
+                Privileged = ticker.Privileged,
+                Symbol = ticker.Symbol,
+            };
+        }
     }
 }

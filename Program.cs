@@ -74,7 +74,7 @@ builder.Services.AddScoped<IFilterFacade, FilterFacade>();
 builder.Services.AddScoped<IFiltrationService, TickersService>();
 builder.Services.AddScoped<IBriefcasesRepository, BriefcasesRepository>();
 builder.Services.AddScoped<IBriefcasesTickersRepository, BriefcasesTickersRepository>();
-builder.Services.AddScoped<IBriefcasesTickersService, BriefcasesTickersService>();
+builder.Services.AddScoped<IBriefcasesService, BriefcasesService>();
 
 builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();

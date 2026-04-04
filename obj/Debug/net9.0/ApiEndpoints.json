@@ -306,6 +306,48 @@
   },
   {
     "ContainingType": "StockLens.Controllers.BriefcasesController",
+    "Method": "DeleteBriefcases",
+    "RelativePath": "api/briefcases/{breifcaseId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "breifcaseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.BriefcasesController",
+    "Method": "GetBriefcase",
+    "RelativePath": "api/briefcases/{briefcaseId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "briefcaseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "StockLens.Dtos.BriefcasesDtos.GetBriefcasesDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "StockLens.Controllers.BriefcasesController",
     "Method": "CreateBriefcases",
     "RelativePath": "api/briefcases/create-briefcase",
     "HttpMethod": "POST",

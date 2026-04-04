@@ -6,8 +6,6 @@ namespace StockLens.Dtos.BriefcasesDtos
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        [JsonIgnore]
-        public string UserId { get; set; }
         public Dictionary<int, decimal> tickersIdsAndPercantages { get; set; } = [];
     }
 }

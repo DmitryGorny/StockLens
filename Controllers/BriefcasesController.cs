@@ -12,10 +12,23 @@ namespace StockLens.Controllers
     [Authorize]
     public class BriefcasesController : ControllerBase
     {
-        private readonly IBriefcasesTickersService _briefcasesTickersService;
-        public BriefcasesController(IBriefcasesTickersService briefcasesTickersService) 
+        private readonly IBriefcasesService _briefcasesTickersService;
+        public BriefcasesController(IBriefcasesService briefcasesTickersService)
         {
             _briefcasesTickersService = briefcasesTickersService;
+        }
+
+        [HttpGet("{briefcaseId}")]
+        public async Task<ActionResult<GetBriefcasesDto>> GetBriefcase(int briefcaseId)
+        {
+            try
+            {
+                return Ok(await _briefcasesTickersService.GetBriefcase(briefcaseId));
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -25,17 +38,17 @@ namespace StockLens.Controllers
 
             try
             {
-                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var email = User.FindFirst(ClaimTypes.Email)!.Value;
                 var list = await _briefcasesTickersService.GetBrifcasesListAsync(email, start, size);
                 return Ok(list);
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(ex);
+                return Unauthorized(ex.Message);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -43,15 +56,47 @@ namespace StockLens.Controllers
         [Route("create-briefcase")]
         public async Task<ActionResult> CreateBriefcases([FromBody] CreateBriefcaseDto dto)
         {
-
+            string email = User.FindFirst(ClaimTypes.Email)!.Value;
             try
             {
-                await _briefcasesTickersService.CreateBriefcase(dto);
+                await _briefcasesTickersService.CreateBriefcase(email, dto);
+                return Created();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{breifcaseId}")]
+        public async Task<ActionResult> DeleteBriefcases(int breifcaseId) 
+        {
+            try
+            {
+                await _briefcasesTickersService.DeleteBriefcase(breifcaseId);
                 return Created();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("{breifcaseId}")]
+        public async Task<ActionResult> PatchBriefcaseTicker(int breifcaseId, [FromBody] PatchBriefcaseDto patchBriefcaseDto)
+        {
+            try
+            {
+                await _briefcasesTickersService.PatchBriefcasesTickers(breifcaseId, patchBriefcaseDto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
