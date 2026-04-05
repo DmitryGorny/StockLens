@@ -176,6 +176,48 @@
             <param name="token">token подтверждения почты (уже сформирован в письме)</param>
             <param name="email">подтверждаемый email</param>
         </member>
+        <member name="T:StockLens.Controllers.BriefcasesController">
+            <summary>
+            Контроллер для операций с портфелями (briefcases).
+            </summary>
+        </member>
+        <member name="M:StockLens.Controllers.BriefcasesController.GetBriefcase(System.Int32)">
+            <summary>
+            Возвращает данные по конкретному портфелю по его идентификатору.
+            </summary>
+            <param name="briefcaseId">Идентификатор портфеля.</param>
+            <returns>200 OK с данными портфеля или 400 BadRequest при ошибке.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.BriefcasesController.GetBriefcasesList(System.Int32,System.Int32)">
+            <summary>
+            Возвращает список портфелей текущего пользователя с пагинацией.
+            </summary>
+            <param name="start">Индекс начала выборки (offset).</param>
+            <param name="size">Количество элементов в выборке (limit).</param>
+            <returns>200 OK с коллекцией портфелей, 401 Unauthorized если пользователь не авторизован, 400 BadRequest при ошибке.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.BriefcasesController.CreateBriefcases(StockLens.Dtos.BriefcasesDtos.CreateBriefcaseDto)">
+            <summary>
+            Создаёт новый портфель для текущего пользователя.
+            </summary>
+            <param name="dto">DTO с данными создаваемого портфеля.</param>
+            <returns>201 Created при успешном создании, 401 Unauthorized если пользователь не авторизован, 400 BadRequest при ошибке.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.BriefcasesController.DeleteBriefcases(System.Int32)">
+            <summary>
+            Удаляет портфель по идентификатору.
+            </summary>
+            <param name="breifcaseId">Идентификатор удаляемого портфеля.</param>
+            <returns>201 Created при успешном выполнении (текущее поведение), 400 BadRequest при ошибке.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.BriefcasesController.PatchBriefcaseTicker(System.Int32,StockLens.Dtos.BriefcasesDtos.PatchBriefcaseDto)">
+            <summary>
+            Частично обновляет портфель (например, изменение списка тикеров или имени).
+            </summary>
+            <param name="breifcaseId">Идентификатор обновляемого портфеля.</param>
+            <param name="patchBriefcaseDto">DTO с полями для частичного обновления.</param>
+            <returns>204 NoContent при успешном обновлении, 400 BadRequest при ошибке.</returns>
+        </member>
         <member name="M:StockLens.Controllers.CitiesController.GetCity(System.Int32)">
             <summary>
             Выгружает данные по одному городу , который соответствует переданному id. Если тикера с города id не существует, то возвращает 404 ошибку

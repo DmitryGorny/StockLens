@@ -3,5 +3,6 @@
     public class PatchBriefcasesTickersDto
     {
         public Dictionary<int, decimal> newTickersAndPercantages { get; set; }
+        public List<int>? tickersToDelete { get; set; }
     }
 }
