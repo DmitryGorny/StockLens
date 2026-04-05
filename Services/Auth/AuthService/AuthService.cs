@@ -63,6 +63,7 @@ namespace StockLens.Services.Auth.AuthService
             if (user != null)
                 throw new Exception("Попробуйте другую почту");
 
+
             var createUser = await _userManager.CreateAsync(User, dto.Password);
 
             if (createUser.Succeeded)
@@ -105,6 +106,7 @@ namespace StockLens.Services.Auth.AuthService
                 Token = _tokenService.CreateJWTToken(user, (List<string>)await _userManager.GetRolesAsync(user)),
                 EmailConfirmed = user.EmailConfirmed,
                 RefreshToken = await _tokenService.GenerateRefreshToken(user),
+                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "User",
             };
         }
 
