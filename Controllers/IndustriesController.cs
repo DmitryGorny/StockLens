@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.IndustriesDtos;
 using StockLens.Services.Industries;
@@ -71,6 +70,13 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Создаёт новую индустрию (Industry) в базе данных.
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 201 Created при успешном создании, 400 BadRequest при ошибке валидации или создании.
+        /// </summary>
+        /// <param name="dto">DTO с данными для новой индустрии.</param>
+        /// <returns>201 Created или 400 BadRequest.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("create-industry")]
@@ -87,6 +93,14 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Частично обновляет индустрию по её идентификатору.
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 204 NoContent при успешном обновлении, 400 BadRequest при ошибке.
+        /// </summary>
+        /// <param name="IndustryId">Идентификатор обновляемой индустрии.</param>
+        /// <param name="dto">DTO с полями для частичного обновления.</param>
+        /// <returns>204 NoContent или 400 BadRequest.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPatch("{IndustryId}")]
         public async Task<IActionResult> PatchIndustry(int IndustryId, PatchIndustryDto dto)
@@ -102,6 +116,13 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Удаляет индустрию по идентификатору (жёсткое удаление).
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 204 NoContent при успешном удалении, 400 BadRequest при ошибке.
+        /// </summary>
+        /// <param name="IndustryId">Идентификатор удаляемой индустрии.</param>
+        /// <returns>204 NoContent или 400 BadRequest.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{IndustryId}")]
         public async Task<IActionResult> DeleteIndustry(int IndustryId)

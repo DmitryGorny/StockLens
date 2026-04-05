@@ -189,6 +189,24 @@
             </summary>
             
         </member>
+        <member name="M:StockLens.Controllers.CitiesController.CreateCity(StockLens.Dtos.CitiesDtos.CreateCitiesDtos)">
+            <summary>
+            Создаёт новый город в базе данных.
+            Доступно только пользователям с ролью Admin.
+            Возвращает 201 Created при успешном создании, 404 NotFound при ошибке.
+            </summary>
+            <param name="dto">DTO с данными создаваемого города.</param>
+            <returns>201 Created или 404 NotFound.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.CitiesController.DeleteCities(System.Int32)">
+            <summary>
+            Удаляет город по идентификатору.
+            Доступно только пользователям с ролью Admin.
+            Возвращает 204 NoContent при успешном удалении, 404 NotFound при ошибке.
+            </summary>
+            <param name="cityId">Идентификатор удаляемого города.</param>
+            <returns>204 NoContent или 404 NotFound.</returns>
+        </member>
         <member name="M:StockLens.Controllers.IndustriesController.GetIndustriesBySectorsId(System.Collections.Generic.List{System.Int32})">
              <summary>
             Выгружает данные по всем индустриям, которые принадлежат к секторам с переданными id, с пагинацией. Если тикеров нет, то возвращает 404 ошибку
@@ -210,6 +228,34 @@
              <param name="start">Индекс начала выборки</param> 
              <param name="size">Количество тикеров в запросе</param>
         </member>
+        <member name="M:StockLens.Controllers.IndustriesController.CreateIndustry(StockLens.Dtos.IndustriesDtos.CreateIndustryDto)">
+            <summary>
+            Создаёт новую индустрию (Industry) в базе данных.
+            Доступно только пользователям с ролью Admin.
+            Возвращает 201 Created при успешном создании, 400 BadRequest при ошибке валидации или создании.
+            </summary>
+            <param name="dto">DTO с данными для новой индустрии.</param>
+            <returns>201 Created или 400 BadRequest.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.IndustriesController.PatchIndustry(System.Int32,StockLens.Dtos.IndustriesDtos.PatchIndustryDto)">
+            <summary>
+            Частично обновляет индустрию по её идентификатору.
+            Доступно только пользователям с ролью Admin.
+            Возвращает 204 NoContent при успешном обновлении, 400 BadRequest при ошибке.
+            </summary>
+            <param name="IndustryId">Идентификатор обновляемой индустрии.</param>
+            <param name="dto">DTO с полями для частичного обновления.</param>
+            <returns>204 NoContent или 400 BadRequest.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.IndustriesController.DeleteIndustry(System.Int32)">
+            <summary>
+            Удаляет индустрию по идентификатору (жёсткое удаление).
+            Доступно только пользователям с ролью Admin.
+            Возвращает 204 NoContent при успешном удалении, 400 BadRequest при ошибке.
+            </summary>
+            <param name="IndustryId">Идентификатор удаляемой индустрии.</param>
+            <returns>204 NoContent или 400 BadRequest.</returns>
+        </member>
         <member name="M:StockLens.Controllers.JsonReaderController.ReadJsonFile(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             Заполняет/обновляет базу данных по данному JSON файлу
@@ -218,6 +264,25 @@
             Заполнение/обновление прошло успешно
             </response>
             
+        </member>
+        <member name="M:StockLens.Controllers.QuotesController.RequestQuotes(System.Int32,System.String)">
+            <summary>
+            Запрашивает исторические котировки для тикера и сохраняет их в базе (bulk).
+            Доступно только пользователям с ролью Admin.
+            Возвращает 201 Created при успешной загрузке, 400 BadRequest при ошибке.
+            </summary>
+            <param name="TickerId">Идентификатор тикера в базе (внешний ключ).</param>
+            <param name="TickerSymbol">Торговый символ тикера (например, "GAZP").</param>
+        </member>
+        <member name="M:StockLens.Controllers.QuotesController.DeleteQuotes(System.Int32,System.DateTime,System.DateTime)">
+            <summary>
+            Удаляет котировки для указанного тикера в заданном диапазоне дат (жёсткое удаление).
+            Доступно только пользователям с ролью Admin.
+            Возвращает 201 Created при успешном выполнении удаления, 400 BadRequest при ошибке.
+            </summary>
+            <param name="TickerId">Идентификатор тикера в базе (внешний ключ).</param>
+            <param name="startDate">Дата начала интервала удаления (включительно).</param>
+            <param name="endDate">Дата конца интервала удаления (включительно).</param>
         </member>
         <member name="M:StockLens.Controllers.SectorsController.GetAllSectors(System.Int32,System.Int32)">
              <summary>
@@ -231,6 +296,40 @@
             Выгружает данные по одной индустрии, которая соответствует переданному id. Если индустрии с таким id не существует, то возвращает 404 ошибку
             </summary>
             <param name="sectorId">Id нужного тикера</param> 
+        </member>
+        <member name="M:StockLens.Controllers.SectorsController.CreateSector(StockLens.Dtos.SectorDtos.CreateSectorDto)">
+            <summary>
+            Создаёт новый сектор в базе данных.
+            Доступно только пользователям с ролью Admin.
+            Возвращает 201 Created при успешном создании, 400 BadRequest при ошибке.
+            </summary>
+            <param name="dto">DTO с данными нового сектора.</param>
+            <returns>201 Created или 400 BadRequest.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.SectorsController.PatchSector(System.Int32,StockLens.Dtos.SectorDtos.PatchSectorDto)">
+            <summary>
+            Частично обновляет сектор по идентификатору.
+            Доступно только пользователям с ролью Admin.
+            Возвращает 204 NoContent при успешном обновлении, 400 BadRequest при ошибке.
+            </summary>
+            <param name="sectorId">Идентификатор обновляемого сектора.</param>
+            <param name="dto">DTO с полями для обновления.</param>
+            <returns>204 NoContent или 400 BadRequest.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.SectorsController.DeleteSector(System.Int32)">
+            <summary>
+            Удаляет сектор из базы данных (жёсткое удаление).
+            Доступно только пользователям с ролью Admin.
+            Возвращает 204 NoContent при успешном удалении, 400 BadRequest при ошибке.
+            </summary>
+            <param name="sectorId">Идентификатор удаляемого сектора.</param>
+            <returns>204 NoContent или 400 BadRequest.</returns>
+        </member>
+        <member name="T:StockLens.Controllers.TickersController">
+            <summary>
+            Контроллер для работы с тикерами: получение, создание, изменение, удаление и фильтрация.
+            Все ответы оформляются через ActionResult для корректной передачи HTTP-кодов.
+            </summary>
         </member>
         <member name="M:StockLens.Controllers.TickersController.GetTicker(System.Int32)">
             <summary>
@@ -247,16 +346,155 @@
              <param name="size">Количество тикеров в запросе</param> 
         </member>
         <member name="M:StockLens.Controllers.TickersController.CreateTickers(StockLens.Dtos.TickersDto.CreateTickersDto)">
-             <summary>
-            Выгружает данные по всем тикерам, которые принадлежат к индустриям с переданными id, с пагинацией. Если тикеров нет, то возвращает 404 ошибку
-             </summary>
-             <param name="IndustriesId">Список с id идустрий</param> 
-             <param name="start">Индекс начала выборки</param> 
-             <param name="size">Количество тикеров в запросе</param> 
+            <summary>
+            Создаёт новый тикер в базе данных.
+            Доступно только пользователям с ролью Admin.
+            </summary>
+            <param name="dto">DTO с данными нового тикера. Все поля обязательны.</param>
+            <returns>201 Created при успешном создании, 400 BadRequest при ошибке валидации или создании</returns>
+        </member>
+        <member name="M:StockLens.Controllers.TickersController.PatchTickers(System.Int32,StockLens.Dtos.TickersDto.PatchTickerDto)">
+            <summary>
+            Частично обновляет тикер по идентификатору (PATCH).
+            Доступно только пользователям с ролью Admin.
+            </summary>
+            <param name="TickerId">Идентификатор обновляемого тикера.</param>
+            <param name="dto">DTO с полями для патча.</param>
+            <returns>204 NoContent при успешном обновлении, 400 BadRequest при ошибке.</returns>
+        </member>
+        <member name="M:StockLens.Controllers.TickersController.DeleteTicker(System.Int32)">
+            <summary>
+            Удаляет тикер по идентификатору.
+            Доступно только пользователям с ролью Admin.
+            </summary>
+            <param name="TickerId">Идентификатор удаляемого тикера.</param>
+            <returns>204 NoContent при успешном удалении, 400 BadRequest при ошибке.</returns>
         </member>
         <member name="M:StockLens.Controllers.TickersController.LayeredFiltration(StockLens.Dtos.TickersDto.FiltrationDto)">
             <summary>
             Эндпоинт для фильтрацие тикеров по ((секторам или индустриям) и городам)
+            </summary>
+        </member>
+        <member name="T:StockLens.Dtos.IndustriesDtos.CreateIndustryDto">
+            <summary>
+            DTO для создания новой индустрии (Industry).
+            Все свойства обязательны и используются для валидации на входе.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.IndustriesDtos.CreateIndustryDto.Name">
+            <summary>
+            Название индустрии.
+            Пример: "Нефтегазовая".
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.IndustriesDtos.CreateIndustryDto.Description">
+            <summary>
+            Краткое описание индустрии.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.IndustriesDtos.CreateIndustryDto.SectorId">
+            <summary>
+            Идентификатор сектора, к которому относится индустрия (внешний ключ).
+            </summary>
+        </member>
+        <member name="T:StockLens.Dtos.IndustriesDtos.PatchIndustryDto">
+            <summary>
+            DTO для частичного обновления индустрии (PATCH).
+            Все свойства необязательны — передавайте только те поля, которые нужно изменить.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.IndustriesDtos.PatchIndustryDto.Name">
+            <summary>
+            Новое название индустрии.
+            Если null — поле не будет изменено.
+            Пример: "Энергетика".
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.IndustriesDtos.PatchIndustryDto.Description">
+            <summary>
+            Новое краткое описание индустрии.
+            Если null — поле не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.SectorDtos.CreateSectorDto.Name">
+            <summary>
+            Название Сектора (читаемое имя).
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.SectorDtos.CreateSectorDto.Description">
+            <summary>
+            Описание.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.SectorDtos.PatchSectorDto.Name">
+            <summary>
+            Название сектора (читаемое имя).
+            Если не указано, то не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.SectorDtos.PatchSectorDto.Description">
+            <summary>
+            Описание.
+            Если не указано, то не будет изменено.
+            </summary>
+        </member>
+        <member name="T:StockLens.Dtos.TickersDto.CreateTickersDto">
+            <summary>
+            DTO для создания записи тикера.
+            Все поля обязательны и используются для валидации при создании тикера.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.Name">
+            <summary>
+            Название тикера (читаемое имя).
+            Пример: "Газпром".
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.Symbol">
+            <summary>
+            Тикер/символ для торгов (уникальный идентификатор на бирже).
+            Пример: "GAZP".
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.Description">
+            <summary>
+            Краткое описание компании или эмитента.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.Privileged">
+            <summary>
+            Признак привилегированности акций (true — привилегированные).
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.ListLevel">
+            <summary>
+            Уровень листинга (целое число).
+            Используется для сортировки/фильтрации по биржевым уровням.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.LongName">
+            <summary>
+            Полное наименование эмитента.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.DividendsValue">
+            <summary>
+            Абсолютная величина дивидендов (в валюте).
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.DividendsPercents">
+            <summary>
+            Процент дивидендной доходности.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.IndustryId">
+            <summary>
+            Идентификатор отрасли (внешний ключ).
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.CreateTickersDto.CityId">
+            <summary>
+            Идентификатор города (внешний ключ).
             </summary>
         </member>
         <member name="P:StockLens.Dtos.TickersDto.FiltrationDto.SectorIds">
@@ -272,6 +510,68 @@
         <member name="P:StockLens.Dtos.TickersDto.FiltrationDto.CityIds">
             <summary>
             Список id городов
+            </summary>
+        </member>
+        <member name="T:StockLens.Dtos.TickersDto.PatchTickerDto">
+            <summary>
+            DTO для частичного обновления тикера (PATCH).
+            Все свойства необязательны — передавайте только те поля, которые нужно обновить.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.Name">
+            <summary>
+            Новое читаемое название тикера.
+            Если null — поле не будет изменено.
+            Пример: "Газпром".
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.Symbol">
+            <summary>
+            Новый торговый символ (тикер).
+            Если null — поле не будет изменено.
+            Пример: "GAZP".
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.Description">
+            <summary>
+            Новое краткое описание компании или эмитента.
+            Если null — поле не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.Privileged">
+            <summary>
+            Флаг привилегированности акций.
+            Если null — поле не будет изменено. true — привилегированные акции.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.ListLevel">
+            <summary>
+            Уровень листинга (целое число).
+            Если null — поле не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.LongName">
+            <summary>
+            Полное наименование эмитента.
+            Если null — поле не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.DividendsValue">
+            <summary>
+            Абсолютная величина дивидендов (в валюте).
+            Если null — поле не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.DividendsPercents">
+            <summary>
+            Процент дивидендной доходности.
+            Если null — поле не будет изменено.
+            </summary>
+        </member>
+        <member name="P:StockLens.Dtos.TickersDto.PatchTickerDto.IndustryId">
+            <summary>
+            Идентификатор отрасли (внешний ключ).
+            Если null — поле не будет изменено.
             </summary>
         </member>
         <member name="T:StockLens.Migrations.Initialreate">

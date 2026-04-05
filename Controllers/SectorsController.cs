@@ -54,6 +54,13 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Создаёт новый сектор в базе данных.
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 201 Created при успешном создании, 400 BadRequest при ошибке.
+        /// </summary>
+        /// <param name="dto">DTO с данными нового сектора.</param>
+        /// <returns>201 Created или 400 BadRequest.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("create-sector")]
@@ -70,6 +77,14 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Частично обновляет сектор по идентификатору.
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 204 NoContent при успешном обновлении, 400 BadRequest при ошибке.
+        /// </summary>
+        /// <param name="sectorId">Идентификатор обновляемого сектора.</param>
+        /// <param name="dto">DTO с полями для обновления.</param>
+        /// <returns>204 NoContent или 400 BadRequest.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPatch("{sectorId}")]
         public async Task<IActionResult> PatchSector(int sectorId, PatchSectorDto dto)
@@ -85,6 +100,13 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Удаляет сектор из базы данных (жёсткое удаление).
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 204 NoContent при успешном удалении, 400 BadRequest при ошибке.
+        /// </summary>
+        /// <param name="sectorId">Идентификатор удаляемого сектора.</param>
+        /// <returns>204 NoContent или 400 BadRequest.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{sectorId}")]
         public async Task<IActionResult> DeleteSector(int sectorId)

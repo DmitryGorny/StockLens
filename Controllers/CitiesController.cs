@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StockLens.Dtos.CitiesDtos;
 using StockLens.Services.Cities;
@@ -48,6 +49,15 @@ namespace StockLens.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Создаёт новый город в базе данных.
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 201 Created при успешном создании, 404 NotFound при ошибке.
+        /// </summary>
+        /// <param name="dto">DTO с данными создаваемого города.</param>
+        /// <returns>201 Created или 404 NotFound.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("create-city")]
         public async Task<IActionResult> CreateCity(CreateCitiesDtos dto)
@@ -63,8 +73,16 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Удаляет город по идентификатору.
+        /// Доступно только пользователям с ролью Admin.
+        /// Возвращает 204 NoContent при успешном удалении, 404 NotFound при ошибке.
+        /// </summary>
+        /// <param name="cityId">Идентификатор удаляемого города.</param>
+        /// <returns>204 NoContent или 404 NotFound.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{cityId}")]
-        public async Task<IActionResult> GetAllCities(int cityId)
+        public async Task<IActionResult> DeleteCities(int cityId)
         {
             try
             {

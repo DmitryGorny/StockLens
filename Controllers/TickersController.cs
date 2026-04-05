@@ -6,6 +6,10 @@ using StockLens.Services.Tickers;
 
 namespace StockLens.Controllers
 {
+    /// <summary>
+    /// Контроллер для работы с тикерами: получение, создание, изменение, удаление и фильтрация.
+    /// Все ответы оформляются через ActionResult для корректной передачи HTTP-кодов.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TickersController : ControllerBase
@@ -95,6 +99,13 @@ namespace StockLens.Controllers
         //    }
         //}
 
+
+        /// <summary>
+        /// Создаёт новый тикер в базе данных.
+        /// Доступно только пользователям с ролью Admin.
+        /// </summary>
+        /// <param name="dto">DTO с данными нового тикера. Все поля обязательны.</param>
+        /// <returns>201 Created при успешном создании, 400 BadRequest при ошибке валидации или создании</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("create-ticker")]
@@ -111,6 +122,13 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Частично обновляет тикер по идентификатору (PATCH).
+        /// Доступно только пользователям с ролью Admin.
+        /// </summary>
+        /// <param name="TickerId">Идентификатор обновляемого тикера.</param>
+        /// <param name="dto">DTO с полями для патча.</param>
+        /// <returns>204 NoContent при успешном обновлении, 400 BadRequest при ошибке.</returns>
         [Authorize(Roles = "Admin")]
         [HttpPatch("{TickerId}")]
         public async Task<IActionResult> PatchTickers(int TickerId, [FromBody] PatchTickerDto dto)
@@ -126,6 +144,12 @@ namespace StockLens.Controllers
             }
         }
 
+        /// <summary>
+        /// Удаляет тикер по идентификатору.
+        /// Доступно только пользователям с ролью Admin.
+        /// </summary>
+        /// <param name="TickerId">Идентификатор удаляемого тикера.</param>
+        /// <returns>204 NoContent при успешном удалении, 400 BadRequest при ошибке.</returns>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{TickerId}")]
         public async Task<IActionResult> DeleteTicker(int TickerId)
