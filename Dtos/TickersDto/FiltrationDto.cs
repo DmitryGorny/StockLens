@@ -14,6 +14,10 @@
         /// Список id городов
         /// </summary>
         public IEnumerable<int>? CityIds { get; set; }
+        /// <summary>
+        /// ListLevel - уровень листинга
+        /// </summary>
+        public int? ListLevel { get; set; }
 
     }
 }

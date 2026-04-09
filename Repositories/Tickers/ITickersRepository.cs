@@ -19,5 +19,6 @@ namespace StockLens.Repositories.Tickers
         public Task<TickersModel?> GetTicker(int tickerId);
         public Task<List<TickersModel>> GetTickersByListLevel(int listLevel);
         public Task<TickersModel?> GetTicker(string symbol);
+        public Task<IEnumerable<SearchTickerDto>> SearchTicker(string symbol);
     }
 }

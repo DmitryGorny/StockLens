@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StockLens.data;
+using StockLens.Dtos.TickersDto;
 using StockLens.Models;
 using StockLens.Repositories.Briefcases;
 using StockLens.Repositories.BriefcasesTickers;
@@ -36,6 +37,7 @@ using StockLens.Services.HttpRequester.MoexHttpRequester;
 using StockLens.Services.Industries;
 using StockLens.Services.Moex;
 using StockLens.Services.QuotesService;
+using StockLens.Services.Search;
 using StockLens.Services.Sector;
 using StockLens.Services.Tickers;
 using StockLens.Services.Tickers.Filters.Facade;
@@ -75,12 +77,15 @@ builder.Services.AddScoped<IFiltrationService, TickersService>();
 builder.Services.AddScoped<IBriefcasesRepository, BriefcasesRepository>();
 builder.Services.AddScoped<IBriefcasesTickersRepository, BriefcasesTickersRepository>();
 builder.Services.AddScoped<IBriefcasesService, BriefcasesService>();
+builder.Services.AddScoped<ISearch<string, SearchTickerDto>, TickersService>();
 
 builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();
 builder.Services.Decorate<ITopTenFacade, CachedTopTen>();
 builder.Services.Decorate<IPortfolioService, CachedPortfolio>();
 builder.Services.Decorate<IFiltrationService, CachedTickersFitler>();
+builder.Services.Decorate<ISearch<string, SearchTickerDto>, CachedTickersSearch>();
+
 
 builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
 {

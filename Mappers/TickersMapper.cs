@@ -36,6 +36,17 @@ namespace StockLens.Mappers
             };
         }
 
+        public static SearchTickerDto CreateSearchDtoFromTickers(this Tickers ticker)
+        {
+            return new SearchTickerDto
+            {
+                Id = ticker.Id,
+                Symbol = ticker.Symbol,
+                Description = ticker.Description,
+                Name = ticker.Name
+            };
+        }
+
         public static Tickers CreateTickerFromDto(this CreateTickersDto dto)
         {
             return new Tickers

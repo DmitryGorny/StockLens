@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using StockLens.Services.Search.SymbolsTree;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -9,15 +12,37 @@ namespace StockLens.Services.Cache
         private readonly IDistributedCache _cache;
 
         public CacheService(IDistributedCache cache) { _cache = cache; }
-        public async Task<IEnumerable<T>?> GetCache<T>(string serviceName, params string[] args)
+        public async Task<IEnumerable<T>?> GetCacheEnumarable<T>(string serviceName, params string[] args)
+        {
+            string key = BuildKey(serviceName, args);
+            var result = await _cache.GetStringAsync(key);
+            
+            if (result == null)
+                return null;
+
+            var deserializedValue = JsonConvert.DeserializeObject<IEnumerable<T>>(result, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
+
+            return deserializedValue;
+        }
+
+        public async Task<T?> GetCache<T>(string serviceName, params string[] args)
         {
             string key = BuildKey(serviceName, args);
             var result = await _cache.GetStringAsync(key);
 
             if (result == null)
-                return null;
+                return default(T);
 
-            return JsonSerializer.Deserialize<IEnumerable<T>>(result);
+            var deserializedValue = JsonConvert.DeserializeObject<T>(result, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
+            return deserializedValue;
         }
 
         public async Task<string?> GetUnserializedCache(string serviceName, params string[] args)
@@ -30,7 +55,12 @@ namespace StockLens.Services.Cache
         public async Task SetCache<T>(T value, string serviceName, params string[] args)
         {
             string key = BuildKey(serviceName, args);
-            string serializedValue = JsonSerializer.Serialize(value);
+
+            var serializedValue = JsonConvert.SerializeObject(value, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
 
             await _cache.SetStringAsync(
                 key,

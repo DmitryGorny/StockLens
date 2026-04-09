@@ -2,10 +2,11 @@
 using StockLens.Dtos.IndustriesDtos;
 using StockLens.Dtos.TickersDto;
 using StockLens.Services.FiltrationService;
+using StockLens.Services.Search;
 
 namespace StockLens.Services.Tickers
 {
-    public interface ITickersService : IFiltrationService
+    public interface ITickersService : IFiltrationService, ISearch<string, SearchTickerDto>
     {
         public Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos);
         public Task CreateTicker(CreateTickersDto dto);
@@ -17,6 +18,5 @@ namespace StockLens.Services.Tickers
         public Task<IEnumerable<GetTickersDto>> GetTickersByCitiesAsync(IEnumerable<int> citiesId, int start, int size);
         public Task<IEnumerable<GetTickersDto>> GetTickersAsync(int start, int size);
         public Task<IEnumerable<GetTickersDto>> GetTickersAsync();
-
     }
 }

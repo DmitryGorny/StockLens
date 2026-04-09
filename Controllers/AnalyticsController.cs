@@ -18,7 +18,7 @@ namespace StockLens.Controllers
     /// </summary>
     [Route("api/analytics")]
     [ApiController]
-    [Authorize(Roles = "User")]
+    [Authorize]
     public class AnalyticsController: ControllerBase
     {
         private readonly IGeneralAnalyticsFacade _generalAnalyticsFacade;

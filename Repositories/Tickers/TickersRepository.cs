@@ -146,5 +146,13 @@ namespace StockLens.Repositories.Tickers
             _db_context.Tickers.Remove(ticker); 
             await _db_context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<SearchTickerDto>> SearchTicker(string symbol)
+        {
+            return _db_context.Tickers
+                    .Where(t => t.Symbol.Contains(symbol))
+                    .Select(t => t.CreateSearchDtoFromTickers())
+                    .AsEnumerable();
+        }
     }
 }

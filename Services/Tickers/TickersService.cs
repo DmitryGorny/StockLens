@@ -98,6 +98,15 @@ namespace StockLens.Services.Tickers
             return allTickers;
             
         }
+
+        public async Task<IEnumerable<SearchTickerDto>> Search(string Symbol)
+        {
+            var tickers = await _tickersRepository.SearchTicker(Symbol);
+            return tickers.Where(t => {
+                                return Symbol.All(l => Symbol.IndexOf(l) == t.Symbol.IndexOf(l));
+                                }); 
+        }
+
     }
 
 }

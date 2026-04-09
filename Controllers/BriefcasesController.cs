@@ -111,11 +111,17 @@ namespace StockLens.Controllers
         }
 
         /// <summary>
-        /// Частично обновляет портфель (например, изменение списка тикеров или имени).
+        /// Частично обновляет портфель текущего пользователя (например: изменение имени, добавление/удаление тикеров и т.п.).
+        /// Требуется аутентификация — контроллер помечен атрибутом [Authorize].
+        /// Возвращает:
+        ///  - 204 NoContent при успешном обновлении;
+        ///  - 400 BadRequest при ошибке валидации или обработке запроса;
+        ///  - 401 Unauthorized если пользователь не аутентифицирован;
+        ///  - 404 NotFound если портфель с указанным идентификатором не найден.
         /// </summary>
         /// <param name="breifcaseId">Идентификатор обновляемого портфеля.</param>
-        /// <param name="patchBriefcaseDto">DTO с полями для частичного обновления.</param>
-        /// <returns>204 NoContent при успешном обновлении, 400 BadRequest при ошибке.</returns>
+        /// <param name="patchBriefcaseDto">DTO с полями для частичного обновления. Передавайте только те поля, которые нужно изменить.</param>
+        /// <returns>204 NoContent / 400 BadRequest / 401 Unauthorized / 404 NotFound</returns>
         [HttpPatch("{breifcaseId}")]
         public async Task<ActionResult> PatchBriefcaseTicker(int breifcaseId, [FromBody] PatchBriefcaseDto patchBriefcaseDto)
         {

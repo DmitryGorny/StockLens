@@ -8,7 +8,9 @@ namespace StockLens.Services.Tickers.Filters.Facade
         private List<IFilter> filters = new() { 
             new SectorFilter(), 
             new IndustryFilter(), 
-            new CityFilter() };
+            new CityFilter(),
+            new ListLevelFilter()
+            };
 
         public async Task<IEnumerable<GetTickersDto>> Filter(IEnumerable<GetTickersDto> dtos, FiltrationDto filterDto)
         {
@@ -36,7 +38,7 @@ namespace StockLens.Services.Tickers.Filters.Facade
                     tasks.Clear();
                     
                     if (tickers.Count() == 0)
-                        tickers = dtos;
+                        tickers = filteredDtos;
 
                     var new_tickers = await filter.Filter(tickers, filterDto);
                     var list = new_tickers.ToList();

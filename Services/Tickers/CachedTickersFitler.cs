@@ -18,7 +18,7 @@ namespace StockLens.Services.Tickers
 
         public async Task<IEnumerable<GetTickersDto>> LayeredFiltration(FiltrationDto dto)
         {
-            var tickers = await _cacheService.GetCache<GetTickersDto>("TickersFitler", JsonSerializer.Serialize(dto));
+            var tickers = await _cacheService.GetCacheEnumarable<GetTickersDto>("TickersFitler", JsonSerializer.Serialize(dto));
             if (tickers != null)
                 return tickers;
 
