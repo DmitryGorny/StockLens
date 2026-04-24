@@ -168,6 +168,16 @@ namespace StockLens.Services.Auth.AuthService
 
             return user.GetUsersCharacteristicsDto();
         }
+        public async Task<bool> IsEmailConfirmed(string email)
+        {
+            User? user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                throw new Exception("Пользователь не найден");
+
+            return user.EmailConfirmed;
+        }
+
 
         private async Task SendEmailConfirmationAsync(User user)
         {

@@ -40,13 +40,24 @@ namespace StockLens.Mappers
 
         public static GetBriefcasesDto ToBriefcasesDto(this Briefcases briefcases)
         {
-            return new GetBriefcasesDto 
-            { 
-                Description = briefcases.Description,
-                Name = briefcases.Name,
-                BriefcasesId = briefcases.BriefcasesId,
-                Tickers = briefcases.Tickers.Select(t => t.ToBriefcasesDto()),
-            };
+            try
+            {
+                return new GetBriefcasesDto
+                {
+                    Description = briefcases.Description,
+                    Name = briefcases.Name,
+                    BriefcasesId = briefcases.BriefcasesId,
+                    Tickers = briefcases.Tickers.Select(t =>
+                    t.ToBriefcasesDto(
+                        t.BriefcasesTickers
+                       .Find(btk => btk.TickerId == t.Id)!.percantage)
+                ),
+                };
+            } catch(NullReferenceException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
 
         }
 

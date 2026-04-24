@@ -91,7 +91,7 @@ namespace StockLens.Mappers
                 ticker.DividendsPercents = dto.DividendsPercents.Value;
         }
 
-        public static GetTickersBriefcasesDto ToBriefcasesDto(this Tickers ticker)
+        public static GetTickersBriefcasesDto ToBriefcasesDto(this Tickers ticker, decimal percantage)
         {
             return new GetTickersBriefcasesDto
             {
@@ -106,6 +106,7 @@ namespace StockLens.Mappers
                 Name = ticker.Name,
                 Privileged = ticker.Privileged,
                 Symbol = ticker.Symbol,
+                briefcasesPercent = percantage
             };
         }
     }

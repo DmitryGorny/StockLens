@@ -176,6 +176,13 @@
             <param name="token">token подтверждения почты (уже сформирован в письме)</param>
             <param name="email">подтверждаемый email</param>
         </member>
+        <member name="M:StockLens.Controllers.AuthController.IsEmailConfirmed(System.String)">
+            <summary>
+            Подтверждение почты
+            </summary>
+            <param name="token">token подтверждения почты (уже сформирован в письме)</param>
+            <param name="email">подтверждаемый email</param>
+        </member>
         <member name="T:StockLens.Controllers.BriefcasesController">
             <summary>
             Контроллер для операций с портфелями (briefcases).

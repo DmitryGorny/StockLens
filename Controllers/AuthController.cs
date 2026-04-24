@@ -114,5 +114,25 @@ namespace StockLens.Controllers
             }
 
         }
+
+        /// <summary>
+        /// Проверка подтверждена ли почта
+        /// </summary>
+        /// <param name="email">подтверждаемый email</param>
+        [HttpGet]
+        [Route("is-email-confirmed")]
+        public async Task<IActionResult> IsEmailConfirmed(string email)
+        {
+            try
+            {
+                var ok = await _authService.IsEmailConfirmed(email);
+                return Ok(ok);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

@@ -7,7 +7,6 @@ namespace StockLens.Dtos.BriefcasesDtos
         public int BriefcasesId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
         public IEnumerable<GetTickersBriefcasesDto> Tickers { get; set; }
     }
 }

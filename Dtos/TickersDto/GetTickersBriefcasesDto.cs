@@ -11,6 +11,7 @@
         public int ListLevel { get; set; }
         public decimal DividendsValue { get; set; }
         public decimal DividendsPercents { get; set; }
+        public decimal briefcasesPercent { get; set; }
         public int IndustryId { get; set; }
         public int CityId { get; set; }
     }

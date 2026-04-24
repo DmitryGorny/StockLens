@@ -10,5 +10,6 @@ namespace StockLens.Services.Auth.AuthService
         public Task<bool> ConfirmEmail(string recieverEmail, string token);
         public Task<NewUserDto?> RefreshToken(string token);
         public Task<UsersСharacteristicsDto> GetUsersMetrics(string email);
+        public Task<bool> IsEmailConfirmed(string email);
     }
 }

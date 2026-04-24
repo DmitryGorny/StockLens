@@ -1,8 +1,4 @@
-﻿using NetTopologySuite.Index.Bintree;
-using NetTopologySuite.Index.HPRtree;
-using Org.BouncyCastle.Bcpg.OpenPgp;
-using System.Diagnostics.Eventing.Reader;
-using System.Runtime.ConstrainedExecution;
+﻿
 
 namespace StockLens.Services.Search.SymbolsTree
 {

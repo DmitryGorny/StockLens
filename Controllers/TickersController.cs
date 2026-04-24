@@ -148,6 +148,16 @@ namespace StockLens.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Ищет тикеры по символу (AAAA).
+        /// Поддерживает полное или частичное совпадение символа — передавайте строку поиска в параметре `symbol`.
+        /// </summary>
+        /// <param name="symbol">Строка поиска символа (полный символ или его часть). Передаётся как query-параметр.</param>
+        /// <returns>
+        /// 200 OK с коллекцией соответствующих тикеров (возможно пустая коллекция).
+        /// 400 BadRequest — при ошибке обработки запроса.
+        /// </returns>
         [HttpGet]
         [Route("search")]
         public async Task<ActionResult<IEnumerable<GetTickersDto>>> Search([FromQuery] string symbol)
