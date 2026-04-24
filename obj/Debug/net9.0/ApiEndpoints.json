@@ -238,6 +238,22 @@
   },
   {
     "ContainingType": "StockLens.Controllers.AuthController",
+    "Method": "IsEmailConfirmed",
+    "RelativePath": "api/auth/is-email-confirmed",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "StockLens.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/auth/login",
     "HttpMethod": "POST",

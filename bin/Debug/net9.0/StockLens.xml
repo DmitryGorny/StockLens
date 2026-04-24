@@ -178,9 +178,8 @@
         </member>
         <member name="M:StockLens.Controllers.AuthController.IsEmailConfirmed(System.String)">
             <summary>
-            Подтверждение почты
+            Проверка подтверждена ли почта
             </summary>
-            <param name="token">token подтверждения почты (уже сформирован в письме)</param>
             <param name="email">подтверждаемый email</param>
         </member>
         <member name="T:StockLens.Controllers.BriefcasesController">
@@ -429,6 +428,17 @@
             <summary>
             Эндпоинт для фильтрацие тикеров по ((секторам или индустриям) и городам и уровню листинга)
             </summary>
+        </member>
+        <member name="M:StockLens.Controllers.TickersController.Search(System.String)">
+            <summary>
+            Ищет тикеры по символу (AAAA).
+            Поддерживает полное или частичное совпадение символа — передавайте строку поиска в параметре `symbol`.
+            </summary>
+            <param name="symbol">Строка поиска символа (полный символ или его часть). Передаётся как query-параметр.</param>
+            <returns>
+            200 OK с коллекцией соответствующих тикеров (возможно пустая коллекция).
+            400 BadRequest — при ошибке обработки запроса.
+            </returns>
         </member>
         <member name="T:StockLens.Dtos.IndustriesDtos.CreateIndustryDto">
             <summary>

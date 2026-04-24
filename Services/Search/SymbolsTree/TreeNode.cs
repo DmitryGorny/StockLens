@@ -13,7 +13,7 @@
             this.id = id;
             this.vals = vals;   
         }
-        public string id { get; private set; }
+        public string id { get; set; }
         public Dictionary<string, TreeNode<T>> _children { get; } = new Dictionary<string, TreeNode<T>>();
         public List<T> vals { get; set; }
     }

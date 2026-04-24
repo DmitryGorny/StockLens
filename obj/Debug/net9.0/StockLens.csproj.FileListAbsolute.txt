@@ -253,3 +253,4 @@ C:\Users\Dmitriy\Desktop\StockLens\StockLens\StockLens\bin\Debug\net9.0\zh\Hangf
 C:\Users\Dmitriy\Desktop\StockLens\StockLens\StockLens\bin\Debug\net9.0\Dapper.dll
 C:\Users\Dmitriy\Desktop\StockLens\StockLens\StockLens\bin\Debug\net9.0\Dapper.AOT.dll
 C:\Users\Dmitriy\Desktop\StockLens\StockLens\StockLens\bin\Debug\net9.0\Hangfire.PostgreSql.dll
+C:\Users\Dmitriy\Desktop\StockLens\StockLens\StockLens\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
