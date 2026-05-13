@@ -33,7 +33,7 @@ namespace StockLens.Services.Tickers.Filters.Facade
 
                     foreach (var r in results)
                     {
-                        tickers = tickers.Union(r, new TickerComparer());
+                        tickers = tickers.Union(r, new TickerComparer()).ToList();
                     }
                     tasks.Clear();
                     
