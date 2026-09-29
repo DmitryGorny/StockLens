@@ -1,6 +1,4 @@
 ﻿using StockLens.Dtos.IndustriesDtos;
-using StockLens.Dtos.SectorDtos;
-using IndustiesModel = StockLens.Models.Industries;
 
 namespace StockLens.Services.Industries
 {
