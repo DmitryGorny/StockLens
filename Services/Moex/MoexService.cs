@@ -1,10 +1,8 @@
-﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
-using StockLens.Dtos.QuotationsDtos;
-using StockLens.Models;
-using StockLens.Services.HttpRequester;
-using StockLens.Services.HttpRequester.MoexHttpRequester;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text.Json;
+
+using StockLens.Dtos.QuotationsDtos;
+using StockLens.Services.HttpRequester;
 
 namespace StockLens.Services.Moex
 {
@@ -18,18 +16,19 @@ namespace StockLens.Services.Moex
         }
         public async Task<List<CreateQuotesDto>> RequestQuotesByYears(string TickerSymbol, int TickerId, int yearsDelta=5)
         {
-            List<CreateQuotesDto> dtos = new List<CreateQuotesDto>();
+            var dtos = new List<CreateQuotesDto>();
             int start = 0;
+
             while (true) {
                 DateTime today = DateTime.Today;
                 DateTime fiveYearsAgo = today.AddYears(-yearsDelta);
-                Root? root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
+                var root = await _httpRequester.GetJsonAsync<Root>("https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/" +
                     $"{TickerSymbol}.json" +
                     $"?from={fiveYearsAgo.ToString("yyyy-MM-dd")}&till={today.ToString("yyyy-MM-dd")}" +
                     $"&start={start}" +
                     "&history.columns=TRADEDATE,OPEN,CLOSE,LOW,HIGH,VOLUME,VALUE,NUMTRADES,WAPRICE");
                 
-                if (root.history.data.Count == 0) 
+                if (root == null || root.history.data.Count == 0) 
                     break;
 
                 foreach (var item in root.history.data)
@@ -37,8 +36,12 @@ namespace StockLens.Services.Moex
                     try
                     {
                         dtos.Add(QuoteValidator(item, TickerId));
-                    } catch(InvalidDataException e) { continue; }                  
-                    catch(InvalidOperationException e) { continue; }
+                    } catch(InvalidDataException e) {
+                        continue; 
+                    }                  
+                    catch(InvalidOperationException e) { 
+                        continue; 
+                    }
                 }
 
                 start += 100;
@@ -61,7 +64,7 @@ namespace StockLens.Services.Moex
                      $"&start={start}" +
                     "&history.columns=TRADEDATE,OPEN,CLOSE,LOW,HIGH,VOLUME,VALUE,NUMTRADES,WAPRICE");
 
-                if (root.history.data.Count == 0)
+                if (root == null || root.history.data.Count == 0)
                     break;
 
                 foreach (var item in root.history.data)
@@ -70,8 +73,12 @@ namespace StockLens.Services.Moex
                     {
                         dtos.Add(QuoteValidator(item, TickerId));
                     }
-                    catch (InvalidDataException e) { continue; }
-                    catch (InvalidOperationException e) { continue; }
+                    catch (InvalidDataException e) {
+                        continue; 
+                    }
+                    catch (InvalidOperationException e) { 
+                        continue; 
+                    }
                 }
                 start += 100;
             }
@@ -178,7 +185,5 @@ namespace StockLens.Services.Moex
 
             return el.GetString()!;
         }
-
-
     }
 }
