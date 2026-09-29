@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity; //импорты в порядок
 using Microsoft.AspNetCore.WebUtilities;
 using StockLens.Dtos.AuthDtos;
 using StockLens.Mappers;
-using StockLens.Migrations;
-using StockLens.Models;
 using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
 using System.Data;
@@ -32,7 +30,8 @@ namespace StockLens.Services.Auth.AuthService
             _emailService = emailMessagesSender;
             _configuration = configuration;
         }
-        public async Task<string> Register(RegisterDto dto)
+        public async Task<string> Register(RegisterDto dto) 
+            //REFACTOR: убрать возвращение string, разделить exception
         {
 
             var investmentHorizonDict = _configuration
@@ -82,6 +81,7 @@ namespace StockLens.Services.Auth.AuthService
 
         
         public async Task<NewUserDto> Login(LoginDto dto)
+            //REFACTOR: кастомнная ошибка для почты
         {
             var user = await _userManager.FindByNameAsync(dto.Username);
 
@@ -177,7 +177,6 @@ namespace StockLens.Services.Auth.AuthService
 
             return user.EmailConfirmed;
         }
-
 
         private async Task SendEmailConfirmationAsync(User user)
         {
