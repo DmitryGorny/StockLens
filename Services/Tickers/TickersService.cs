@@ -89,7 +89,7 @@ namespace StockLens.Services.Tickers
             await _tickersRepository.DeleteTickerHardAsync(ticker);
         }
 
-        public async Task<IEnumerable<GetTickersDto>> LayeredFiltration(FiltrationDto dto)
+        public async Task<IEnumerable<GetTickersDto>> Filter(FiltrationDto dto)
         {
             var allTickers = await GetTickersAsync();
 

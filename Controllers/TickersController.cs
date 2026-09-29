@@ -140,7 +140,7 @@ namespace StockLens.Controllers
         {
             try
             {
-                return Ok(await _filtrationService.LayeredFiltration(dto));
+                return Ok(await _filtrationService.Filter(dto));
             }
             catch (Exception ex)
             {

@@ -1,6 +1,4 @@
-﻿using StockLens.Dtos.AuthDtos;
-using StockLens.Dtos.QuotesDtos.Analytics;
-using System.Diagnostics;
+﻿using StockLens.Dtos.QuotesDtos.Analytics;
 using System.Text.Json;
 
 namespace StockLens.Services.HttpRequester
@@ -30,8 +28,7 @@ namespace StockLens.Services.HttpRequester
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
-            Console.WriteLine(
-                JsonSerializer.Serialize(AnalyticsDto, options));
+            
             var response = await _httpClient.PostAsJsonAsync(url, AnalyticsDto, options);
 
             if (!response.IsSuccessStatusCode)

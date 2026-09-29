@@ -16,13 +16,13 @@ namespace StockLens.Services.Tickers
             _tickersService = filtrationService;
         }
 
-        public async Task<IEnumerable<GetTickersDto>> LayeredFiltration(FiltrationDto dto)
+        public async Task<IEnumerable<GetTickersDto>> Filter(FiltrationDto dto)
         {
             var tickers = await _cacheService.GetCacheEnumarable<GetTickersDto>("TickersFitler", JsonSerializer.Serialize(dto));
             if (tickers != null)
                 return tickers;
 
-            var result = await _tickersService.LayeredFiltration(dto);
+            var result = await _tickersService.Filter(dto);
             await _cacheService.SetCache(result, "TickersFitler", JsonSerializer.Serialize(dto)); 
             return result;
         }
