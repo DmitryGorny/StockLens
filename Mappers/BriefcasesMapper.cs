@@ -30,7 +30,7 @@ namespace StockLens.Mappers
         {
             return new BriefcasesTickers
             {
-                percantage = dto.percantage,
+                Percantage = dto.Percantage,
                 Briefcase = dto.Briefcase,
                 BriefcaseId = dto.BriefcaseId,
                 Ticker = dto.Ticker,
@@ -50,7 +50,7 @@ namespace StockLens.Mappers
                     Tickers = briefcases.Tickers.Select(t =>
                     t.ToBriefcasesDto(
                         t.BriefcasesTickers
-                       .Find(btk => btk.TickerId == t.Id)!.percantage)
+                       .Find(btk => btk.TickerId == t.Id)!.Percantage)
                 ),
                 };
             } catch(NullReferenceException ex)

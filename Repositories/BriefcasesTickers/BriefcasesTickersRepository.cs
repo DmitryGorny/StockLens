@@ -49,19 +49,19 @@ namespace StockLens.Repositories.BriefcasesTickers
                     if (bct.Count() == 0)
                         throw new Exception("Такого портфеля нет");
 
-                    newTickers = dto.newTickersAndPercantages.Where(p => !bct.Any(b => b.TickerId == p.Key)).ToList();
+                    newTickers = dto.NewTickersAndPercantages.Where(p => !bct.Any(b => b.TickerId == p.Key)).ToList();
 
-                    foreach (var pair in dto.newTickersAndPercantages)
+                    foreach (var pair in dto.NewTickersAndPercantages)
                     {
 
                         var BriefcaseTicker = bct.Find(b => b.TickerId == pair.Key);
                         if (BriefcaseTicker == null)
                             continue;
 
-                        BriefcaseTicker.percantage = pair.Value;
+                        BriefcaseTicker.Percantage = pair.Value;
                     }
 
-                    foreach (var tickerId in dto.tickersToDelete)
+                    foreach (var tickerId in dto.TickersToDelete)
                     {
                         var BriefcaseTicker = bct.Find(b => b.TickerId == tickerId);
                         if (BriefcaseTicker == null)

@@ -6,6 +6,6 @@
         public int BriefcaseId { get; set; }
         public Briefcases Briefcase { get; set; }
         public Tickers Ticker { get; set; }
-        public decimal percantage { get; set; }
+        public decimal Percantage { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class PatchBriefcasesTickersDto
     {
-        public Dictionary<int, decimal> newTickersAndPercantages { get; set; }
-        public List<int>? tickersToDelete { get; set; }
+        public Dictionary<int, decimal> NewTickersAndPercantages { get; set; }
+        public List<int>? TickersToDelete { get; set; }
     }
 }

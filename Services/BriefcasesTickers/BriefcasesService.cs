@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+
 using StockLens.Dtos.BriefcasesDtos;
 using StockLens.Dtos.BriefcasesTickersDtos;
-using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
 using StockLens.Models;
 using StockLens.Repositories.Briefcases;
 using StockLens.Repositories.BriefcasesTickers;
 using StockLens.Repositories.Tickers;
-using StockLens.Services.Tickers;
-using System.Collections.Generic;
 
 namespace StockLens.Services.BriefcasesTickers
 {
@@ -28,18 +26,18 @@ namespace StockLens.Services.BriefcasesTickers
             _tickersRepository = tics;
             _userManager = userManager;
         }
+
         public async Task<IEnumerable<GetBrifcasesListDto>> GetBrifcasesListAsync(string userEmail, int start, int size)
         {
-            User? user = await _userManager.FindByEmailAsync(userEmail);
+            var user = await _userManager.FindByEmailAsync(userEmail);
             if (user == null)
                 throw new UnauthorizedAccessException("Пользователь не найден");
 
 
             var list = await _briefcasesRepository.GetUsersBriefcasesAsync(user.Id, start, size);
-            return list.Select(b => b.ToBriefcaseListDto());
-              
-            
+            return list.Select(b => b.ToBriefcaseListDto());     
         }
+
         public async Task<GetBriefcasesDto> GetBriefcase(int briefcaseId)
         {
             var briefcase = await _briefcasesRepository.GetBriefcaseAsync(briefcaseId);
@@ -47,14 +45,14 @@ namespace StockLens.Services.BriefcasesTickers
                 throw new Exception("Портфель не был найден");
             return briefcase.ToBriefcasesDto();
         }
+
         public async Task CreateBriefcase(string userEmail, CreateBriefcaseDto dto)
         {
-
             var user = await _userManager.FindByEmailAsync(userEmail);
             if (user == null)
                 throw new UnauthorizedAccessException("Пользователь не найден");
 
-            List<CreateBriefcasesTickersDto> dtos = [];
+            var dtos =  new List<CreateBriefcasesTickersDto>();
 
             var briefcase = dto.ToBriefcase(user.Id);
             await _briefcasesRepository.CreateBriefcase(briefcase);
@@ -71,14 +69,14 @@ namespace StockLens.Services.BriefcasesTickers
                     TickerId = ticker.Id,
                     Briefcase = briefcase,
                     BriefcaseId = briefcase.BriefcasesId,
-                    percantage = pair.Value,
+                    Percantage = pair.Value,
                     
                 };
                 dtos.Add(createDto);
             }
-
             await _briefcasesTickersRepository.CreateBriefcaseBulk(dtos);
         }
+
         public async Task DeleteBriefcase(int briefcaseId)
         {
             var briefcase = await _briefcasesRepository.GetBriefcaseAsync(briefcaseId);
@@ -96,15 +94,15 @@ namespace StockLens.Services.BriefcasesTickers
 
             if (patchDto.Tickers != null)
             {
-                var sum = patchDto.Tickers.newTickersAndPercantages.Sum(p => p.Value);
-                if (sum != 1)
-                    throw new Exception("Суммапроцентов должна быть равна 1");
+                var sum = patchDto.Tickers.NewTickersAndPercantages.Sum(p => p.Value);
+                if (sum < 1 || sum > 1)
+                    throw new Exception("Сумма процентов должна быть равна 1");
 
-                var idsAndPercantage = await _briefcasesTickersRepository.PatchBriefcasesTickers(briefcaseId, patchDto.Tickers);
+                var IdsAndPercantage = await _briefcasesTickersRepository.PatchBriefcasesTickers(briefcaseId, patchDto.Tickers);
 
-                if (idsAndPercantage.Count() > 0)
+                if (IdsAndPercantage.Count() > 0)
                 {
-                    foreach (var pair in idsAndPercantage)
+                    foreach (var pair in IdsAndPercantage)
                     {
                         var ticker = await _tickersRepository.GetTicker(pair.Key);
 
@@ -117,15 +115,14 @@ namespace StockLens.Services.BriefcasesTickers
                             TickerId = ticker.Id,
                             Briefcase = briefcase,
                             BriefcaseId = briefcase.BriefcasesId,
-                            percantage = pair.Value,
+                            Percantage = pair.Value,
 
                         };
 
                         await _briefcasesTickersRepository.CreateBrifcasesTickers(createDto.ToBriefcaseTickers());
                     }  
                 }
-            }
-               
+            }            
         }
     }
 }
