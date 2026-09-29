@@ -1,4 +1,6 @@
-﻿using StockLens.data;
+﻿using System.Text.Json;
+
+using StockLens.data;
 using StockLens.Dtos.CitiesDtos;
 using StockLens.Dtos.IndustriesDtos;
 using StockLens.Dtos.SectorDtos;
@@ -10,9 +12,6 @@ using StockLens.Services.Moex;
 using StockLens.Services.QuotesService;
 using StockLens.Services.Sector;
 using StockLens.Services.Tickers;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-
 
 namespace StockLens.Services.FileReaderFacade
 {
@@ -51,11 +50,15 @@ namespace StockLens.Services.FileReaderFacade
                 try
                 {
                     var root = JsonSerializer.Deserialize<Root>(stream);
+                    if (root == null)
+                        throw new Exception("Файл не содержит поля sectors");
+
                     foreach (var sector in root.sectors)
                     {
                         var sectorDto = await CreateSectorDB(sector);
                         var indsDtos = await CreateIndustriesDB(sector.Industries, sectorDto.Id);
                         var indsMap = indsDtos.ToDictionary(x => x.Name);
+
                         foreach (var ind in sector.Industries)
                         {
                             var tickers_dto = await CreateTickers(ind.Tickers, indsMap[ind.Name].Id);
@@ -66,7 +69,6 @@ namespace StockLens.Services.FileReaderFacade
                             }
                         }
                     }
-
                     await transaction.CommitAsync();
                 }
                 catch
@@ -74,7 +76,6 @@ namespace StockLens.Services.FileReaderFacade
                     await transaction.RollbackAsync();
                     throw;
                 }
-
             }
         }
 
