@@ -5,16 +5,15 @@
         public TreeNode() { }
         public TreeNode(string id)
         {
-            this.id = id;
+            Id = id;
         }
-
         public TreeNode(string id, List<T> vals)
         {
-            this.id = id;
-            this.vals = vals;   
+            Id = id;
+            Vals = vals;   
         }
-        public string id { get; set; }
-        public Dictionary<string, TreeNode<T>> _children { get; } = new Dictionary<string, TreeNode<T>>();
-        public List<T> vals { get; set; }
+        public string Id { get; set; }
+        public Dictionary<string, TreeNode<T>> Children { get; } = new Dictionary<string, TreeNode<T>>();
+        public List<T> Vals { get; set; }
     }
 }
