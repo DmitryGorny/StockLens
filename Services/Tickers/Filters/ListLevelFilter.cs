@@ -1,8 +1,9 @@
 ﻿using StockLens.Dtos.TickersDto;
+using System.Linq.Expressions;
 
 namespace StockLens.Services.Tickers.Filters
 {
-    public class ListLevelFilter : IFilter
+    public class ListLevelFilter : IFilter<Models.Tickers>
     {
         private readonly int _order;
         private readonly ParallelEnum.ParallelEnum _isParralel;
@@ -15,12 +16,12 @@ namespace StockLens.Services.Tickers.Filters
             _isParralel = ParallelEnum.ParallelEnum.NotParallel;
         }
 
-        public Task<IEnumerable<GetTickersDto>> Filter(IEnumerable<GetTickersDto> dtos, FiltrationDto dto)
+        public Expression<Func<Models.Tickers, bool>?> GetFilterPredicate(FiltrationDto dto)
         {
             if (dto.ListLevel == null)
-                return Task.FromResult(dtos);
-            var dtos_new = dtos.Where(d => d.ListLevel == dto.ListLevel);
-            return Task.FromResult(dtos_new);
+                return null;
+
+            return (Models.Tickers ticker) => ticker.ListLevel == dto.ListLevel;
         }
     }
 }

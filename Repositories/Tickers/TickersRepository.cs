@@ -1,11 +1,9 @@
 ﻿using EFCore.BulkExtensions;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using StockLens.data;
 using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
+using StockLens.Services.Tickers.Filters.Facade;
 using TickersModel = StockLens.Models.Tickers;
 
 
@@ -14,10 +12,12 @@ namespace StockLens.Repositories.Tickers
     public class TickersRepository : ITickersRepository
     {
         private readonly AppDBContext _db_context;
+        private readonly IFilterRepository<TickersModel> _filterRepository;
 
-        public TickersRepository(AppDBContext db_context)
+        public TickersRepository(AppDBContext db_context, IFilterRepository<TickersModel> filterRepository)
         {
             _db_context = db_context;
+            _filterRepository = filterRepository;
         }
 
         public async Task BulkCreateTickersAsync(List<TickersModel> tickers)
@@ -153,6 +153,15 @@ namespace StockLens.Repositories.Tickers
                     .Where(t => t.Symbol.Contains(symbol))
                     .Select(t => t.CreateSearchDtoFromTickers())
                     .AsEnumerable();
+        }
+
+        public async Task<List<TickersModel>> GetTickersFiltered(FiltrationDto dto)
+        {
+            var request = _db_context.Tickers;
+            return await _filterRepository.Filter(request, dto)
+                                    .Include(t => t.Industry)
+                                    .Include(t => t.City)
+                                    .ToListAsync();
         }
     }
 }

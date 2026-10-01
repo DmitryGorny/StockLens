@@ -1,15 +1,23 @@
-using Hangfire;
-using Hangfire.PostgreSql;
-using Microsoft.AspNetCore.Authentication;
+// System
+using System.Reflection;
+
+// ASP.NET Core / EF Core / Identity
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
+// Сторонние библиотеки
+using Hangfire;
+using Hangfire.PostgreSql;
+
+// Data и модели
 using StockLens.data;
-using StockLens.Dtos.TickersDto;
 using StockLens.Models;
+using StockLens.Dtos.TickersDto;
+
+// Репозитории
 using StockLens.Repositories.Briefcases;
 using StockLens.Repositories.BriefcasesTickers;
 using StockLens.Repositories.Cities;
@@ -18,35 +26,37 @@ using StockLens.Repositories.Quotes;
 using StockLens.Repositories.RefreshTokens;
 using StockLens.Repositories.Sector;
 using StockLens.Repositories.Tickers;
+
+// Сервисы: справочники и тикеры
+using StockLens.Services.Cities;
+using StockLens.Services.Industries;
+using StockLens.Services.Sector;
+using StockLens.Services.Tickers;
+using StockLens.Services.Tickers.Filters.Facade;
+using StockLens.Services.FiltrationService;
+using StockLens.Services.Search;
+using StockLens.Services.QuotesService;
+using StockLens.Services.BriefcasesTickers;
+using StockLens.Services.FileReaderFacade;
+
+// Сервисы: аналитика
 using StockLens.Services.Analytics.GeneralAnalytics;
 using StockLens.Services.Analytics.Heatmap;
 using StockLens.Services.Analytics.Portfolio;
 using StockLens.Services.Analytics.TopTen;
+
+// Сервисы: аутентификация
 using StockLens.Services.Auth.AuthService;
 using StockLens.Services.Auth.EmailSender;
 using StockLens.Services.Auth.Token;
-using StockLens.Services.BriefcasesTickers;
-using StockLens.Services.Cache;
-using StockLens.Services.Cities;
-using StockLens.Services.Cron;
-using StockLens.Services.FileReaderFacade;
-using StockLens.Services.FiltrationService;
-using StockLens.Services.HttpRequester;
-using StockLens.Services.HttpRequester.AnalyticsHttpRequester;
-using StockLens.Services.HttpRequester.MoexHttpRequester;
-using StockLens.Services.Industries;
-using StockLens.Services.Moex;
-using StockLens.Services.QuotesService;
-using StockLens.Services.Search;
-using StockLens.Services.Sector;
-using StockLens.Services.Tickers;
-using StockLens.Services.Tickers.Filters.Facade;
-using System;
-using System.Reflection;
 
+// Инфраструктура: внешние API, кэш, фоновые задачи
+using StockLens.Services.HttpRequester;
+using StockLens.Services.Moex;
+using StockLens.Services.Cache;
+using StockLens.Services.Cron;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
@@ -57,9 +67,7 @@ builder.Services.AddScoped<ITickersRepository, TickersRepository>();
 builder.Services.AddScoped<ITickersService, TickersService>();
 builder.Services.AddScoped<ICitiesRepositroy, CitiesRepository>();
 builder.Services.AddScoped<IDataBaseFillingFacade, DataBaseFillingFacade>();
-builder.Services.AddScoped<ICitiesRepositroy, CitiesRepository>();
-builder.Services.AddScoped<IHttpRequester, MoexHttpRequester>();
-builder.Services.AddScoped<IHttpRequester, AnalyticsHttpRequester>();
+builder.Services.AddScoped<IHttpRequester, HttpRequester>();
 builder.Services.AddScoped<IMoexService, MoexService>();
 builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
@@ -72,8 +80,7 @@ builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 builder.Services.AddScoped<ICronFacade, CroneFacade>();
-builder.Services.AddScoped<IFilterFacade, FilterFacade>();
-builder.Services.AddScoped<IFiltrationService, TickersService>();
+builder.Services.AddScoped<IFilterRepository<Tickers>, FilterRepository>();
 builder.Services.AddScoped<IBriefcasesRepository, BriefcasesRepository>();
 builder.Services.AddScoped<IBriefcasesTickersRepository, BriefcasesTickersRepository>();
 builder.Services.AddScoped<IBriefcasesService, BriefcasesService>();
@@ -83,16 +90,15 @@ builder.Services.Decorate<IGeneralAnalyticsFacade, CachedGeneralAnalytics>();
 builder.Services.Decorate<IHeatmapFacade, CachedHeatmap>();
 builder.Services.Decorate<ITopTenFacade, CachedTopTen>();
 builder.Services.Decorate<IPortfolioService, CachedPortfolio>();
-builder.Services.Decorate<IFiltrationService, CachedTickersFitler>();
 builder.Services.Decorate<ISearch<string, SearchTickerDto>, CachedTickersSearch>();
 
 
-builder.Services.AddHttpClient<IHttpRequester, MoexHttpRequester>(client =>
+builder.Services.AddHttpClient<IHttpRequester, HttpRequester>(client =>
 {
     client.BaseAddress = new Uri("https://iss.moex.com/");
 });
 
-builder.Services.AddHttpClient<IHttpRequester, AnalyticsHttpRequester>(client =>
+builder.Services.AddHttpClient<IHttpRequester, HttpRequester>(client =>
 {
     client.BaseAddress = new Uri("http://127.0.0.1:8000/"); //TODO: Сюда адрес питоновского сервера
 });
@@ -139,6 +145,14 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         ),
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = ctx =>
+        {
+            ctx.Token = ctx.Request.Cookies["access_token"];
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -192,8 +206,6 @@ builder.Services.AddHangfire(configuration => configuration
 
 
 builder.Services.AddHangfireServer();
-
-
 
 var app = builder.Build();
 

@@ -1,7 +1,6 @@
 ﻿using StockLens.Dtos.TickersDto;
 using StockLens.Mappers;
 using StockLens.Repositories.Tickers;
-using StockLens.Services.Tickers.Filters.Facade;
 using TickersModel = StockLens.Models.Tickers;
 
 namespace StockLens.Services.Tickers
@@ -9,12 +8,10 @@ namespace StockLens.Services.Tickers
     public class TickersService : ITickersService
     {
         private readonly ITickersRepository _tickersRepository;
-        private readonly IFilterFacade _filter;
 
-        public TickersService(ITickersRepository tickersRepository, IFilterFacade filterFacade)
+        public TickersService(ITickersRepository tickersRepository)
         {
             _tickersRepository = tickersRepository;
-            _filter = filterFacade;
         }
 
         public async Task<List<GetTickersDto>> BulkCreateTickersAsync(List<CreateTickersDto> dtos)
@@ -89,16 +86,6 @@ namespace StockLens.Services.Tickers
             await _tickersRepository.DeleteTickerHardAsync(ticker);
         }
 
-        public async Task<IEnumerable<GetTickersDto>> Filter(FiltrationDto dto)
-        {
-            var allTickers = await GetTickersAsync();
-
-            allTickers = await _filter.Filter(allTickers, dto);    
-            
-            return allTickers;
-            
-        }
-
         public async Task<IEnumerable<SearchTickerDto>> Search(string Symbol)
         {
             var tickers = await _tickersRepository.SearchTicker(Symbol);
@@ -107,6 +94,11 @@ namespace StockLens.Services.Tickers
                                 }); 
         }
 
-    }
+        public async Task<IEnumerable<GetTickersDto>> GetTickersFiltered(FiltrationDto dto)
+        {
+            var tickers = await _tickersRepository.GetTickersFiltered(dto);
 
+            return tickers.Select(t => t.CreateDtoFromTickers());
+        }
+    }
 }

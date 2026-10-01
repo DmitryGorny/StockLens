@@ -1,10 +1,9 @@
-﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Internal;
-using StockLens.Dtos.TickersDto;
-using StockLens.Models;
+﻿using StockLens.Dtos.TickersDto;
+using System.Linq.Expressions;
 
 namespace StockLens.Services.Tickers.Filters
 {
-    public class CityFilter : IFilter
+    public class CityFilter : IFilter<Models.Tickers>
     {
         private readonly int _order;
         private readonly ParallelEnum.ParallelEnum _isParralel;
@@ -17,12 +16,14 @@ namespace StockLens.Services.Tickers.Filters
             _isParralel = ParallelEnum.ParallelEnum.NotParallel;
         }
 
-        public Task<IEnumerable<GetTickersDto>> Filter(IEnumerable<GetTickersDto> dtos, FiltrationDto dto)
+        public Expression<Func<Models.Tickers, bool>?> GetFilterPredicate(FiltrationDto dto)
         {
             if (dto.CityIds == null)
-                return Task.FromResult(dtos);
-            var dtos_new = dtos.Where(d => dto.CityIds.Contains(d.CityId));
-            return Task.FromResult(dtos_new);
+                return null;
+
+            var cityIds = dto.CityIds;
+            return ticker => cityIds.Contains(ticker.CityId);
         }
+    
     }
 }

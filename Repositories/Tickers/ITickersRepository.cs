@@ -1,5 +1,4 @@
-﻿using Org.BouncyCastle.Bcpg.OpenPgp;
-using StockLens.Dtos.TickersDto;
+﻿using StockLens.Dtos.TickersDto;
 using TickersModel = StockLens.Models.Tickers;
 
 namespace StockLens.Repositories.Tickers
@@ -20,5 +19,6 @@ namespace StockLens.Repositories.Tickers
         public Task<List<TickersModel>> GetTickersByListLevel(int listLevel);
         public Task<TickersModel?> GetTicker(string symbol);
         public Task<IEnumerable<SearchTickerDto>> SearchTicker(string symbol);
+        public Task<List<TickersModel>> GetTickersFiltered(FiltrationDto dto);
     }
 }

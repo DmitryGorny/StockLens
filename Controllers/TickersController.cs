@@ -16,15 +16,12 @@ namespace StockLens.Controllers
     public class TickersController : ControllerBase
     {
         private readonly ITickersService _tickersService;
-        private readonly IFiltrationService _filtrationService;
         private readonly ISearch<string, SearchTickerDto> _searchService;
 
-        public TickersController(ITickersService tickersService, 
-                                 IFiltrationService filtrationService,
+        public TickersController(ITickersService tickersService,
                                  ISearch<string, SearchTickerDto> searchService)
         {
             _tickersService = tickersService;
-            _filtrationService = filtrationService;
             _searchService = searchService;
         }
 
@@ -140,7 +137,7 @@ namespace StockLens.Controllers
         {
             try
             {
-                return Ok(await _filtrationService.Filter(dto));
+                return Ok(await _tickersService.GetTickersFiltered(dto));
             }
             catch (Exception ex)
             {
